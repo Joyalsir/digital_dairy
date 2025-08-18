@@ -51,7 +51,7 @@
           <a href="#">report▾</a>
           <ul class="submenu">
             <li><a href="milk_collection_report.php">milk collection report </a></li>
-            <li><a href="farmer_payment_report.php">farmer payment report </a></li>
+            <li><a href="payment_report.php">farmer payment report </a></li>
              <li><a href="inventory_report.php">inventory report </a></li>
               <li><a href="sales_report.php">sales report </a></li>
           </ul>
