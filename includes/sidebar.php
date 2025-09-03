@@ -60,10 +60,5 @@
       </ul>
     </div>
     <div class="main">
-      <div class="topbar">
-        <div><?php echo date("D M j Y H:i:s (T)"); ?></div>
-        <select>
-          <option>English</option>
-          <option>Malayalam</option>
-        </select>
+      
       </div>

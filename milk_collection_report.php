@@ -15,58 +15,107 @@ $result = mysqli_query($con, $sql);
 <?php include("includes/sidebar.php"); ?>
 <?php include("includes/header.php"); ?>
 
-<div class="container-fluid px-4">
-    <h4 class="mt-4 mb-4 text-primary">Milk Collection Report</h4>
 
-    <form method="GET" class="row mb-4">
-        <div class="col-md-4">
-            <label>From Date<span class="text-danger">*</span></label>
-            <input type="date" name="from" class="form-control" value="<?php echo $fromDate; ?>" required>
-        </div>
-        <div class="col-md-4">
-            <label>To Date<span class="text-danger">*</span></label>
-            <input type="date" name="to" class="form-control" value="<?php echo $toDate; ?>" required>
-        </div>
-        <div class="col-md-4 d-flex align-items-end">
-            <button type="submit" class="btn btn-primary me-2">Search</button>
-            <a href="milk_collection_report.php" class="btn btn-secondary">Reset</a>
-        </div>
-    </form>
 
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <table id="milkTable" class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>Serial</th>
-                        <th>Date</th>
-                        <th>Farmer</th>
-                        <th>Product Type</th>
-                        <th>Milk Quantity (L)</th>
-                        <th>Milk Fat Content (%)</th>
-                        <th>Temperature (°C)</th>
-                        <th>Payment</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $serial = 1;
-                    while ($row = mysqli_fetch_assoc($result)) {
-                        echo "<tr>
-                            <td>{$serial}</td>
-                            <td>{$row['date']}</td>
-                            <td>{$row['farmer_name']}</td>
-                            <td>{$row['product_type']}</td>
-                            <td>{$row['milk_quantity']}</td>
-                            <td>{$row['milk_fat']}</td>
-                            <td>{$row['temperature']}</td>
-                            <td>{$row['payment']}</td>
-                        </tr>";
-                        $serial++;
-                    }
-                    ?>
-                </tbody>
-            </table>
+<div class="milk-report-container">
+    <div class="container-fluid px-4">
+        <div class="report-header">
+            <h1 class="report-title">
+                <i class="fas fa-chart-line me-3"></i>
+                Milk Collection Report
+            </h1>
+            <p class="mb-0">Comprehensive analysis of milk collection data</p>
+        </div>
+
+    <div class="search-form-card">
+        <form method="GET" class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label fw-bold">
+                    <i class="fas fa-calendar-alt me-2"></i>
+                    From Date <span class="text-danger">*</span>
+                </label>
+                <input type="date" name="from" class="form-control" value="<?php echo $fromDate; ?>" required>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-bold">
+                    <i class="fas fa-calendar-alt me-2"></i>
+                    To Date <span class="text-danger">*</span>
+                </label>
+                <input type="date" name="to" class="form-control" value="<?php echo $toDate; ?>" required>
+            </div>
+            <div class="col-md-4 d-flex align-items-end gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search me-2"></i>
+                    Search
+                </button>
+                <a href="milk_collection_report.php" class="btn btn-secondary">
+                    <i class="fas fa-refresh me-2"></i>
+                    Reset
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <div class="table-card">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table id="milkTable" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-hashtag me-2"></i>Serial</th>
+                            <th><i class="fas fa-calendar me-2"></i>Date</th>
+                            <th><i class="fas fa-user me-2"></i>Farmer</th>
+                            <th><i class="fas fa-box me-2"></i>Product Type</th>
+                            <th><i class="fas fa-tint me-2"></i>Milk Quantity (L)</th>
+                            <th><i class="fas fa-percentage me-2"></i>Fat Content (%)</th>
+                            <th><i class="fas fa-thermometer-half me-2"></i>Temperature (°C)</th>
+                            <th><i class="fas fa-dollar-sign me-2"></i>Payment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $serial = 1;
+                        $totalQuantity = 0;
+                        $totalPayment = 0;
+                        
+                        if (mysqli_num_rows($result) > 0) {
+                            while ($row = mysqli_fetch_assoc($result)) {
+                                $totalQuantity += $row['milk_quantity'];
+                                $totalPayment += $row['payment'];
+                                
+                                echo "<tr>
+                                    <td><span class='badge bg-primary'>{$serial}</span></td>
+                                    <td><strong>" . date('d M Y', strtotime($row['date'])) . "</strong></td>
+                                    <td><span class='text-primary fw-bold'>{$row['farmer_name']}</span></td>
+                                    <td><span class='badge bg-info'>{$row['product_type']}</span></td>
+                                    <td><span class='badge bg-success'>{$row['milk_quantity']} L</span></td>
+                                    <td><span class='badge bg-warning text-dark'>{$row['milk_fat']}%</span></td>
+                                    <td><span class='badge bg-secondary'>{$row['temperature']}°C</span></td>
+                                    <td><span class='badge bg-success'>₹{$row['payment']}</span></td>
+                                </tr>";
+                                $serial++;
+                            }
+                            
+                            // Summary row
+                            echo "<tr class='table-dark fw-bold'>
+                                <td colspan='4' class='text-end'>TOTALS:</td>
+                                <td><span class='badge bg-light text-dark'>{$totalQuantity} L</span></td>
+                                <td colspan='2'></td>
+                                <td><span class='badge bg-light text-dark'>₹{$totalPayment}</span></td>
+                            </tr>";
+                        } else {
+                            echo "<tr>
+                                <td colspan='8' class='text-center py-4'>
+                                    <i class='fas fa-inbox fa-3x text-muted mb-3'></i>
+                                    <h5 class='text-muted'>No records found</h5>
+                                    <p class='text-muted'>Try adjusting your date range</p>
+                                </td>
+                            </tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

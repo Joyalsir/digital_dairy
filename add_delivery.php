@@ -1,74 +1,238 @@
-<?php include('includes/header.php'); ?>
-<?php include('includes/sidebar.php'); ?>
+<?php
+session_start();
+if (!isset($_SESSION['email'])) {
+  header("Location: login.php");
+  exit;
+}
+include('includes/header.php');
+include('includes/config.php');
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Delivery - Digital Dairy Management System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <?php include('includes/sidebar.php'); ?>
 
-<div class="container mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="fw-bold">Add Delivery Details</h4>
-    <a href="manage_delivery.php" class="btn btn-secondary">📦 View All</a>
-  </div>
+        <div class="dashboard-main">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <div class="dashboard-title">
+                    <h1>Add Delivery Details</h1>
+                    <p>Schedule a new delivery for customers</p>
+                </div>
+                <div class="date-display">
+                    <i class="fas fa-calendar"></i>
+                    <?php echo date("D, M j, Y - h:i A"); ?>
+                </div>
+            </div>
 
-  <div class="card shadow p-4">
-    <form action="insert_delivery.php" method="POST">
-      <div class="row mb-3">
-        <div class="col-md-6">
-          <label for="customer_name" class="form-label">Customer Name</label>
-          <input type="text" name="customer_name" class="form-control" required>
-        </div>
-        <div class="col-md-6">
-          <label for="contact" class="form-label">Customer Contact</label>
-          <input type="text" name="contact" class="form-control" required>
-        </div>
-      </div>
+            <!-- Action Bar -->
+            <div class="action-bar">
+                <div class="action-info">
+                    <h3><i class="fas fa-truck"></i> Delivery Scheduling</h3>
+                    <p class="text-muted">Schedule new delivery orders for customers</p>
+                </div>
+                <div class="action-buttons">
+                    <a href="manage_delivery.php" class="btn btn-outline-primary">
+                        <i class="fas fa-list"></i> View All Deliveries
+                    </a>
+                </div>
+            </div>
 
-      <div class="row mb-3">
-        <div class="col-md-12">
-          <label for="address" class="form-label">Delivery Address</label>
-          <textarea name="address" class="form-control" rows="2" required></textarea>
-        </div>
-      </div>
+            <!-- Delivery Form Card -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3><i class="fas fa-plus-circle"></i> Delivery Form</h3>
+                    <p class="text-muted">Please fill in all required fields to schedule a delivery</p>
+                </div>
+                
+                <div class="form-container">
+                    <form action="insert_delivery.php" method="POST" class="modern-form">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="customer_name" class="form-label">
+                                    <i class="fas fa-user"></i> Customer Name <span class="required">*</span>
+                                </label>
+                                <input type="text" id="customer_name" name="customer_name" class="form-control" 
+                                       placeholder="Enter customer name" required>
+                            </div>
 
-      <div class="row mb-3">
-        <div class="col-md-6">
-          <label for="delivery_date" class="form-label">Delivery Date</label>
-          <input type="date" name="delivery_date" class="form-control" required>
-        </div>
-        <div class="col-md-6">
-          <label for="product_type" class="form-label">Product Type</label>
-          <select name="product_type" class="form-select" required>
-            <option value="">Select Product</option>
-            <option value="Milk">Milk</option>
-            <option value="Ghee">Ghee</option>
-            <option value="Butter">Butter</option>
-            <option value="Curd">Curd</option>
-          </select>
-        </div>
-      </div>
+                            <div class="form-group">
+                                <label for="contact" class="form-label">
+                                    <i class="fas fa-phone"></i> Customer Contact <span class="required">*</span>
+                                </label>
+                                <input type="tel" id="contact" name="contact" class="form-control" 
+                                       placeholder="Enter phone number" required>
+                            </div>
 
-      <div class="row mb-3">
-        <div class="col-md-6">
-          <label for="quantity" class="form-label">Quantity (Liters/Kg)</label>
-          <input type="number" name="quantity" class="form-control" required>
-        </div>
-        <div class="col-md-6">
-          <label for="vehicle_no" class="form-label">Vehicle Number</label>
-          <input type="text" name="vehicle_no" class="form-control" required>
-        </div>
-      </div>
+                            <div class="form-group full-width">
+                                <label for="address" class="form-label">
+                                    <i class="fas fa-map-marker-alt"></i> Delivery Address <span class="required">*</span>
+                                </label>
+                                <textarea id="address" name="address" class="form-control" rows="3" 
+                                          placeholder="Enter complete delivery address" required></textarea>
+                            </div>
 
-      <div class="row mb-4">
-        <div class="col-md-6">
-          <label for="driver_name" class="form-label">Driver Name</label>
-          <input type="text" name="driver_name" class="form-control" required>
-        </div>
-        <div class="col-md-6">
-          <label for="driver_contact" class="form-label">Driver Contact</label>
-          <input type="text" name="driver_contact" class="form-control" required>
-        </div>
-      </div>
+                            <div class="form-group">
+                                <label for="delivery_date" class="form-label">
+                                    <i class="fas fa-calendar-alt"></i> Delivery Date <span class="required">*</span>
+                                </label>
+                                <input type="date" id="delivery_date" name="delivery_date" class="form-control" required>
+                            </div>
 
-      <button type="submit" name="submit" class="btn btn-primary">🚚 Submit Delivery</button>
-    </form>
-  </div>
-</div>
+                            <div class="form-group">
+                                <label for="product_type" class="form-label">
+                                    <i class="fas fa-box"></i> Product Type <span class="required">*</span>
+                                </label>
+                                <select id="product_type" name="product_type" class="form-control" required>
+                                    <option value="">Select Product</option>
+                                    <option value="Milk">Milk</option>
+                                    <option value="Ghee">Ghee</option>
+                                    <option value="Butter">Butter</option>
+                                    <option value="Curd">Curd</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="quantity" class="form-label">
+                                    <i class="fas fa-weight"></i> Quantity <span class="required">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <input type="number" id="quantity" name="quantity" step="0.01" 
+                                           class="form-control" placeholder="0.0" required>
+                                    <span class="input-addon">Liters/Kg</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="vehicle_no" class="form-label">
+                                    <i class="fas fa-truck"></i> Vehicle Number <span class="required">*</span>
+                                </label>
+                                <input type="text" id="vehicle_no" name="vehicle_no" class="form-control" 
+                                       placeholder="e.g., MH12AB1234" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="driver_name" class="form-label">
+                                    <i class="fas fa-user-tie"></i> Driver Name <span class="required">*</span>
+                                </label>
+                                <input type="text" id="driver_name" name="driver_name" class="form-control" 
+                                       placeholder="Enter driver name" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="driver_contact" class="form-label">
+                                    <i class="fas fa-phone"></i> Driver Contact <span class="required">*</span>
+                                </label>
+                                <input type="tel" id="driver_contact" name="driver_contact" class="form-control" 
+                                       placeholder="Enter driver phone number" required>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="reset" class="btn btn-outline-secondary">
+                                <i class="fas fa-undo"></i> Reset Form
+                            </button>
+                            <button type="submit" name="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i> Schedule Delivery
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="stats-grid" style="margin-top: 2rem;">
+                <div class="stat-card">
+                    <div class="stat-icon deliveries">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <div class="stat-content">
+                        <?php
+                        $result = mysqli_query($con, "SELECT COUNT(*) as total FROM tbldelivery");
+                        $total_deliveries = 0;
+                        if ($row = mysqli_fetch_assoc($result)) {
+                            $total_deliveries = $row['total'];
+                        }
+                        ?>
+                        <h3><?php echo number_format($total_deliveries); ?></h3>
+                        <p>Total Deliveries</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon info">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <?php
+                        $result = mysqli_query($con, "SELECT COUNT(*) as pending FROM tbldelivery WHERE status = 'Pending'");
+                        $pending_deliveries = 0;
+                        if ($row = mysqli_fetch_assoc($result)) {
+                            $pending_deliveries = $row['pending'];
+                        }
+                        ?>
+                        <h3><?php echo number_format($pending_deliveries); ?></h3>
+                        <p>Pending Deliveries</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <?php
+                        $result = mysqli_query($con, "SELECT COUNT(*) as completed FROM tbldelivery WHERE status = 'Completed'");
+                        $completed_deliveries = 0;
+                        if ($row = mysqli_fetch_assoc($result)) {
+                            $completed_deliveries = $row['completed'];
+                        }
+                        ?>
+                        <h3><?php echo number_format($completed_deliveries); ?></h3>
+                        <p>Completed Deliveries</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set today's date as default
+        const today = new Date().toISOString().split('T')[0];
+        document.querySelector('input[type="date"]').value = today;
+        
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            let isValid = true;
+            
+            // Validate all required fields
+            document.querySelectorAll('[required]').forEach(field => {
+                if (!field.value.trim()) {
+                    field.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    field.classList.remove('is-invalid');
+                }
+            });
+            
+            if (!isValid) {
+                e.preventDefault();
+                alert('Please fill all required fields!');
+            }
+        });
+    });
+    </script>
+</body>
+</html>
 
 <?php include('includes/footer.php'); ?>
