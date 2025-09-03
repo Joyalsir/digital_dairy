@@ -19,7 +19,350 @@ include('includes/config.php');
   
   <!-- Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
+  <style>  :root {
+      --primary-color: #667eea;
+      --secondary-color: #764ba2;
+      --success-color: #10b981;
+      --warning-color: #f59e0b;
+      --danger-color: #ef4444;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-600: #4b5563;
+      --gray-800: #1f2937;
+      --white: #ffffff;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+    }
+
+    .content {
+      margin-left: 280px;
+      padding: 30px;
+      transition: all 0.3s ease;
+      min-height: 100vh;
+    }
+
+    .content.collapsed {
+      margin-left: 80px;
+    }
+
+    /* Page Header */
+    .page-header {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 30px;
+      border-radius: 16px;
+      margin-bottom: 30px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .page-header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      margin: 0 0 8px 0;
+    }
+
+    .page-header p {
+      margin: 0;
+      opacity: 0.9;
+      font-size: 16px;
+    }
+
+    /* Enhanced Card Design */
+    .card {
+      background: var(--white);
+      border-radius: 16px;
+      box-shadow: var(--shadow-md);
+      padding: 30px;
+      margin-bottom: 25px;
+      border: 1px solid var(--gray-200);
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-xl);
+      transform: translateY(-2px);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid var(--gray-100);
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--gray-800);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-title i {
+      color: var(--primary-color);
+    }
+
+    /* Enhanced Form Styling */
+    .form-container {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 20px;
+      align-items: end;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: var(--gray-800);
+      margin-bottom: 8px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .form-group label i {
+      color: var(--primary-color);
+      font-size: 14px;
+    }
+
+    .form-control {
+      padding: 12px 16px;
+      border: 2px solid var(--gray-200);
+      border-radius: 8px;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      background: var(--gray-100);
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      background: var(--white);
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    /* Enhanced Button Styling */
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    /* Enhanced Table Styling */
+    .table-container {
+      background: var(--white);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+
+    .table-header {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 20px 30px;
+    }
+
+    .table-header h3 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    /* DataTables Custom Styling */
+    .dataTables_wrapper {
+      padding: 0;
+      overflow-x: auto;
+    }
+
+    #paymentTable {
+      margin: 0;
+      border-radius: 0;
+      min-width: 800px; /* Minimum width to prevent excessive shrinking */
+    }
+
+    #paymentTable thead th {
+      background: var(--gray-100);
+      color: var(--gray-800);
+      font-weight: 600;
+      padding: 16px;
+      border-bottom: 2px solid var(--gray-200);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    #paymentTable tbody td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--gray-200);
+      font-size: 14px;
+    }
+
+    #paymentTable tbody tr:hover {
+      background: rgba(102, 126, 234, 0.05);
+    }
+
+    #paymentTable tbody tr:nth-child(even) {
+      background: rgba(249, 250, 251, 0.5);
+    }
+
+    /* Farmer name truncation for mobile */
+    .farmer-name {
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* Summary Cards */
+    .summary-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .summary-card {
+      background: var(--white);
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .summary-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .summary-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: white;
+    }
+
+    .summary-icon.total {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    }
+
+    .summary-icon.paid {
+      background: linear-gradient(135deg, #10b981, #059669);
+    }
+
+    .summary-icon.pending {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+    }
+
+    .summary-content h4 {
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0 0 5px 0;
+      color: var(--gray-800);
+    }
+
+    .summary-content p {
+      margin: 0;
+      color: var(--gray-600);
+      font-size: 14px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .content {
+        margin-left: 0;
+        padding: 20px;
+      }
+
+      .content.collapsed {
+        margin-left: 0;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .page-header {
+        padding: 20px;
+      }
+
+      .page-header h1 {
+        font-size: 24px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .content {
+        padding: 15px;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      .page-header {
+        padding: 15px;
+      }
+    }</style>
   
   
 </head>
@@ -127,24 +470,30 @@ include('includes/config.php');
           if(isset($_POST['search'])){
             $from = $_POST['from_date'];
             $to = $_POST['to_date'];
-            $sql = "SELECT p.id, p.date, f.name as farmer, pr.product_name, p.milk_qty, p.milk_fat, p.temperature, p.payment
-                    FROM payment p 
-                    JOIN farmers f ON f.id=p.farmer_id
-                    JOIN products pr ON pr.id=p.product_id
-                    WHERE date BETWEEN '$from' AND '$to'
-                    ORDER BY p.date DESC";
-            $res = mysqli_query($con,$sql);
-            $serial=1;
+            $sql = "SELECT mc.id, mc.`date`, f.name AS farmer, mc.product_type, mc.quantity, 
+       mc.fat, mc.temperature, mc.payment
+FROM milk_collection mc
+JOIN farmers f ON f.id = mc.farmer_id
+WHERE mc.`date` BETWEEN '$from' AND '$to'
+ORDER BY mc.`date` DESC
+";
+            $res = mysqli_query($con, $sql);
+
+if (!$res) {
+    die("SQL Error: " . mysqli_error($con) . "<br>Query: " . $sql);
+}
+$serial = 1;
+
             while($row=mysqli_fetch_assoc($res)){
               $totalPayment += $row['payment'];
               $recordCount++;
               echo "<tr>
                       <td>".$serial++."</td>
                       <td>".date('d M Y', strtotime($row['date']))."</td>
-                      <td><strong>".$row['farmer']."</strong></td>
-                      <td>".$row['product_name']."</td>
-                      <td>".number_format($row['milk_qty'], 2)."</td>
-                      <td>".number_format($row['milk_fat'], 2)."</td>
+                      <td><strong class=\"farmer-name\">".$row['farmer']."</strong></td>
+                      <td>".$row['product_type']."</td>
+                      <td>".number_format($row['quantity'], 2)."</td>
+                      <td>".number_format($row['fat'], 2)."</td>
                       <td>".number_format($row['temperature'], 1)."</td>
                       <td><strong>₹".number_format($row['payment'], 2)."</strong></td>
                     </tr>";

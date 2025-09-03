@@ -54,7 +54,8 @@ include('includes/config.php');
                 </div>
                 
                 <div class="form-container">
-                    <form method="POST" class="modern-form">
+                    <form method="POST" action="process_add_collection.php" class="modern-form">
+
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="date" class="form-label">

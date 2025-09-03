@@ -41,7 +41,7 @@ include('includes/config.php');
                 </div>
                 
                 <div class="form-container">
-                    <form action="process-add-farmer.php" method="post" class="modern-form">
+                    <form action="process_farmer.php" method="post" class="modern-form">
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="name" class="form-label">

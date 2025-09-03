@@ -6,10 +6,14 @@ include('includes/config.php');
 $fromDate = isset($_GET['from']) ? $_GET['from'] : '';
 $toDate = isset($_GET['to']) ? $_GET['to'] : '';
 
-$sql = "SELECT * FROM milk_collection WHERE 1";
+$sql = "SELECT mc.*, f.name as farmer_name 
+        FROM milk_collection mc 
+        JOIN farmers f ON mc.farmer_id = f.id 
+        WHERE 1";
 if ($fromDate && $toDate) {
-    $sql .= " AND date BETWEEN '$fromDate' AND '$toDate'";
+    $sql .= " AND mc.date BETWEEN '$fromDate' AND '$toDate'";
 }
+$sql .= " ORDER BY mc.date DESC";
 $result = mysqli_query($con, $sql);
 ?>
 <?php include("includes/sidebar.php"); ?>
@@ -80,7 +84,7 @@ $result = mysqli_query($con, $sql);
                         
                         if (mysqli_num_rows($result) > 0) {
                             while ($row = mysqli_fetch_assoc($result)) {
-                                $totalQuantity += $row['milk_quantity'];
+                                $totalQuantity += $row['quantity'];
                                 $totalPayment += $row['payment'];
                                 
                                 echo "<tr>
@@ -88,8 +92,8 @@ $result = mysqli_query($con, $sql);
                                     <td><strong>" . date('d M Y', strtotime($row['date'])) . "</strong></td>
                                     <td><span class='text-primary fw-bold'>{$row['farmer_name']}</span></td>
                                     <td><span class='badge bg-info'>{$row['product_type']}</span></td>
-                                    <td><span class='badge bg-success'>{$row['milk_quantity']} L</span></td>
-                                    <td><span class='badge bg-warning text-dark'>{$row['milk_fat']}%</span></td>
+                                    <td><span class='badge bg-success'>{$row['quantity']} L</span></td>
+                                    <td><span class='badge bg-warning text-dark'>{$row['fat']}%</span></td>
                                     <td><span class='badge bg-secondary'>{$row['temperature']}°C</span></td>
                                     <td><span class='badge bg-success'>₹{$row['payment']}</span></td>
                                 </tr>";
@@ -134,7 +138,7 @@ $result = mysqli_query($con, $sql);
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
 <script>
-$('#milkTable').DataTable({
+$('#milk_collection').DataTable({
     dom: '<"d-flex justify-content-between align-items-center"lfB>rtip',
     buttons: [
         { extend: 'copy', className: 'btn btn-sm' },

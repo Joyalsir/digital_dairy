@@ -147,62 +147,9 @@ include('includes/config.php');
                     </form>
                 </div>
             </div>
-
-            <!-- Quick Stats -->
-            <div class="stats-grid" style="margin-top: 2rem;">
-                <div class="stat-card">
-                    <div class="stat-icon deliveries">
-                        <i class="fas fa-truck"></i>
-                    </div>
-                    <div class="stat-content">
-                        <?php
-                        $result = mysqli_query($con, "SELECT COUNT(*) as total FROM tbldelivery");
-                        $total_deliveries = 0;
-                        if ($row = mysqli_fetch_assoc($result)) {
-                            $total_deliveries = $row['total'];
-                        }
-                        ?>
-                        <h3><?php echo number_format($total_deliveries); ?></h3>
-                        <p>Total Deliveries</p>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon info">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <div class="stat-content">
-                        <?php
-                        $result = mysqli_query($con, "SELECT COUNT(*) as pending FROM tbldelivery WHERE status = 'Pending'");
-                        $pending_deliveries = 0;
-                        if ($row = mysqli_fetch_assoc($result)) {
-                            $pending_deliveries = $row['pending'];
-                        }
-                        ?>
-                        <h3><?php echo number_format($pending_deliveries); ?></h3>
-                        <p>Pending Deliveries</p>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon success">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <div class="stat-content">
-                        <?php
-                        $result = mysqli_query($con, "SELECT COUNT(*) as completed FROM tbldelivery WHERE status = 'Completed'");
-                        $completed_deliveries = 0;
-                        if ($row = mysqli_fetch_assoc($result)) {
-                            $completed_deliveries = $row['completed'];
-                        }
-                        ?>
-                        <h3><?php echo number_format($completed_deliveries); ?></h3>
-                        <p>Completed Deliveries</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+ </div>
+ </div>
+</div>
 
    
     <script>

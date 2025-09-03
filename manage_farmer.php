@@ -16,12 +16,13 @@ include('includes/config.php');
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+   
 </head>
 <body>
-    <div class="dashboard-container">
+    <div class="dashboard-container" style="max-width: 100%; overflow-x: hidden;">
         <?php include('includes/sidebar.php'); ?>
 
-        <div class="dashboard-main">
+        <div class="dashboard-main" style="width: 100%; max-width: 100%;">
             <!-- Dashboard Header -->
             <div class="dashboard-header">
                 <div class="dashboard-title">
@@ -193,7 +194,104 @@ include('includes/config.php');
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
     
- 
+  <style>
+    
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-info h3 {
+            margin: 0;
+            color: #374151;
+            font-size: 1.25rem;
+        }
+
+        .table-container {
+            padding: 2rem;
+        }
+
+        .table {
+            width: 100%;
+            margin-bottom: 0;
+        }
+
+        .table th {
+            border-top: none;
+            font-weight: 600;
+            color: #374151;
+            background-color: #f9fafb;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #e5e7eb;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+        }
+
+        .user-avatar i {
+            font-size: 1.25rem;
+        }
+
+        .action-buttons-cell {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-sm {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        .badge {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .text-muted {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .table-responsive {
+            border-radius: 0.375rem;
+            overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+            .action-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .action-buttons {
+                width: 100%;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
 
     <script>
         $(document).ready(function() {
@@ -216,4 +314,4 @@ include('includes/config.php');
 </body>
 </html>
 
-<?php include('includes/footer.php'); ?>
+

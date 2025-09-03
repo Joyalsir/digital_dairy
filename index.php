@@ -2,16 +2,19 @@
 session_start();
 include('includes/config.php');
 
-if (isset($_POST['index'])) {
-    $email = $_POST['email'];
+if (isset($_POST['email']) && isset($_POST['password'])) {
+    $email = mysqli_real_escape_string($con, $_POST['email']);
     $password = md5($_POST['password']);
 
     $query = "SELECT * FROM tblusers WHERE email='$email' AND password='$password'";
-    $result = mysqli_query($conn, $query);
+    $result = mysqli_query($con, $query);
 
     if ($result && mysqli_num_rows($result) == 1) {
+        $user = mysqli_fetch_assoc($result);
         $_SESSION['email'] = $email;
-        header("Location: user_dashboard.php"); // Redirect to dashboard after login
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['name'] = $user['name'];
+        header("Location: user_dashboard.php");
         exit();
     } else {
         $error = "Invalid email or password!";
@@ -50,7 +53,7 @@ if (isset($_POST['index'])) {
    <div class="right">
     <div class="login-box">
         <h2>User Login</h2>
-        <form method="POST" action="index.php">
+        <form method="POST" action="">
             <div class="input-box">
                 <label>Email address</label>
                 <input type="email" name="email" required>

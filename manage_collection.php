@@ -74,7 +74,7 @@ include('includes/config.php');
                                 $query = mysqli_query($con, "SELECT mc.*, f.name as farmer_name 
                                                             FROM milk_collection mc 
                                                             JOIN farmers f ON mc.farmer_id = f.id 
-                                                            ORDER BY mc.collection_date DESC");
+                                                            ORDER BY mc.date DESC");
                                 $count = 1;
                                 while($row = mysqli_fetch_assoc($query)) {
                                 ?>
@@ -82,7 +82,7 @@ include('includes/config.php');
                                         <td><?php echo $count++; ?></td>
                                         <td>
                                             <i class="fas fa-calendar text-primary"></i>
-                                            <?php echo date('M j, Y', strtotime($row['collection_date'])); ?>
+                                            <?php echo date('M j, Y', strtotime($row['date'])); ?>
                                         </td>
                                         <td>
                                             <div class="user-info">
@@ -101,12 +101,12 @@ include('includes/config.php');
                                         </td>
                                         <td>
                                             <span class="badge bg-primary">
-                                                <?php echo number_format($row['milk_quantity'], 2); ?> L
+                                                <?php echo number_format($row['quantity'], 2); ?> L
                                             </span>
                                         </td>
                                         <td>
                                             <span class="badge bg-warning text-dark">
-                                                <?php echo number_format($row['milk_fat'], 2); ?>%
+                                                <?php echo number_format($row['fat'], 2); ?>%
                                             </span>
                                         </td>
                                         <td>
@@ -136,7 +136,7 @@ include('includes/config.php');
                     </div>
                     <div class="stat-content">
                         <?php
-                        $result = mysqli_query($con, "SELECT SUM(milk_quantity) as total FROM milk_collection");
+                        $result = mysqli_query($con, "SELECT SUM(quantity) as total FROM milk_collection");
                         $total_collection = 0;
                         if ($row = mysqli_fetch_assoc($result)) {
                             $total_collection = $row['total'] ? $row['total'] : 0;
