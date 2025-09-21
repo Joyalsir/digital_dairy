@@ -170,5 +170,7 @@ if (isset($_POST['submit'])) {
    
 </body>
 </html>
-
+<style>
+          
+        </style>
 <?php include('includes/footer.php'); ?>

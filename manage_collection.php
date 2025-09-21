@@ -71,9 +71,9 @@ include('includes/config.php');
                             </thead>
                             <tbody>
                                 <?php
-                                $query = mysqli_query($con, "SELECT mc.*, f.name as farmer_name 
-                                                            FROM milk_collection mc 
-                                                            JOIN farmers f ON mc.farmer_id = f.id 
+                                $query = mysqli_query($con, "SELECT mc.*, f.name as farmer_name
+                                                            FROM milk_collection mc
+                                                            JOIN farmers f ON mc.farmer_uuid = f.uuid
                                                             ORDER BY mc.date DESC");
                                 $count = 1;
                                 while($row = mysqli_fetch_assoc($query)) {
@@ -119,6 +119,11 @@ include('includes/config.php');
                                                 <i class="fas fa-rupee-sign"></i>
                                                 <?php echo number_format($row['payment'], 2); ?>
                                             </strong>
+                                        </td>
+                                        <td>
+                                            <a href="delete-collection.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-danger" title="Delete Collection" onclick="return confirm('Are you sure you want to delete this collection record? This action cannot be undone.');">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                 <?php } ?>
@@ -183,6 +188,8 @@ include('includes/config.php');
             </div>
         </div>
     </div>
+    <style>
+        </style>
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>

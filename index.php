@@ -1,27 +1,36 @@
+
+
+
 <?php
 session_start();
 include('includes/config.php');
 
-if (isset($_POST['email']) && isset($_POST['password'])) {
-    $email = mysqli_real_escape_string($con, $_POST['email']);
-    $password = md5($_POST['password']);
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $login_input = mysqli_real_escape_string($con, $_POST['login_input']);
+    $password = mysqli_real_escape_string($con, $_POST['password']);
+    $hashed_password = md5($password);
 
-    $query = "SELECT * FROM tblusers WHERE email='$email' AND password='$password'";
-    $result = mysqli_query($con, $query);
+    // Check if input is email or username
+    $field = filter_var($login_input, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+    $sql = "SELECT * FROM farmers WHERE ($field = '$login_input') AND password = '$hashed_password' LIMIT 1";
+    $result = mysqli_query($con, $sql);
 
     if ($result && mysqli_num_rows($result) == 1) {
         $user = mysqli_fetch_assoc($result);
-        $_SESSION['email'] = $email;
-        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['email'] = $user['email'];
         $_SESSION['name'] = $user['name'];
+        $_SESSION['username'] = $user['username'];
+        $_SESSION['farmer_uuid'] = $user['uuid'];
+
+        // Redirect to user dashboard or home page after login
         header("Location: user_dashboard.php");
-        exit();
+        exit;
     } else {
-        $error = "Invalid email or password!";
+        $login_error = "Invalid username/email or password.";
     }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -31,6 +40,12 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
   <link rel="stylesheet" href="user_style.css">
 </head>
 <body>
+<?php
+if (isset($_SESSION['logout_message'])) {
+    echo "<script>alert('" . addslashes($_SESSION['logout_message']) . "');</script>";
+    unset($_SESSION['logout_message']);
+}
+?>
 <div class="container">
     <div class="left text-panel">
     <div class="text-content">
@@ -53,10 +68,15 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
    <div class="right">
     <div class="login-box">
         <h2>User Login</h2>
+        <?php if (!empty($login_error)) : ?>
+            <div class="error-message" style="color: red; margin-bottom: 10px;">
+                <?php echo htmlspecialchars($login_error); ?>
+            </div>
+        <?php endif; ?>
         <form method="POST" action="">
             <div class="input-box">
-                <label>Email address</label>
-                <input type="email" name="email" required>
+                <label>Username or Email</label>
+                <input type="text" name="login_input" required placeholder="Enter your username or email">
             </div>
             <div class="input-box">
                 <label>Password</label>
@@ -69,7 +89,7 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
             <button type="submit">Login</button>
         </form>
         <div class="register-link">
-            Don't have an account? <a href="user_register.php">Register here</a>
+            Don't have an account? <a href="add_farmer.php">Register here</a>
         </div>
     </div>
 </div>

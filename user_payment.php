@@ -10,6 +10,41 @@ include('includes/config.php');
 $from_date = isset($_GET['from-date']) ? mysqli_real_escape_string($con, $_GET['from-date']) : '';
 $to_date = isset($_GET['to-date']) ? mysqli_real_escape_string($con, $_GET['to-date']) : '';
 
+// Handle download report request
+if (isset($_GET['download_report'])) {
+    $user_email = $_SESSION['email'];
+    $query = mysqli_query($con, "SELECT * FROM farmers WHERE email='$user_email'");
+    if (!$query) {
+        die("Query failed: " . mysqli_error($con));
+    }
+    if (mysqli_num_rows($query) == 0) {
+        $farmer_uuid = null;
+    } else {
+        $farmer = mysqli_fetch_assoc($query);
+        $farmer_uuid = $farmer['uuid'];
+    }
+
+    if ($farmer_uuid) {
+        $where_clause = "WHERE farmer_uuid='$farmer_uuid'";
+        if ($from_date) $where_clause .= " AND date >= '$from_date'";
+        if ($to_date) $where_clause .= " AND date <= '$to_date'";
+        $payments_query = mysqli_query($con, "SELECT date, payment FROM milk_collection $where_clause ORDER BY date DESC");
+
+        // Prepare CSV
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="payment_report.csv"');
+        $output = fopen('php://output', 'w');
+        fputcsv($output, ['Date', 'Amount (₹)', 'Status']);
+        while ($row = mysqli_fetch_assoc($payments_query)) {
+            fputcsv($output, [date('d/m/Y', strtotime($row['date'])), number_format($row['payment'], 2), 'Paid']);
+        }
+        fclose($output);
+        exit;
+    }
+}
+
+
+
 // Get farmer details
 $user_email = $_SESSION['email'];
 $query = mysqli_query($con, "SELECT * FROM farmers WHERE email='$user_email'");
@@ -17,11 +52,11 @@ if (!$query) {
     die("Query failed: " . mysqli_error($con));
 }
 if (mysqli_num_rows($query) == 0) {
-    $farmer_id = null;
+    $farmer_uuid = null;
     $farmer_name = $_SESSION['name'];
 } else {
     $farmer = mysqli_fetch_assoc($query);
-    $farmer_id = $farmer['id'];
+    $farmer_uuid = $farmer['uuid'];
     $farmer_name = $farmer['name'];
 }
 
@@ -29,8 +64,8 @@ if (mysqli_num_rows($query) == 0) {
 $payments = [];
 $total_payments = 0;
 $total_records = 0;
-if ($farmer_id) {
-    $where_clause = "WHERE farmer_id='$farmer_id'";
+if ($farmer_uuid) {
+    $where_clause = "WHERE farmer_uuid='$farmer_uuid'";
     if ($from_date) $where_clause .= " AND date >= '$from_date'";
     if ($to_date) $where_clause .= " AND date <= '$to_date'";
     $payments_query = mysqli_query($con, "SELECT date, payment FROM milk_collection $where_clause ORDER BY date DESC");
@@ -55,70 +90,88 @@ if ($farmer_id) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
     <style>
+        /* Reset and base */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
         .dashboard-container {
             display: flex;
             min-height: 100vh;
+            background-color: #f5f7fa;
         }
         .main-content {
             flex: 1;
-            padding: 20px;
-            background: #f8f9fa;
-            margin-left: 250px;
+            padding: 30px 40px;
+            background: #fff;
+            margin-left: 280px;
+            box-shadow: -2px 0 8px rgba(0,0,0,0.05);
+            border-radius: 0 15px 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
         }
         .page-title {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
         .page-title h1 {
             margin: 0;
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 700;
+            color: #222;
         }
         .btn-primary {
-            background-color: #3b82f6;
+            background-color: #3f51b5;
             color: white;
             border: none;
-            padding: 10px 18px;
-            border-radius: 6px;
+            padding: 12px 22px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease;
         }
         .btn-primary:hover {
-            background-color: #2563eb;
-        }
-        .card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-            padding: 20px 30px;
-        }
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        .card-header h2 {
-            margin: 0;
-            font-size: 1.3rem;
-            font-weight: 700;
+            background-color: #303f9f;
         }
         .btn-secondary {
             background-color: #6b7280;
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
+            padding: 10px 20px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
         }
         .btn-secondary:hover {
             background-color: #4b5563;
+        }
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            padding: 30px 40px;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .card-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #222;
         }
         .table-responsive {
             overflow-x: auto;
@@ -126,22 +179,24 @@ if ($farmer_id) {
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.95rem;
+            font-size: 1rem;
+            color: #444;
         }
         th, td {
-            padding: 12px 15px;
+            padding: 15px 18px;
             border-bottom: 1px solid #e5e7eb;
             text-align: left;
         }
         th {
             background-color: #f3f4f6;
-            font-weight: 600;
+            font-weight: 700;
+            color: #555;
         }
         .status {
-            padding: 5px 12px;
+            padding: 6px 14px;
             border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.85rem;
+            font-weight: 700;
+            font-size: 0.9rem;
             color: white;
             display: inline-block;
         }
@@ -150,46 +205,64 @@ if ($farmer_id) {
         }
         .filter-group {
             display: flex;
-            gap: 15px;
+            gap: 20px;
             flex-wrap: wrap;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         .filter-group label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: #333;
         }
         .filter-group input[type="date"] {
-            padding: 8px 10px;
-            border-radius: 6px;
+            padding: 10px 14px;
+            border-radius: 8px;
             border: 1px solid #d1d5db;
-            width: 200px;
+            width: 220px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        .filter-group input[type="date"]:focus {
+            border-color: #3f51b5;
+            outline: none;
         }
         .stat-card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: #fff;
+            padding: 25px 20px;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
             text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: default;
+        }
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
         }
         .stat-icon {
-            font-size: 2rem;
-            margin-bottom: 10px;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            transition: color 0.3s ease;
         }
-        .stat-icon.revenue { color: #e74c3c; }
-        .stat-icon.info { color: #27ae60; }
+        .stat-icon.revenue { color: #e91e63; }
+        .stat-icon.info { color: #4caf50; }
         .stat-content h3 {
             margin: 0;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #222;
         }
         .stat-content p {
             margin: 5px 0 0;
             color: #666;
+            font-size: 1rem;
+            letter-spacing: 0.02em;
         }
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
             margin-bottom: 20px;
         }
     </style>
@@ -200,7 +273,11 @@ if ($farmer_id) {
         <div class="main-content">
             <div class="page-title">
                 <h1>Payment History</h1>
-                <button class="btn btn-primary">Download Report</button>
+                <form method="GET" style="display:inline;">
+                    <input type="hidden" name="from-date" value="<?php echo htmlspecialchars($from_date); ?>" />
+                    <input type="hidden" name="to-date" value="<?php echo htmlspecialchars($to_date); ?>" />
+                    <button type="submit" name="download_report" value="1" class="btn btn-primary">Download Report</button>
+                </form>
             </div>
             <div class="card">
                 <div class="card-header">
@@ -225,13 +302,18 @@ if ($farmer_id) {
                 </form>
             </div>
             <div class="card">
-                <div class="card-header">
-                    <h2>Payment History</h2>
-                    <div>
-                        <button class="btn btn-secondary" style="margin-right: 10px;">Print</button>
-                        <button class="btn btn-primary">Export PDF</button>
-                    </div>
+            <div class="card-header">
+                <h2>Payment History</h2>
+                <div>
+                    <button class="btn btn-secondary" style="margin-right: 10px;">Print</button>
+                    <form method="GET" style="display:inline;">
+                        <input type="hidden" name="export_pdf" value="1" />
+                        <input type="hidden" name="from-date" value="<?php echo htmlspecialchars($from_date); ?>" />
+                        <input type="hidden" name="to-date" value="<?php echo htmlspecialchars($to_date); ?>" />
+                        <button type="submit" class="btn btn-primary">Export PDF</button>
+                    </form>
                 </div>
+            </div>
                 <div class="table-responsive">
                     <table id="paymentTable">
                         <thead>
@@ -285,6 +367,8 @@ if ($farmer_id) {
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 
     <script>
         $(document).ready(function() {
@@ -301,6 +385,48 @@ if ($farmer_id) {
                         next: '<i class="fas fa-chevron-right"></i>'
                     }
                 }
+            });
+
+            // Print button functionality
+            $('.btn.btn-secondary').click(function() {
+                window.print();
+            });
+
+            // Export PDF button functionality
+            $('.btn.btn-primary').filter(function() {
+                return $(this).text().trim() === 'Export PDF';
+            }).click(function(e) {
+                e.preventDefault();
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+
+                doc.text("Payment History Report", 14, 20);
+                const fromDate = $('#from-date').val();
+                const toDate = $('#to-date').val();
+                let periodText = 'All Time';
+                if (fromDate && toDate) {
+                    periodText = `Period: ${fromDate} to ${toDate}`;
+                }
+                doc.text(periodText, 14, 30);
+
+                const rows = [];
+                $('#paymentTable tbody tr').each(function() {
+                    const row = [];
+                    $(this).find('td').each(function() {
+                        row.push($(this).text().trim());
+                    });
+                    if (row.length > 0) {
+                        rows.push(row);
+                    }
+                });
+
+                doc.autoTable({
+                    head: [['Date', 'Amount (₹)', 'Status']],
+                    body: rows,
+                    startY: 40,
+                });
+
+                doc.save('payment_report.pdf');
             });
         });
     </script>

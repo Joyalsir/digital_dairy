@@ -62,6 +62,8 @@ include('includes/config.php');
                                 <tr>
                                     <th><i class="fas fa-hashtag"></i> ID</th>
                                     <th><i class="fas fa-user"></i> Name</th>
+                                    <th><i class="fas fa-at"></i> Username</th>
+                                    <th><i class="fas fa-toggle-on"></i> Status</th>
                                     <th><i class="fas fa-phone"></i> Contact</th>
                                     <th><i class="fas fa-map-marker-alt"></i> Address</th>
                                     <th><i class="fas fa-tractor"></i> Farm Size</th>
@@ -72,12 +74,12 @@ include('includes/config.php');
                             </thead>
                             <tbody>
                                 <?php
-                                $ret = mysqli_query($con, "SELECT * FROM farmers ORDER BY created_at DESC");
+                                $ret = mysqli_query($con, "SELECT * FROM farmers WHERE status = 'active' OR status IS NULL ORDER BY created_at DESC");
                                 $cnt = 1;
                                 while ($row = mysqli_fetch_array($ret)) {
                                 ?>
                                     <tr>
-                                        <td><?php echo $row['id']; ?></td>
+                                        <td><?php echo htmlspecialchars($row['uuid']); ?></td>
                                         <td>
                                             <div class="user-info">
                                                 <div class="user-avatar">
@@ -89,6 +91,22 @@ include('includes/config.php');
                                                     <small class="text-muted">Aadhar: <?php echo htmlspecialchars($row['aadhar']); ?></small>
                                                 </div>
                                             </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">
+                                                <i class="fas fa-at"></i> <?php echo htmlspecialchars($row['username'] ?? 'N/A'); ?>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <?php
+                                            $status = $row['status'] ?? 'active';
+                                            $status_badge = $status == 'active' ? 'bg-success' : 'bg-warning';
+                                            $status_text = ucfirst($status);
+                                            ?>
+                                            <span class="badge <?php echo $status_badge; ?>">
+                                                <i class="fas fa-toggle-<?php echo $status == 'active' ? 'on' : 'off'; ?>"></i>
+                                                <?php echo $status_text; ?>
+                                            </span>
                                         </td>
                                         <td>
                                             <i class="fas fa-phone text-success"></i>
@@ -114,21 +132,21 @@ include('includes/config.php');
                                         </td>
                                         <td>
                                             <div class="action-buttons-cell">
-                                                <a href="view-farmer.php?id=<?php echo $row['id']; ?>" 
-                                                   class="btn btn-sm btn-info" 
+                                                <a href="view-farmer.php?uuid=<?php echo $row['uuid']; ?>"
+                                                   class="btn btn-sm btn-info"
                                                    title="View Details">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-                                                <a href="edit-farmer.php?id=<?php echo $row['id']; ?>" 
-                                                   class="btn btn-sm btn-warning" 
+                                                <a href="edit-farmer.php?uuid=<?php echo $row['uuid']; ?>"
+                                                   class="btn btn-sm btn-warning"
                                                    title="Edit Farmer">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-                                                <a href="delete-farmer.php?id=<?php echo $row['id']; ?>" 
-                                                   class="btn btn-sm btn-danger" 
-                                                   onclick="return confirm('Are you sure you want to delete this farmer?');" 
-                                                   title="Delete Farmer">
-                                                    <i class="fas fa-trash"></i>
+                                                <a href="delete-farmer.php?uuid=<?php echo $row['uuid']; ?>"
+                                                   class="btn btn-sm btn-danger"
+                                                   onclick="return confirm('Are you sure you want to archive this farmer? This will hide them from the active list.');"
+                                                   title="Archive Farmer">
+                                                    <i class="fas fa-archive"></i>
                                                 </a>
                                             </div>
                                         </td>
@@ -194,104 +212,10 @@ include('includes/config.php');
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
     
-  <style>
+  
     
-        .action-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            padding: 1.5rem;
-            background: white;
-            border-radius: 0.5rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .action-info h3 {
-            margin: 0;
-            color: #374151;
-            font-size: 1.25rem;
-        }
-
-        .table-container {
-            padding: 2rem;
-        }
-
-        .table {
-            width: 100%;
-            margin-bottom: 0;
-        }
-
-        .table th {
-            border-top: none;
-            font-weight: 600;
-            color: #374151;
-            background-color: #f9fafb;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            background: #e5e7eb;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #6b7280;
-        }
-
-        .user-avatar i {
-            font-size: 1.25rem;
-        }
-
-        .action-buttons-cell {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .btn-sm {
-            padding: 0.375rem 0.75rem;
-            font-size: 0.875rem;
-        }
-
-        .badge {
-            padding: 0.375rem 0.75rem;
-            font-size: 0.75rem;
-            font-weight: 500;
-        }
-
-        .text-muted {
-            color: #6b7280;
-            font-size: 0.875rem;
-        }
-
-        .table-responsive {
-            border-radius: 0.375rem;
-            overflow: hidden;
-        }
-
-        @media (max-width: 768px) {
-            .action-bar {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-            }
-            
-            .action-buttons {
-                width: 100%;
-            }
-            
-            .btn {
-                width: 100%;
-            }
-        }
-    </style>
+       
+    
 
     <script>
         $(document).ready(function() {

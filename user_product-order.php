@@ -13,11 +13,11 @@ if (!$query) {
     die("Query failed: " . mysqli_error($con));
 }
 if (mysqli_num_rows($query) == 0) {
-    $farmer_id = null;
+    $farmer_uuid = null;
     $farmer_name = $_SESSION['name'];
 } else {
     $farmer = mysqli_fetch_assoc($query);
-    $farmer_id = $farmer['id'];
+    $farmer_uuid = $farmer['uuid'];
     $farmer_name = $farmer['name'];
 }
 ?>
@@ -31,70 +31,88 @@ if (mysqli_num_rows($query) == 0) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
     <style>
+        /* Reset and base */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
         .dashboard-container {
             display: flex;
             min-height: 100vh;
+            background-color: #f5f7fa;
         }
         .main-content {
             flex: 1;
-            padding: 20px;
-            background: #f8f9fa;
-            margin-left: 250px;
+            padding: 30px 40px;
+            background: #fff;
+            margin-left: 280px;
+            box-shadow: -2px 0 8px rgba(0,0,0,0.05);
+            border-radius: 0 15px 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
         }
         .page-title {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
         .page-title h1 {
             margin: 0;
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 700;
+            color: #222;
         }
         .btn-primary {
-            background-color: #3b82f6;
+            background-color: #3f51b5;
             color: white;
             border: none;
-            padding: 10px 18px;
-            border-radius: 6px;
+            padding: 12px 22px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease;
         }
         .btn-primary:hover {
-            background-color: #2563eb;
+            background-color: #303f9f;
         }
         .btn-secondary {
             background-color: #6b7280;
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
+            padding: 10px 20px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
         }
         .btn-secondary:hover {
             background-color: #4b5563;
         }
         .card {
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
             margin-bottom: 30px;
-            padding: 20px 30px;
+            padding: 30px 40px;
         }
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 25px;
         }
         .card-header h2 {
             margin: 0;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             font-weight: 700;
+            color: #222;
         }
         .table-responsive {
             overflow-x: auto;
@@ -102,16 +120,18 @@ if (mysqli_num_rows($query) == 0) {
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.95rem;
+            font-size: 1rem;
+            color: #444;
         }
         th, td {
-            padding: 12px 15px;
+            padding: 15px 18px;
             border-bottom: 1px solid #e5e7eb;
             text-align: left;
         }
         th {
             background-color: #f3f4f6;
-            font-weight: 600;
+            font-weight: 700;
+            color: #555;
         }
         .product-info {
             display: flex;
@@ -119,13 +139,14 @@ if (mysqli_num_rows($query) == 0) {
         }
         .product-icon {
             margin-right: 10px;
-            color: #3b82f6;
+            color: #3f51b5;
+            font-size: 1.5rem;
         }
         .badge {
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
         }
         .bg-info {
             background-color: #0ea5e9;
@@ -138,31 +159,42 @@ if (mysqli_num_rows($query) == 0) {
             color: #6b7280;
         }
         .stat-card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: #fff;
+            padding: 25px 20px;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
             text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: default;
+        }
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
         }
         .stat-icon {
-            font-size: 2rem;
-            margin-bottom: 10px;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            transition: color 0.3s ease;
         }
-        .stat-icon.revenue { color: #e74c3c; }
-        .stat-icon.milk { color: #3498db; }
+        .stat-icon.revenue { color: #e91e63; }
+        .stat-icon.milk { color: #3f51b5; }
         .stat-icon.success { color: #27ae60; }
         .stat-content h3 {
             margin: 0;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #222;
         }
         .stat-content p {
             margin: 5px 0 0;
             color: #666;
+            font-size: 1rem;
+            letter-spacing: 0.02em;
         }
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
             margin-bottom: 20px;
         }
     </style>

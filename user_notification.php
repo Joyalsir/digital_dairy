@@ -13,16 +13,16 @@ if (!$query) {
     die("Query failed: " . mysqli_error($con));
 }
 if (mysqli_num_rows($query) == 0) {
-    $farmer_id = null;
+    $farmer_uuid = null;
 } else {
     $farmer = mysqli_fetch_assoc($query);
-    $farmer_id = $farmer['id'];
+    $farmer_uuid = $farmer['uuid'];
 }
 
 // Fetch notifications
 $notifications = [];
-if ($farmer_id) {
-    $notif_query = mysqli_query($con, "SELECT * FROM notifications WHERE farmer_id='$farmer_id' ORDER BY created_at DESC");
+if ($farmer_uuid) {
+    $notif_query = mysqli_query($con, "SELECT * FROM notifications WHERE farmer_uuid='$farmer_uuid' ORDER BY created_at DESC");
     if ($notif_query) {
         while ($row = mysqli_fetch_assoc($notif_query)) {
             $notifications[] = $row;
@@ -36,7 +36,7 @@ if ($farmer_id) {
         ];
     }
 } else {
-    // Sample notifications if no farmer_id
+    // Sample notifications if no farmer_uuid
     $notifications = [
         ['id' => 1, 'message' => 'Welcome to Digital Dairy! Your account has been activated.', 'created_at' => date('Y-m-d H:i:s'), 'is_read' => 0],
         ['id' => 2, 'message' => 'Your milk collection for today has been recorded.', 'created_at' => date('Y-m-d H:i:s', strtotime('-1 day')), 'is_read' => 1],
@@ -53,92 +53,116 @@ if ($farmer_id) {
     <link rel="stylesheet" href="css/user_style.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
+        /* Reset and base */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
         .dashboard-container {
             display: flex;
             min-height: 100vh;
+            background-color: #f5f7fa;
         }
         .main-content {
             flex: 1;
-            padding: 20px;
-            background: #f8f9fa;
-            margin-left: 250px;
+            padding: 30px 40px;
+            background: #fff;
+            margin-left: 280px;
+            box-shadow: -2px 0 8px rgba(0,0,0,0.05);
+            border-radius: 0 15px 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
         }
         .page-title {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
         .page-title h1 {
             margin: 0;
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 700;
+            color: #222;
         }
         .btn-primary {
-            background-color: #3b82f6;
+            background-color: #3f51b5;
             color: white;
             border: none;
-            padding: 10px 18px;
-            border-radius: 6px;
+            padding: 12px 22px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease;
         }
         .btn-primary:hover {
-            background-color: #2563eb;
+            background-color: #303f9f;
         }
         .card {
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
             margin-bottom: 30px;
-            padding: 20px 30px;
+            padding: 30px 40px;
         }
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 25px;
         }
         .card-header h2 {
             margin: 0;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             font-weight: 700;
+            color: #222;
         }
         .notification-item {
             border-bottom: 1px solid #e5e7eb;
-            padding: 15px 0;
+            padding: 18px 0;
             display: flex;
             align-items: flex-start;
+            transition: background-color 0.3s ease;
         }
         .notification-item:last-child {
             border-bottom: none;
         }
         .notification-icon {
-            margin-right: 15px;
-            color: #3b82f6;
-            font-size: 1.5rem;
+            margin-right: 20px;
+            color: #3f51b5;
+            font-size: 1.8rem;
+            flex-shrink: 0;
         }
         .notification-content {
             flex: 1;
         }
         .notification-message {
             margin: 0;
-            font-size: 1rem;
+            font-size: 1.1rem;
+            color: #222;
         }
         .notification-time {
-            margin: 5px 0 0;
-            font-size: 0.85rem;
+            margin: 6px 0 0;
+            font-size: 0.9rem;
             color: #6b7280;
         }
         .notification-unread {
-            background-color: #eff6ff;
-            border-left: 4px solid #3b82f6;
+            background-color: #e3f2fd;
+            border-left: 5px solid #3f51b5;
+        }
+        .notification-item:hover {
+            background-color: #f0f4ff;
         }
         .no-notifications {
             text-align: center;
-            padding: 40px;
+            padding: 50px;
             color: #6b7280;
+            font-size: 1.1rem;
         }
     </style>
 </head>

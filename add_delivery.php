@@ -6,6 +6,12 @@ if (!isset($_SESSION['email'])) {
 }
 include('includes/header.php');
 include('includes/config.php');
+include('includes/uuid_helper.php');
+
+// Generate UUIDs on server-side for consistency
+$customer_uuid = generateShortUUID();
+$driver_uuid = generateShortUUID();
+$delivery_uuid = generateShortUUID();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -52,7 +58,7 @@ include('includes/config.php');
                     <h3><i class="fas fa-plus-circle"></i> Delivery Form</h3>
                     <p class="text-muted">Please fill in all required fields to schedule a delivery</p>
                 </div>
-                
+
                 <div class="form-container">
                     <form action="insert_delivery.php" method="POST" class="modern-form">
                         <div class="form-grid">
@@ -60,7 +66,7 @@ include('includes/config.php');
                                 <label for="customer_name" class="form-label">
                                     <i class="fas fa-user"></i> Customer Name <span class="required">*</span>
                                 </label>
-                                <input type="text" id="customer_name" name="customer_name" class="form-control" 
+                                <input type="text" id="customer_name" name="customer_name" class="form-control"
                                        placeholder="Enter customer name" required>
                             </div>
 
@@ -68,7 +74,7 @@ include('includes/config.php');
                                 <label for="contact" class="form-label">
                                     <i class="fas fa-phone"></i> Customer Contact <span class="required">*</span>
                                 </label>
-                                <input type="tel" id="contact" name="contact" class="form-control" 
+                                <input type="tel" id="contact" name="contact" class="form-control"
                                        placeholder="Enter phone number" required>
                             </div>
 
@@ -76,7 +82,7 @@ include('includes/config.php');
                                 <label for="address" class="form-label">
                                     <i class="fas fa-map-marker-alt"></i> Delivery Address <span class="required">*</span>
                                 </label>
-                                <textarea id="address" name="address" class="form-control" rows="3" 
+                                <textarea id="address" name="address" class="form-control" rows="3"
                                           placeholder="Enter complete delivery address" required></textarea>
                             </div>
 
@@ -105,7 +111,7 @@ include('includes/config.php');
                                     <i class="fas fa-weight"></i> Quantity <span class="required">*</span>
                                 </label>
                                 <div class="input-group">
-                                    <input type="number" id="quantity" name="quantity" step="0.01" 
+                                    <input type="number" id="quantity" name="quantity" step="0.01"
                                            class="form-control" placeholder="0.0" required>
                                     <span class="input-addon">Liters/Kg</span>
                                 </div>
@@ -115,7 +121,7 @@ include('includes/config.php');
                                 <label for="vehicle_no" class="form-label">
                                     <i class="fas fa-truck"></i> Vehicle Number <span class="required">*</span>
                                 </label>
-                                <input type="text" id="vehicle_no" name="vehicle_no" class="form-control" 
+                                <input type="text" id="vehicle_no" name="vehicle_no" class="form-control"
                                        placeholder="e.g., MH12AB1234" required>
                             </div>
 
@@ -123,7 +129,7 @@ include('includes/config.php');
                                 <label for="driver_name" class="form-label">
                                     <i class="fas fa-user-tie"></i> Driver Name <span class="required">*</span>
                                 </label>
-                                <input type="text" id="driver_name" name="driver_name" class="form-control" 
+                                <input type="text" id="driver_name" name="driver_name" class="form-control"
                                        placeholder="Enter driver name" required>
                             </div>
 
@@ -131,8 +137,35 @@ include('includes/config.php');
                                 <label for="driver_contact" class="form-label">
                                     <i class="fas fa-phone"></i> Driver Contact <span class="required">*</span>
                                 </label>
-                                <input type="tel" id="driver_contact" name="driver_contact" class="form-control" 
+                                <input type="tel" id="driver_contact" name="driver_contact" class="form-control"
                                        placeholder="Enter driver phone number" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="customer_uuid_display" class="form-label">
+                                    <i class="fas fa-id-badge"></i> Customer UUID
+                                </label>
+                                <input type="text" id="customer_uuid_display" name="customer_uuid_display" class="form-control"
+                                       placeholder="Auto-generated" readonly>
+                                <small class="form-text text-muted">Auto-generated unique customer identifier</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="driver_uuid_display" class="form-label">
+                                    <i class="fas fa-id-badge"></i> Driver UUID
+                                </label>
+                                <input type="text" id="driver_uuid_display" name="driver_uuid_display" class="form-control"
+                                       placeholder="Auto-generated" readonly>
+                                <small class="form-text text-muted">Auto-generated unique driver identifier</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="delivery_uuid_display" class="form-label">
+                                    <i class="fas fa-id-badge"></i> Delivery UUID
+                                </label>
+                                <input type="text" id="delivery_uuid_display" name="delivery_uuid_display" class="form-control"
+                                       placeholder="Auto-generated" readonly>
+                                <small class="form-text text-muted">Auto-generated unique delivery identifier</small>
                             </div>
                         </div>
 
@@ -150,18 +183,25 @@ include('includes/config.php');
  </div>
  </div>
 </div>
+<style></style>
 
-   
+
     <script>
+    // Use server-generated UUIDs for consistency
     document.addEventListener('DOMContentLoaded', function() {
+        // Set the server-generated UUIDs
+        document.getElementById('customer_uuid_display').value = '<?php echo $customer_uuid; ?>';
+        document.getElementById('driver_uuid_display').value = '<?php echo $driver_uuid; ?>';
+        document.getElementById('delivery_uuid_display').value = '<?php echo $delivery_uuid; ?>';
+
         // Set today's date as default
         const today = new Date().toISOString().split('T')[0];
         document.querySelector('input[type="date"]').value = today;
-        
+
         // Form validation
         document.querySelector('form').addEventListener('submit', function(e) {
             let isValid = true;
-            
+
             // Validate all required fields
             document.querySelectorAll('[required]').forEach(field => {
                 if (!field.value.trim()) {
@@ -171,7 +211,7 @@ include('includes/config.php');
                     field.classList.remove('is-invalid');
                 }
             });
-            
+
             if (!isValid) {
                 e.preventDefault();
                 alert('Please fill all required fields!');

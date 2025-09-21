@@ -6,10 +6,12 @@ if (!isset($_SESSION['email'])) {
 }
 
 include('includes/config.php'); // contains $con
+include('includes/uuid_helper.php'); // Add UUID helper
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Collect form data safely
     $name         = mysqli_real_escape_string($con, $_POST['name']);
+    $username     = mysqli_real_escape_string($con, $_POST['username']);
     $contact      = mysqli_real_escape_string($con, $_POST['contact']);
     $address      = mysqli_real_escape_string($con, $_POST['address']);
     $farm_size    = mysqli_real_escape_string($con, $_POST['farm_size']);
@@ -17,12 +19,69 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $aadhar       = mysqli_real_escape_string($con, $_POST['aadhar']);
     $bank_account = mysqli_real_escape_string($con, $_POST['bank_account']);
     $ifsc         = mysqli_real_escape_string($con, $_POST['ifsc']);
+    $password     = mysqli_real_escape_string($con, $_POST['password']);
+    $confirm_password = mysqli_real_escape_string($con, $_POST['confirm_password']);
+
+    // Validate email
+    if (empty($email)) {
+        echo "<script>alert('Email is required!'); window.history.back();</script>";
+        exit;
+    }
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo "<script>alert('Invalid email format!'); window.history.back();</script>";
+        exit;
+    }
+    // Check for duplicate email
+    $check_query = mysqli_query($con, "SELECT id FROM farmers WHERE email='$email'");
+    if (mysqli_num_rows($check_query) > 0) {
+        echo "<script>alert('Email already exists!'); window.history.back();</script>";
+        exit;
+    }
+
+    // Validate username
+    if (empty($username)) {
+        echo "<script>alert('Username is required!'); window.history.back();</script>";
+        exit;
+    }
+    if (!preg_match('/^[a-zA-Z0-9_]{3,20}$/', $username)) {
+        echo "<script>alert('Username must be 3-20 characters long and contain only letters, numbers, and underscores!'); window.history.back();</script>";
+        exit;
+    }
+    // Check for duplicate username
+    $check_query = mysqli_query($con, "SELECT id FROM farmers WHERE username='$username'");
+    if (mysqli_num_rows($check_query) > 0) {
+        echo "<script>alert('Username already exists! Please choose a different username.'); window.history.back();</script>";
+        exit;
+    }
+
+    if ($password !== $confirm_password) {
+        echo "<script>alert('Passwords do not match!'); window.history.back();</script>";
+        exit;
+    }
+
+    $hashed_password = md5($password);
+
+    // Use the UUID from the form instead of generating a new one
+    $uuid = mysqli_real_escape_string($con, $_POST['farmer_uuid']);
+
+    // Verify the UUID is not empty and check for uniqueness
+    if (empty($uuid)) {
+        echo "<script>alert('UUID is required!'); window.history.back();</script>";
+        exit;
+    }
+
+    // Check if UUID already exists
+    $check_query = mysqli_query($con, "SELECT id FROM farmers WHERE uuid='$uuid'");
+    if (mysqli_num_rows($check_query) > 0) {
+        echo "<script>alert('UUID already exists! Please try again.'); window.history.back();</script>";
+        exit;
+    }
 
     // SQL Insert Query
-    $sql = "INSERT INTO farmers 
-            (name, contact, address, farm_size, email, aadhar, bank_account, ifsc) 
-            VALUES 
-            ('$name', '$contact', '$address', '$farm_size', '$email', '$aadhar', '$bank_account', '$ifsc')";
+    $sql = "INSERT INTO farmers
+            (uuid, name, username, contact, address, farm_size, email, aadhar, bank_account, ifsc, password)
+            VALUES
+            ('$uuid', '$name', '$username', '$contact', '$address', '$farm_size', '$email', '$aadhar', '$bank_account', '$ifsc', '$hashed_password')";
 
     if (mysqli_query($con, $sql)) {
         // Success → show popup and redirect back to add farmer

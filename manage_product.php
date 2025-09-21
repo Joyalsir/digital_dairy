@@ -1,32 +1,34 @@
 <?php
 session_start();
 if (!isset($_SESSION['email'])) {
-  header("Location: login.php");
-  exit;
+    header("Location: login.php");
+    exit;
 }
+
 include('includes/header.php');
 include('includes/config.php');
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Manage Products - Digital Dairy Management System</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
 </head>
 <body>
-    <div class="dashboard-container">
+    <div class="dashboard-container" style="max-width: 100%; overflow-x: hidden;">
         <?php include('includes/sidebar.php'); ?>
 
-        <div class="dashboard-main">
+        <div class="dashboard-main" style="width: 100%; max-width: 100%;">
             <!-- Dashboard Header -->
             <div class="dashboard-header">
                 <div class="dashboard-title">
                     <h1>Manage Products</h1>
-                    <p>View and manage all products in your inventory</p>
+                    <p>View, add, edit, and delete products in the system</p>
                 </div>
                 <div class="date-display">
                     <i class="fas fa-calendar"></i>
@@ -37,8 +39,8 @@ include('includes/config.php');
             <!-- Action Bar -->
             <div class="action-bar">
                 <div class="action-info">
-                    <h3><i class="fas fa-boxes"></i> Product Inventory</h3>
-                    <p class="text-muted">Manage all products and their details</p>
+                    <h3><i class="fas fa-box"></i> Product Management</h3>
+                    <p class="text-muted">Manage all products available in the inventory</p>
                 </div>
                 <div class="action-buttons">
                     <a href="add_product.php" class="btn btn-primary">
@@ -47,7 +49,7 @@ include('includes/config.php');
                 </div>
             </div>
 
-            <!-- Products Table Card -->
+           <!-- Products Table Card -->
             <div class="chart-card">
                 <div class="chart-header">
                     <h3><i class="fas fa-table"></i> All Products</h3>
@@ -56,7 +58,7 @@ include('includes/config.php');
                 
                 <div class="table-container">
                     <div class="table-responsive">
-                        <table class="table table-striped table-hover" id="productTable">
+                        <table class="table table-striped table-hover" id="productsTable" style="width: 100%; max-width: 100%;">
                             <thead class="table-dark">
                                 <tr>
                                     <th><i class="fas fa-hashtag"></i> ID</th>
@@ -64,6 +66,7 @@ include('includes/config.php');
                                     <th><i class="fas fa-cubes"></i> Product Type</th>
                                     <th><i class="fas fa-rupee-sign"></i> Unit Price</th>
                                     <th><i class="fas fa-calendar"></i> Added On</th>
+                                    <th><i class="fas fa-cogs"></i> Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -99,6 +102,16 @@ include('includes/config.php');
                                             <small class="text-muted">
                                                 <?php echo date('M j, Y', strtotime($row['PostingDate'])); ?>
                                             </small>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons-cell">
+                                                <a href="edit-product.php?pid=<?php echo $row['ID']; ?>" class="btn btn-sm btn-warning" title="Edit Product">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a href="delete-product.php?pid=<?php echo $row['ID']; ?>" class="btn btn-sm btn-danger" title="Delete Product" onclick="return confirm('Are you sure you want to delete this product? This action cannot be undone.');">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            </div>
                                         </td>
                                     </tr>
                                 <?php } ?>
@@ -158,18 +171,16 @@ include('includes/config.php');
     </div>
 
     <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-    
-   
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 
     <script>
         $(document).ready(function() {
-            $('#productTable').DataTable({
+            $('#productsTable').DataTable({
                 responsive: true,
                 pageLength: 10,
-                order: [[0, 'desc']],
+                order: [[1, 'asc']],
                 language: {
                     search: "Search products:",
                     lengthMenu: "Show _MENU_ products per page",
@@ -184,5 +195,4 @@ include('includes/config.php');
     </script>
 </body>
 </html>
-
 <?php include('includes/footer.php'); ?>

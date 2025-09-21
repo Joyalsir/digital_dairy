@@ -209,7 +209,9 @@ if (isset($_POST['submit'])) {
         </div>
     </div>
 
+   <style>
    
+   </style>
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {

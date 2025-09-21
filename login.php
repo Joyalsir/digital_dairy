@@ -1,3 +1,4 @@
+
 <?php
 session_start();
 include('includes/config.php');
@@ -6,12 +7,14 @@ if (isset($_POST['login'])) {
     $email = $_POST['email'];
     $password = md5($_POST['password']);
 
-    $query = mysqli_query($con, "SELECT * FROM user WHERE email='$email' AND password='$password'");
+    $query = mysqli_query($con, "SELECT * FROM farmers WHERE email='$email' AND password='$password'");
     $row = mysqli_fetch_array($query);
 
     if ($row) {
+        $_SESSION['user_id'] = $row['id'];
+        $_SESSION['uuid'] = $row['uuid'];
         $_SESSION['email'] = $email;
-        header("Location: dashboard.php");
+        header("Location: user_dashboard.php");
         exit();
     } else {
         $error = "Invalid email or password!";
@@ -54,6 +57,107 @@ if (isset($_POST['login'])) {
       </form>
     </div>
   </div>
+  <style>
+    .login-container {
+  background: #fff;
+  padding: 40px;
+  width: 100%;
+  max-width: 360px;
+  margin: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  border-radius: 12px;
+}
+
+.logo {
+  display: block;
+  margin: 0 auto 20px;
+  max-width: 120px;
+}
+
+.login-box h2 {
+  text-align: center;
+  color: #2c2c54;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.form-group label span {
+  color: red;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+  transition: 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper .toggle {
+  position: absolute;
+  right: 10px;
+  top: 35%;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #2c2c54;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.form-footer {
+  text-align: center;
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+.error {
+  background: #ffe0e0;
+  color: #c00;
+  padding: 8px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+  </style>
 
   <script>
     function togglePassword() {

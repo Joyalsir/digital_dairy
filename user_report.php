@@ -17,11 +17,11 @@ if (!$query) {
     die("Query failed: " . mysqli_error($con));
 }
 if (mysqli_num_rows($query) == 0) {
-    $farmer_id = null;
+    $farmer_uuid = null;
     $farmer_name = $_SESSION['name'];
 } else {
     $farmer = mysqli_fetch_assoc($query);
-    $farmer_id = $farmer['id'];
+    $farmer_uuid = $farmer['uuid'];
     $farmer_name = $farmer['name'];
 }
 
@@ -34,8 +34,8 @@ $report_data = [
     'period' => $from_date && $to_date ? "$from_date to $to_date" : 'All Time',
 ];
 
-if ($farmer_id) {
-    $where_clause = "WHERE farmer_id='$farmer_id'";
+if ($farmer_uuid) {
+    $where_clause = "WHERE farmer_uuid='$farmer_uuid'";
     if ($from_date) $where_clause .= " AND date >= '$from_date'";
     if ($to_date) $where_clause .= " AND date <= '$to_date'";
 
@@ -57,121 +57,165 @@ if ($farmer_id) {
     <link rel="stylesheet" href="css/user_style.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
+        /* Reset and base */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
         .dashboard-container {
             display: flex;
             min-height: 100vh;
+            background-color: #f5f7fa;
         }
         .main-content {
             flex: 1;
-            padding: 20px;
-            background: #f8f9fa;
-            margin-left: 250px;
+            padding: 30px 40px;
+            background: #fff;
+            margin-left: 280px;
+            box-shadow: -2px 0 8px rgba(0,0,0,0.05);
+            border-radius: 0 15px 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
         }
         .page-title {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
         .page-title h1 {
             margin: 0;
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 700;
+            color: #222;
         }
         .btn-primary {
-            background-color: #3b82f6;
+            background-color: #3f51b5;
             color: white;
             border: none;
-            padding: 10px 18px;
-            border-radius: 6px;
+            padding: 12px 22px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease;
         }
         .btn-primary:hover {
-            background-color: #2563eb;
+            background-color: #303f9f;
         }
         .btn-secondary {
             background-color: #6b7280;
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
+            padding: 10px 20px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
         }
         .btn-secondary:hover {
             background-color: #4b5563;
         }
         .card {
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
             margin-bottom: 30px;
-            padding: 20px 30px;
+            padding: 30px 40px;
         }
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 25px;
         }
         .card-header h2 {
             margin: 0;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             font-weight: 700;
+            color: #222;
         }
         .filter-group {
             display: flex;
-            gap: 15px;
+            gap: 20px;
             flex-wrap: wrap;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         .filter-group label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: #333;
         }
         .filter-group input[type="date"] {
-            padding: 8px 10px;
-            border-radius: 6px;
+            padding: 10px 14px;
+            border-radius: 8px;
             border: 1px solid #d1d5db;
-            width: 200px;
+            width: 220px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        .filter-group input[type="date"]:focus {
+            border-color: #3f51b5;
+            outline: none;
         }
         .report-summary {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
             margin-bottom: 30px;
         }
         .summary-card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: #fff;
+            padding: 25px 20px;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
             text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: default;
+        }
+        .summary-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
         }
         .summary-icon {
-            font-size: 2rem;
-            margin-bottom: 10px;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            transition: color 0.3s ease;
         }
-        .summary-icon.milk { color: #3498db; }
-        .summary-icon.payment { color: #e74c3c; }
-        .summary-icon.records { color: #27ae60; }
+        .summary-icon.milk { color: #3f51b5; }
+        .summary-icon.payment { color: #e91e63; }
+        .summary-icon.records { color: #4caf50; }
         .summary-icon.avg { color: #f39c12; }
         .summary-content h3 {
             margin: 0;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #222;
         }
         .summary-content p {
             margin: 5px 0 0;
             color: #666;
+            font-size: 1rem;
+            letter-spacing: 0.02em;
         }
         .report-actions {
             display: flex;
-            gap: 15px;
+            gap: 20px;
             flex-wrap: wrap;
+        }
+        .report-actions .btn {
+            padding: 12px 24px;
+            font-size: 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
     </style>
 </head>
@@ -251,13 +295,58 @@ if ($farmer_id) {
                 <div class="card-header">
                     <h2>Report Actions</h2>
                 </div>
-                <div class="report-actions">
-                    <button class="btn btn-primary" onclick="window.print()">Print Report</button>
-                    <button class="btn btn-secondary">Export PDF</button>
-                    <button class="btn btn-secondary">Export Excel</button>
-                </div>
+            <div class="report-actions">
+                <button class="btn btn-primary" onclick="window.print()">Print Report</button>
+                <button class="btn btn-secondary" id="exportPdfBtn">Export PDF</button>
+                <button class="btn btn-secondary" id="exportExcelBtn">Export Excel</button>
+            </div>
             </div>
         </div>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <script>
+        document.getElementById('exportPdfBtn').addEventListener('click', function() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            doc.text("Milk Collection Report", 14, 20);
+            const periodText = "<?php echo htmlspecialchars($report_data['period']); ?>";
+            doc.text("Period: " + periodText, 14, 30);
+
+            const head = [['Metric', 'Value']];
+            const body = [
+                ['Total Milk Collection (L)', '<?php echo number_format($report_data['total_collection'], 2); ?>'],
+                ['Total Payments (₹)', '₹<?php echo number_format($report_data['total_payments'], 2); ?>'],
+                ['Total Records', '<?php echo number_format($report_data['total_records']); ?>'],
+                ['Average Daily Collection (L)', '<?php echo number_format($report_data['average_daily'], 2); ?>']
+            ];
+
+            doc.autoTable({
+                head: head,
+                body: body,
+                startY: 40,
+            });
+
+            doc.save('milk_collection_report.pdf');
+        });
+
+        document.getElementById('exportExcelBtn').addEventListener('click', function() {
+            const wb = XLSX.utils.book_new();
+            const ws_data = [
+                ['Metric', 'Value'],
+                ['Total Milk Collection (L)', '<?php echo number_format($report_data['total_collection'], 2); ?>'],
+                ['Total Payments (₹)', '<?php echo number_format($report_data['total_payments'], 2); ?>'],
+                ['Total Records', '<?php echo number_format($report_data['total_records']); ?>'],
+                ['Average Daily Collection (L)', '<?php echo number_format($report_data['average_daily'], 2); ?>']
+            ];
+            const ws = XLSX.utils.aoa_to_sheet(ws_data);
+            XLSX.utils.book_append_sheet(wb, ws, "Report");
+            XLSX.writeFile(wb, "milk_collection_report.xlsx");
+        });
+    </script>
 </body>
 </html>

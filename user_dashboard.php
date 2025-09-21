@@ -13,11 +13,11 @@ if (!$query) {
     die("Query failed: " . mysqli_error($con));
 }
 if (mysqli_num_rows($query) == 0) {
-    $farmer_id = null;
+    $farmer_uuid = null;
     $farmer_name = $_SESSION['name'];
 } else {
     $farmer = mysqli_fetch_assoc($query);
-    $farmer_id = $farmer['id'];
+    $farmer_uuid = $farmer['uuid'];
     $farmer_name = $farmer['name'];
 }
 
@@ -25,8 +25,8 @@ if (mysqli_num_rows($query) == 0) {
 $today_collection = 0;
 $today_rate = 0;
 $today_amount = 0;
-if ($farmer_id) {
-    $today_query = mysqli_query($con, "SELECT SUM(quantity) as qty, SUM(payment) as total_amt FROM milk_collection WHERE farmer_id='$farmer_id' AND DATE(date)=CURDATE()");
+if ($farmer_uuid) {
+    $today_query = mysqli_query($con, "SELECT SUM(quantity) as qty, SUM(payment) as total_amt FROM milk_collection WHERE farmer_uuid='$farmer_uuid' AND DATE(date)=CURDATE()");
     if (!$today_query) {
         die("Query failed: " . mysqli_error($con));
     }
@@ -39,8 +39,8 @@ if ($farmer_id) {
 
 // Total payments
 $total_payments = 0;
-if ($farmer_id) {
-    $total_query = mysqli_query($con, "SELECT SUM(payment) as total_amt FROM milk_collection WHERE farmer_id='$farmer_id'");
+if ($farmer_uuid) {
+    $total_query = mysqli_query($con, "SELECT SUM(payment) as total_amt FROM milk_collection WHERE farmer_uuid='$farmer_uuid'");
     if (!$total_query) {
         die("Query failed: " . mysqli_error($con));
     }
@@ -52,8 +52,8 @@ if ($farmer_id) {
 // Total collection and records
 $total_collection = 0;
 $total_records = 0;
-if ($farmer_id) {
-    $total_query = mysqli_query($con, "SELECT SUM(quantity) as total_qty, COUNT(*) as records FROM milk_collection WHERE farmer_id='$farmer_id'");
+if ($farmer_uuid) {
+    $total_query = mysqli_query($con, "SELECT SUM(quantity) as total_qty, COUNT(*) as records FROM milk_collection WHERE farmer_uuid='$farmer_uuid'");
     if ($row = mysqli_fetch_assoc($total_query)) {
         $total_collection = $row['total_qty'] ? $row['total_qty'] : 0;
         $total_records = $row['records'];
@@ -62,8 +62,8 @@ if ($farmer_id) {
 
 // Latest notifications
 $notifications = [];
-if ($farmer_id) {
-    $notif_query = mysqli_query($con, "SELECT date, quantity, payment FROM milk_collection WHERE farmer_id='$farmer_id' ORDER BY date DESC LIMIT 5");
+if ($farmer_uuid) {
+    $notif_query = mysqli_query($con, "SELECT date, quantity, payment FROM milk_collection WHERE farmer_uuid='$farmer_uuid' ORDER BY date DESC LIMIT 5");
     if (!$notif_query) {
         die("Query failed: " . mysqli_error($con));
     }
@@ -82,61 +82,117 @@ if ($farmer_id) {
     <link rel="stylesheet" href="css/user_style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Reset and base */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
         .dashboard-container {
             display: flex;
             min-height: 100vh;
+            background-color: #f5f7fa;
         }
         .sidebar {
-            width: 250px;
-            background: #2c3e50;
-            color: white;
-            padding: 20px;
+            width: 280px;
+            background: #3f51b5;
+            color: #fff;
+            padding: 30px 25px;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            font-weight: 600;
+            font-size: 16px;
         }
         .main-content {
             flex: 1;
-            padding: 20px;
-            background: #f8f9fa;
-            margin-left: 250px;
+            padding: 30px 40px;
+            background: #fff;
+            margin-left: 280px;
+            box-shadow: -2px 0 8px rgba(0,0,0,0.05);
+            border-radius: 0 15px 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
         }
         .welcome-section {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 30px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            font-size: 1.3rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
         }
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
         }
         .stat-card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: #fff;
+            padding: 25px 20px;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
             text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: default;
+        }
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
         }
         .stat-icon {
-            font-size: 2rem;
-            margin-bottom: 10px;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            transition: color 0.3s ease;
         }
-        .stat-icon.milk { color: #3498db; }
-        .stat-icon.payment { color: #e74c3c; }
-        .stat-icon.rate { color: #27ae60; }
+        .stat-icon.milk { color: #3f51b5; }
+        .stat-icon.payment { color: #e91e63; }
+        .stat-icon.rate { color: #4caf50; }
+        .stat-icon.info { color: #2196f3; }
+        .stat-icon.revenue { color: #ff9800; }
+        .stat-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: #222;
+        }
+        .stat-card p {
+            font-size: 1rem;
+            color: #666;
+            letter-spacing: 0.02em;
+        }
         .notifications {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: #fff;
+            padding: 30px 25px;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .notifications h3 {
+            font-weight: 700;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
         }
         .notification-item {
-            padding: 10px 0;
+            padding: 15px 0;
             border-bottom: 1px solid #eee;
+            font-size: 1rem;
+            color: #444;
+            transition: background-color 0.3s ease;
         }
         .notification-item:last-child {
             border-bottom: none;
+        }
+        .notification-item:hover {
+            background-color: #f0f0f0;
         }
     </style>
 </head>
@@ -146,7 +202,7 @@ if ($farmer_id) {
         
         <div class="main-content">
             <div class="welcome-section">
-                <h1>Welcome back, <?php echo htmlspecialchars($farmer_name); ?>!</h1>
+                <h1>Welcome back, <?php echo htmlspecialchars($farmer_name); ?><?php if ($farmer_uuid) echo ' (UUID: ' . htmlspecialchars($farmer_uuid) . ')'; ?>!</h1>
                 <p>Here's an overview of your milk collection and payments.</p>
             </div>
             

@@ -13,13 +13,13 @@ if (!$query) {
     die("Query failed: " . mysqli_error($con));
 }
 if (mysqli_num_rows($query) == 0) {
-    $farmer_id = null;
+    $farmer_uuid = null;
     $farmer_name = $_SESSION['name'];
     $farmer_phone = '';
     $farmer_address = '';
 } else {
     $farmer = mysqli_fetch_assoc($query);
-    $farmer_id = $farmer['id'];
+    $farmer_uuid = $farmer['uuid'];
     $farmer_name = $farmer['name'];
     $farmer_phone = $farmer['phone'] ?? '';
     $farmer_address = $farmer['address'] ?? '';
@@ -31,8 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $phone = mysqli_real_escape_string($con, $_POST['phone']);
     $address = mysqli_real_escape_string($con, $_POST['address']);
 
-    if ($farmer_id) {
-        $update_query = "UPDATE farmers SET name='$name', phone='$phone', address='$address' WHERE id='$farmer_id'";
+    if ($farmer_uuid) {
+        $update_query = "UPDATE farmers SET name='$name', phone='$phone', address='$address' WHERE uuid='$farmer_uuid'";
     } else {
         // If no farmer record, perhaps insert, but for now, skip
         $update_query = null;

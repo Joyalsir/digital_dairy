@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['email'])) {
-  header("Location: login.php");
+  header("Location:login.php");
   exit;
 }
 include('includes/header.php');
@@ -64,6 +64,27 @@ $result = mysqli_query($con, "SELECT ProductName, SUM(Quantity) as total_qty
                               GROUP BY ProductName");
 while ($row = mysqli_fetch_assoc($result)) {
     $product_sales[$row['ProductName']] = $row['total_qty'];
+}
+
+// Get milk collection distribution by time of day (morning, evening, night)
+$time_distribution = [
+    'Morning' => 0,
+    'Evening' => 0,
+    'Night' => 0
+];
+$result = mysqli_query($con, "
+    SELECT 
+        CASE 
+            WHEN HOUR(date) BETWEEN 5 AND 11 THEN 'Morning'
+            WHEN HOUR(date) BETWEEN 12 AND 17 THEN 'Evening'
+            ELSE 'Night'
+        END as time_of_day,
+        SUM(quantity) as total_qty
+    FROM milk_collection
+    GROUP BY time_of_day
+");
+while ($row = mysqli_fetch_assoc($result)) {
+    $time_distribution[$row['time_of_day']] = $row['total_qty'];
 }
 
 ?>
@@ -304,11 +325,11 @@ while ($row = mysqli_fetch_assoc($result)) {
                 type: 'doughnut',
                 data: {
                     labels: ['Morning', 'Evening', 'Night'],
-                    datasets: [{
-                        data: [45, 35, 20],
-                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
-                        borderWidth: 0
-                    }]
+            datasets: [{
+                data: <?php echo json_encode(array_values($time_distribution)); ?>,
+                backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+                borderWidth: 0
+            }]
                 },
                 options: {
                     responsive: true,

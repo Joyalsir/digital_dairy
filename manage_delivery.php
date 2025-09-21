@@ -129,6 +129,11 @@ include('includes/config.php');
                                                 <?php echo date('M j, Y H:i', strtotime($row['PostingDate'])); ?>
                                             </small>
                                         </td>
+                                        <td>
+                                            <a href="delete-delivery.php?id=<?php echo $row['ID']; ?>" class="btn btn-sm btn-danger" title="Delete Delivery" onclick="return confirm('Are you sure you want to delete this delivery record? This action cannot be undone.');">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </td>
                                     </tr>
                                 <?php } ?>
                             </tbody>
@@ -192,6 +197,8 @@ include('includes/config.php');
             </div>
         </div>
     </div>
+    <style> 
+        </style>
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>

@@ -1,3 +1,4 @@
+
 <?php
 session_start();
 if (!isset($_SESSION['email'])) {
@@ -46,16 +47,22 @@ $total_collection = 0;
 $total_payment = 0;
 $total_records = 0;
 if ($farmer_id) {
-    $where_clause = "WHERE farmer_id='$farmer_id'";
+    $where_clause = "WHERE id='$farmer_id'";
     if ($from_date) $where_clause .= " AND date >= '$from_date'";
     if ($to_date) $where_clause .= " AND date <= '$to_date'";
     $records_query = mysqli_query($con, "SELECT date, quantity, payment, product_type, fat, temperature FROM milk_collection $where_clause ORDER BY date DESC");
+    if (!$records_query) {
+        die("Records query failed: " . mysqli_error($con));
+    }
     while ($row = mysqli_fetch_assoc($records_query)) {
         $row['rate'] = $row['quantity'] > 0 ? $row['payment'] / $row['quantity'] : 0;
         $row['status'] = 'Completed';
         $records[] = $row;
     }
     $stats_query = mysqli_query($con, "SELECT SUM(quantity) as total_qty, SUM(payment) as total_pay, COUNT(*) as records FROM milk_collection $where_clause");
+    if (!$stats_query) {
+        die("Stats query failed: " . mysqli_error($con));
+    }
     if ($row = mysqli_fetch_assoc($stats_query)) {
         $total_collection = $row['total_qty'] ? $row['total_qty'] : 0;
         $total_payment = $row['total_pay'] ? $row['total_pay'] : 0;
@@ -73,70 +80,88 @@ if ($farmer_id) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
     <style>
+        /* Reset and base */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
         .dashboard-container {
             display: flex;
             min-height: 100vh;
+            background-color: #f5f7fa;
         }
         .main-content {
             flex: 1;
-            padding: 20px;
-            background: #f8f9fa;
-            margin-left: 250px;
+            padding: 30px 40px;
+            background: #fff;
+            margin-left: 280px;
+            box-shadow: -2px 0 8px rgba(0,0,0,0.05);
+            border-radius: 0 15px 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
         }
         .page-title {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
         .page-title h1 {
             margin: 0;
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 700;
+            color: #222;
         }
         .btn-primary {
-            background-color: #3b82f6;
+            background-color: #3f51b5;
             color: white;
             border: none;
-            padding: 10px 18px;
-            border-radius: 6px;
+            padding: 12px 22px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease;
         }
         .btn-primary:hover {
-            background-color: #2563eb;
-        }
-        .card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-            padding: 20px 30px;
-        }
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        .card-header h2 {
-            margin: 0;
-            font-size: 1.3rem;
-            font-weight: 700;
+            background-color: #303f9f;
         }
         .btn-secondary {
             background-color: #6b7280;
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
+            padding: 10px 20px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
         }
         .btn-secondary:hover {
             background-color: #4b5563;
+        }
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            padding: 30px 40px;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .card-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #222;
         }
         .table-responsive {
             overflow-x: auto;
@@ -144,22 +169,24 @@ if ($farmer_id) {
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.95rem;
+            font-size: 1rem;
+            color: #444;
         }
         th, td {
-            padding: 12px 15px;
+            padding: 15px 18px;
             border-bottom: 1px solid #e5e7eb;
             text-align: left;
         }
         th {
             background-color: #f3f4f6;
-            font-weight: 600;
+            font-weight: 700;
+            color: #555;
         }
         .status {
-            padding: 5px 12px;
+            padding: 6px 14px;
             border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.85rem;
+            font-weight: 700;
+            font-size: 0.9rem;
             color: white;
             display: inline-block;
         }
@@ -168,47 +195,65 @@ if ($farmer_id) {
         }
         .filter-group {
             display: flex;
-            gap: 15px;
+            gap: 20px;
             flex-wrap: wrap;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         .filter-group label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: #333;
         }
         .filter-group input[type="date"] {
-            padding: 8px 10px;
-            border-radius: 6px;
+            padding: 10px 14px;
+            border-radius: 8px;
             border: 1px solid #d1d5db;
-            width: 200px;
+            width: 220px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        .filter-group input[type="date"]:focus {
+            border-color: #3f51b5;
+            outline: none;
         }
         .stat-card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: #fff;
+            padding: 25px 20px;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
             text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: default;
+        }
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
         }
         .stat-icon {
-            font-size: 2rem;
-            margin-bottom: 10px;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            transition: color 0.3s ease;
         }
-        .stat-icon.milk { color: #3498db; }
-        .stat-icon.revenue { color: #e74c3c; }
-        .stat-icon.info { color: #27ae60; }
+        .stat-icon.milk { color: #3f51b5; }
+        .stat-icon.revenue { color: #e91e63; }
+        .stat-icon.info { color: #4caf50; }
         .stat-content h3 {
             margin: 0;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #222;
         }
         .stat-content p {
             margin: 5px 0 0;
             color: #666;
+            font-size: 1rem;
+            letter-spacing: 0.02em;
         }
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
             margin-bottom: 20px;
         }
     </style>

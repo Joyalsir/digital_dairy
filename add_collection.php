@@ -68,15 +68,23 @@ include('includes/config.php');
                                 <label for="farmer" class="form-label">
                                     <i class="fas fa-user"></i> Select Farmer <span class="required">*</span>
                                 </label>
-                                <select id="farmer" name="farmer" class="form-control" required>
+                                <select id="farmer" name="farmer" class="form-control" required onchange="showFarmerUUID(this.value)">
                                     <option value="">-- Select Farmer --</option>
                                     <?php
                                     $query = mysqli_query($con, "SELECT * FROM farmers ORDER BY name ASC");
                                     while ($row = mysqli_fetch_array($query)) {
-                                        echo "<option value='{$row['id']}'>{$row['name']}</option>";
+                                        echo "<option value='{$row['id']}' data-uuid='{$row['uuid']}'>{$row['name']}</option>";
                                     }
                                     ?>
                                 </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="farmer_uuid_display" class="form-label">
+                                    <i class="fas fa-id-badge"></i> Farmer UUID
+                                </label>
+                                <input type="text" id="farmer_uuid_display" name="farmer_uuid_display" class="form-control" readonly>
+                                <small class="form-text text-muted">Auto-populated when farmer is selected</small>
                             </div>
 
                             <div class="form-group">
@@ -169,7 +177,7 @@ include('includes/config.php');
                     </div>
                     <div class="stat-content">
                         <?php
-                        $result = mysqli_query($con, "SELECT COUNT(DISTINCT farmer_id) as farmers FROM milk_collection WHERE DATE(date) = CURDATE()");
+                        $result = mysqli_query($con, "SELECT COUNT(DISTINCT farmer_uuid) as farmers FROM milk_collection WHERE DATE(date) = CURDATE()");
                         $today_farmers = 0;
                         if ($row = mysqli_fetch_assoc($result)) {
                             $today_farmers = $row['farmers'];
@@ -199,19 +207,36 @@ include('includes/config.php');
             </div>
         </div>
     </div>
-
+<style>
    
+</style>   
 
     <script>
+    function showFarmerUUID(farmerId) {
+        const farmerSelect = document.getElementById('farmer');
+        const uuidDisplay = document.getElementById('farmer_uuid_display');
+
+        if (farmerId && farmerSelect) {
+            const selectedOption = farmerSelect.querySelector(`option[value="${farmerId}"]`);
+            if (selectedOption && selectedOption.dataset.uuid) {
+                uuidDisplay.value = selectedOption.dataset.uuid;
+            } else {
+                uuidDisplay.value = '';
+            }
+        } else {
+            uuidDisplay.value = '';
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         // Set today's date as default
         const today = new Date().toISOString().split('T')[0];
         document.querySelector('input[type="date"]').value = today;
-        
+
         // Form validation
         document.querySelector('form').addEventListener('submit', function(e) {
             let isValid = true;
-            
+
             // Validate all required fields
             document.querySelectorAll('[required]').forEach(field => {
                 if (!field.value.trim()) {
@@ -221,7 +246,7 @@ include('includes/config.php');
                     field.classList.remove('is-invalid');
                 }
             });
-            
+
             if (!isValid) {
                 e.preventDefault();
                 alert('Please fill all required fields!');
