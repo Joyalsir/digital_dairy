@@ -179,45 +179,6 @@ $delivery_uuid = generateShortUUID();
                         </div>
                     </form>
                 </div>
-            </div>
- </div>
- </div>
-</div>
-<style></style>
-
-
-    <script>
-    // Use server-generated UUIDs for consistency
-    document.addEventListener('DOMContentLoaded', function() {
-        // Set the server-generated UUIDs
-        document.getElementById('customer_uuid_display').value = '<?php echo $customer_uuid; ?>';
-        document.getElementById('driver_uuid_display').value = '<?php echo $driver_uuid; ?>';
-        document.getElementById('delivery_uuid_display').value = '<?php echo $delivery_uuid; ?>';
-
-        // Set today's date as default
-        const today = new Date().toISOString().split('T')[0];
-        document.querySelector('input[type="date"]').value = today;
-
-        // Form validation
-        document.querySelector('form').addEventListener('submit', function(e) {
-            let isValid = true;
-
-            // Validate all required fields
-            document.querySelectorAll('[required]').forEach(field => {
-                if (!field.value.trim()) {
-                    field.classList.add('is-invalid');
-                    isValid = false;
-                } else {
-                    field.classList.remove('is-invalid');
-                }
-            });
-
-            if (!isValid) {
-                e.preventDefault();
-                alert('Please fill all required fields!');
-            }
-        });
-    });
     </script>
 </body>
 </html>

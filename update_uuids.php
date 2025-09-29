@@ -1,5 +1,6 @@
 <?php
 include('includes/config.php');
+include('includes/uuid_helper.php');
 
 function generate_unique_uuid($con) {
     do {
