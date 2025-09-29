@@ -1,25 +1,25 @@
-# TODO: Fix farmer_id references to farmer_uuid
+# MILMA Style Header and Products Section Updates
 
-## Files to Update:
-- [x] delete-farmer.php: Update queries to use farmer_uuid
-- [x] manage_farmer.php: Update links to use uuid
-- [ ] inventory_report.php: Update JOIN and WHERE to use farmer_uuid
-- [ ] manage_collection.php: Update JOIN to use farmer_uuid
-- [ ] payment_report.php: Update JOIN to use farmer_uuid
-- [ ] milk_collection_report.php: Update JOIN to use farmer_uuid
-- [ ] process_add_collection.php: Already updated
-- [ ] user_dashboard.php: Update queries to use farmer_uuid
-- [ ] user_profile.php: Update WHERE to use farmer_uuid
-- [ ] user_report.php: Update WHERE to use farmer_uuid
-- [ ] user_payment.php: Update WHERE to use farmer_uuid
-- [ ] user_milk_record.php: Update WHERE to use farmer_uuid
-- [ ] add_collection.php: Update farmer selection if needed
-- [ ] index.php: Update session to use farmer_uuid
-- [x] view-farmer.php: Updated to use uuid instead of id
-- [x] edit-farmer.php: Updated to use uuid instead of id
-- [x] process_edit_farmer.php: Updated to use uuid instead of id
+## Tasks to Complete:
 
-## Steps:
-1. Update each file to replace farmer_id with farmer_uuid in queries.
-2. Test login and functionality to ensure no "Unknown column" errors.
-3. Clean up temporary files created during development.
+### Header Section Updates:
+- [ ] Update navigation menu to include MILMA-style items (HOME, ABOUT US, PRODUCTS, SERVICES, INSIGHTS, MEDIA, CAREER, CONTACT, BUY NOW)
+- [ ] Add MILMA logo/branding
+- [ ] Style the header to match MILMA design
+- [ ] Add BUY NOW button styling
+
+### Products Section Updates:
+- [ ] Reorganize products into categories like MILMA site:
+  - [ ] Milk Products
+  - [ ] Curd & Sambaram
+  - [ ] Ghee & Butter
+  - [ ] Ice Creams
+- [ ] Update product layout to be more compact
+- [ ] Add category headers
+- [ ] Style product cards to match MILMA design
+- [ ] Update product images and descriptions
+
+### Additional Improvements:
+- [ ] Ensure responsive design
+- [ ] Test navigation functionality
+- [ ] Verify product display

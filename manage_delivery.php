@@ -22,6 +22,13 @@ include('includes/config.php');
         <?php include('includes/sidebar.php'); ?>
 
         <div class="dashboard-main">
+            <?php
+            session_start();
+            if (isset($_SESSION['message'])) {
+                echo '<div class="alert alert-info" role="alert">' . htmlspecialchars($_SESSION['message']) . '</div>';
+                unset($_SESSION['message']);
+            }
+            ?>
             <!-- Dashboard Header -->
             <div class="dashboard-header">
                 <div class="dashboard-title">
@@ -70,6 +77,8 @@ include('includes/config.php');
                                     <th><i class="fas fa-user-tie"></i> Driver</th>
                                     <th><i class="fas fa-phone"></i> Driver Contact</th>
                                     <th><i class="fas fa-clock"></i> Posted</th>
+                            
+                                    <th><i class="fas fa-tasks"></i> Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -130,6 +139,19 @@ include('includes/config.php');
                                             </small>
                                         </td>
                                         <td>
+                                            <?php
+                                            $status = $row['delivery_status'];
+                                            if ($status == 'pending') {
+                                                echo '<span class="badge bg-warning text-dark">Pending</span>';
+                                            } else if ($status == 'received') {
+                                                echo '<span class="badge bg-success">Received</span>';
+                                            } else {
+                                                echo '<span class="badge bg-secondary">Unknown</span>';
+                                            }
+                                            ?>
+                                        </td>
+                                        <td>
+                                            
                                             <a href="delete-delivery.php?id=<?php echo $row['ID']; ?>" class="btn btn-sm btn-danger" title="Delete Delivery" onclick="return confirm('Are you sure you want to delete this delivery record? This action cannot be undone.');">
                                                 <i class="fas fa-trash"></i>
                                             </a>

@@ -172,7 +172,7 @@ if ($farmer_uuid) {
         <div class="main-content">
             <div class="page-title">
                 <h1>Notifications</h1>
-                <button class="btn btn-primary">Mark All as Read</button>
+                <button class="btn btn-primary" id="markAllReadBtn">Mark All as Read</button>
             </div>
             <div class="card">
                 <div class="card-header">
@@ -199,5 +199,28 @@ if ($farmer_uuid) {
             </div>
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#markAllReadBtn').click(function() {
+                $.ajax({
+                    url: 'mark_notifications_read.php',
+                    method: 'POST',
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            $('.notification-item').removeClass('notification-unread');
+                        } else {
+                            alert('Failed to mark notifications as read.');
+                        }
+                    },
+                    error: function() {
+                        alert('Error occurred while marking notifications as read.');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

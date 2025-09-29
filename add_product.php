@@ -9,17 +9,53 @@ include('includes/config.php');
 
 if (isset($_POST['submit'])) {
     $productName = $_POST['product_name'];
+    $productCategory = $_POST['product_category'];
     $productType = $_POST['product_type'];
     $unitPrice = $_POST['unit_price'];
 
-    $sql = "INSERT INTO tblproduct (ProductName, ProductType, UnitPrice) VALUES (?, ?, ?)";
-    $stmt = $con->prepare($sql);
-    $stmt->bind_param("ssd", $productName, $productType, $unitPrice);
-    $stmt->execute();
-    if ($stmt->affected_rows > 0) {
-        $msg = "Product added successfully.";
-    } else {
-        $msg = "Failed to add product.";
+    // Handle image upload
+    $productImage = '';
+    if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] == 0) {
+        $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        $max_size = 5 * 1024 * 1024; // 5MB
+
+        if (in_array($_FILES['product_image']['type'], $allowed_types) && $_FILES['product_image']['size'] <= $max_size) {
+            $upload_dir = 'uploads/products/';
+
+            // Create directory if it doesn't exist
+            if (!file_exists($upload_dir)) {
+                mkdir($upload_dir, 0755, true);
+            }
+
+            $file_extension = pathinfo($_FILES['product_image']['name'], PATHINFO_EXTENSION);
+            $file_name = uniqid('product_', true) . '.' . $file_extension;
+            $target_file = $upload_dir . $file_name;
+
+            if (move_uploaded_file($_FILES['product_image']['tmp_name'], $target_file)) {
+                $productImage = $target_file;
+            } else {
+                $error_msg = "Failed to upload image. Please check directory permissions and try again.";
+            }
+        } else {
+            $error_msg = "Invalid file type or file too large. Please use JPG, PNG, GIF, or WebP images under 5MB.";
+        }
+    }
+
+    if (!isset($error_msg)) {
+        $sql = "INSERT INTO tblproduct (ProductName, ProductType, UnitPrice, ProductImage) VALUES (?, ?, ?, ?)";
+        $stmt = $con->prepare($sql);
+
+        if ($stmt === false) {
+            $error_msg = "Database error: " . $con->error;
+        } else {
+            $stmt->bind_param("ssds", $productName, $productType, $unitPrice, $productImage);
+            if ($stmt->execute()) {
+                $msg = "Product added successfully.";
+            } else {
+                $error_msg = "Failed to add product to database: " . $stmt->error;
+            }
+            $stmt->close();
+        }
     }
 }
 ?>
@@ -68,30 +104,50 @@ if (isset($_POST['submit'])) {
                     <h3><i class="fas fa-box"></i> Add New Product</h3>
                     <p class="text-muted">Please fill in all required fields to add a new product</p>
                 </div>
-                
+
                 <div class="form-container">
                     <?php if (isset($msg)): ?>
                         <div class="alert alert-info" style="margin-bottom: 1rem; padding: 1rem; background: #d1fae5; color: #065f46; border-radius: 0.5rem;">
                             <i class="fas fa-check-circle"></i> <?php echo $msg; ?>
                         </div>
                     <?php endif; ?>
-                    
-                    <form method="post" class="modern-form">
+
+                    <?php if (isset($error_msg)): ?>
+                        <div class="alert alert-error" style="margin-bottom: 1rem; padding: 1rem; background: #fee2e2; color: #dc2626; border-radius: 0.5rem;">
+                            <i class="fas fa-exclamation-triangle"></i> <?php echo $error_msg; ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <form method="post" enctype="multipart/form-data" class="modern-form">
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="product_name" class="form-label">
                                     <i class="fas fa-tag"></i> Product Name <span class="required">*</span>
                                 </label>
-                                <input type="text" id="product_name" name="product_name" class="form-control" 
+                                <input type="text" id="product_name" name="product_name" class="form-control"
                                        placeholder="Enter product name" required>
                             </div>
 
                             <div class="form-group">
-                                <label for="product_type" class="form-label">
-                                    <i class="fas fa-cubes"></i> Product Type <span class="required">*</span>
+                                <label for="product_category" class="form-label">
+                                    <i class="fas fa-cubes"></i> Product Category <span class="required">*</span>
                                 </label>
-                                <input type="text" id="product_type" name="product_type" class="form-control" 
-                                       placeholder="e.g., Milk, Ghee, Butter, Curd" required>
+                                <select id="product_category" name="product_category" class="form-control" required>
+                                    <option value="">-- Select Product Category --</option>
+                                    <option value="Milk Product">🥛 Milk Product</option>
+                                    <option value="Curd & Sambaram">🥛 Curd & Sambaram</option>
+                                    <option value="Ice Cream">🍦 Ice Cream</option>
+                                    <option value="Ghee & Butter">🧈 Ghee & Butter</option>
+                                    <option value="Other">📦 Other</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="product_type" class="form-label">
+                                    <i class="fas fa-tag"></i> Product Type / Name <span class="required">*</span>
+                                </label>
+                                <input type="text" id="product_type" name="product_type" class="form-control"
+                                       placeholder="e.g., Full Cream Milk, Greek Yogurt, Vanilla Ice Cream" required>
                             </div>
 
                             <div class="form-group">
@@ -100,8 +156,24 @@ if (isset($_POST['submit'])) {
                                 </label>
                                 <div class="input-group">
                                     <span class="input-addon">₹</span>
-                                    <input type="number" id="unit_price" name="unit_price" step="0.01" 
+                                    <input type="number" id="unit_price" name="unit_price" step="0.01"
                                            class="form-control" placeholder="0.00" min="0" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="product_image" class="form-label">
+                                    <i class="fas fa-image"></i> Product Image <span class="optional">(optional)</span>
+                                </label>
+                                <div class="file-input-container">
+                                    <input type="file" id="product_image" name="product_image" class="form-control"
+                                           accept="image/*" onchange="previewImage(this)">
+                                    <div class="file-input-info">
+                                        <small class="text-muted">Accepted formats: JPG, PNG, GIF, WebP (Max: 5MB)</small>
+                                    </div>
+                                </div>
+                                <div id="image_preview" class="image-preview" style="display: none;">
+                                    <img id="preview_img" src="" alt="Preview" style="max-width: 200px; max-height: 200px; border-radius: 0.5rem; margin-top: 0.5rem;">
                                 </div>
                             </div>
                         </div>
@@ -167,10 +239,48 @@ if (isset($_POST['submit'])) {
         </div>
     </div>
 
-   
+    <script>
+    function previewImage(input) {
+        const preview = document.getElementById('image_preview');
+        const previewImg = document.getElementById('preview_img');
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                previewImg.src = e.target.result;
+                preview.style.display = 'block';
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            preview.style.display = 'none';
+        }
+    }
+    </script>
 </body>
 </html>
 <style>
-          
-        </style>
+    .file-input-container {
+        position: relative;
+    }
+
+    .file-input-info {
+        margin-top: 0.25rem;
+    }
+
+    .image-preview {
+        margin-top: 0.5rem;
+    }
+
+    .required {
+        color: #dc2626;
+        font-weight: bold;
+    }
+
+    .optional {
+        color: #6b7280;
+        font-weight: normal;
+    }
+</style>
 <?php include('includes/footer.php'); ?>

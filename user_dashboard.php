@@ -272,4 +272,3 @@ if ($farmer_uuid) {
     </div>
 </body>
 </html>
-

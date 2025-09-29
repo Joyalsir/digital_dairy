@@ -19,9 +19,9 @@ if (isset($_POST['submit'])) {
   $driver_uuid = generateShortUUID();
 
   $query = "INSERT INTO tbldelivery
-    (CustomerName, Contact, Address, DeliveryDate, ProductType, Quantity, VehicleNo, DriverName, DriverContact, delivery_uuid, customer_uuid, driver_uuid)
+    (CustomerName, Contact, Address, DeliveryDate, ProductType, Quantity, VehicleNo, DriverName, DriverContact, delivery_uuid, customer_uuid, driver_uuid, delivery_status)
     VALUES
-    ('$customer_name', '$contact', '$address', '$delivery_date', '$product_type', '$quantity', '$vehicle_no', '$driver_name', '$driver_contact', '$delivery_uuid', '$customer_uuid', '$driver_uuid')";
+    ('$customer_name', '$contact', '$address', '$delivery_date', '$product_type', '$quantity', '$vehicle_no', '$driver_name', '$driver_contact', '$delivery_uuid', '$customer_uuid', '$driver_uuid', 'pending')";
 
   if (mysqli_query($con, $query)) {
     echo "<script>alert('Delivery details added successfully with UUID tracking'); window.location='manage_delivery.php';</script>";

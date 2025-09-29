@@ -1,5 +1,17 @@
 <?php
+session_start();
 include('includes/config.php');
+
+// Check if user is logged in
+if (isset($_SESSION['email'])) {
+    // User is logged in - show cart and user menu
+    $isLoggedIn = true;
+    $cartCount = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
+} else {
+    // User is not logged in - show login/register menu
+    $isLoggedIn = false;
+    $cartCount = 0;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -276,66 +288,7 @@ include('includes/config.php');
       color: var(--primary-color);
     }
     
-    /* Products Section */
-    .products {
-      padding: 100px 0;
-      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    }
-    
-    .products .card {
-      border: none;
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      height: 100%;
-    }
-    
-    .products .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-    }
-    
-    .products .card-img-top {
-      height: 200px;
-      object-fit: cover;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 3rem;
-    }
-    
-    .products .card-body {
-      padding: 25px;
-    }
-    
-    .products .card-title {
-      color: var(--primary-color);
-      font-weight: 600;
-      margin-bottom: 15px;
-    }
-    
-    .products .price {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--secondary-color);
-      margin-bottom: 20px;
-    }
-    
-    .products .btn-primary {
-      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-      border: none;
-      border-radius: 25px;
-      padding: 10px 25px;
-      font-weight: 600;
-    }
-    
-    .products .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(44, 90, 160, 0.3);
-    }
+   
 
     /* Call to Action */
     .cta {
@@ -420,466 +373,765 @@ include('includes/config.php');
       color: var(--primary-color);
     }
 
-    /* Demo Section Styles */
-    .demo-card {
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
+    /* product*/ 
+     .categories-section {
+            padding: 60px 0;
+            background: var(--light-bg);
+        }
+
+        .category-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .category-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border: 3px solid rgba(255,255,255,0.2);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .category-icon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(44,90,160,0.7) 0%, rgba(76,175,80,0.7) 100%);
+            z-index: 1;
+        }
+
+        .category-icon i {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Category specific image backgrounds */
+        .milk-icon {
+            background-image: url('uploads/products/product_68d11758f140b4.57759496.png');
+        }
+
+        .curd-icon {
+            background-image: url('uploads/products/product_68d118eb1afba8.07186790.png');
+        }
+
+        .icecream-icon {
+            background-image: url('uploads/products/product_68d1200e547f02.98518454.png');
+        }
+
+        .ghee-icon {
+            background-image: url('uploads/products/product_68d11896e32298.84480869.png');
+        }
+
+        .category-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .category-description {
+            color: #666;
+            font-size: 0.95rem;
+        }
     
-    .demo-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.15) !important;
-    }
-    
-    .demo-icon {
-      width: 80px;
-      height: 80px;
+
+    /* Hero Banner Styles */
+    .dairy-banner {
       background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto;
+      border-radius: 20px;
+      padding: 40px 30px;
+      text-align: center;
       color: white;
-    }
-    
-    .form-group {
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
       position: relative;
-    }
-    
-    .form-label {
-      display: flex;
-      align-items: center;
-      font-weight: 500;
-    }
-    
-    .form-control {
-      border: 2px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 15px;
-      font-size: 16px;
-      transition: all 0.3s ease;
-    }
-    
-    .form-control:focus {
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.1);
-    }
-    
-    .form-control-lg {
-      padding: 15px 20px;
-      font-size: 18px;
-    }
-    
-    /* Comparison Section Styles */
-    .comparison-card {
-      border-radius: 15px;
       overflow: hidden;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease;
+      min-height: 350px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
-    
-    .comparison-card:hover {
-      transform: translateY(-3px);
+
+    .banner-image-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1;
     }
-    
-    .comparison-card.traditional {
-      border-left: 4px solid #dc3545;
+
+    .banner-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 20px;
+      opacity: 0.3;
     }
-    
-    .comparison-card.digital {
-      border-left: 4px solid #28a745;
+
+    .banner-content-overlay {
+      position: relative;
+      z-index: 2;
     }
-    
-    .comparison-icon {
+
+    .dairy-banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="3" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="30" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="70" r="2.5" fill="rgba(255,255,255,0.1)"/><circle cx="70" cy="80" r="3" fill="rgba(255,255,255,0.1)"/></svg>');
+      background-size: 150px 150px;
+    }
+
+    .banner-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      opacity: 0.9;
+      position: relative;
+      z-index: 2;
+    }
+
+    .dairy-banner h3 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .dairy-banner p {
+      font-size: 1rem;
+      opacity: 0.9;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Enhanced Hero Section */
+    .hero {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 50%;
+      height: 100%;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="2" fill="rgba(44,90,160,0.05)"/><circle cx="75" cy="75" r="1.5" fill="rgba(76,175,80,0.05)"/><circle cx="50" cy="10" r="1" fill="rgba(255,107,53,0.05)"/><circle cx="10" cy="60" r="1.5" fill="rgba(44,90,160,0.05)"/><circle cx="90" cy="40" r="2" fill="rgba(76,175,80,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+      background-size: 200px 200px;
+      opacity: 0.3;
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero h1 {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      font-size: 1.3rem;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+      color: var(--dark-text);
+      opacity: 0.9;
+    }
+
+    .hero-buttons {
+      margin-bottom: 3rem;
+    }
+
+    /* Responsive adjustments for hero */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .hero p {
+        font-size: 1.1rem;
+      }
+
+      .dairy-banner {
+        margin-top: 2rem;
+        min-height: 280px;
+      }
+
+      .banner-icon {
+        font-size: 3rem;
+      }
+
+      .dairy-banner h3 {
+        font-size: 1.5rem;
+      }
+    }
+
+    /* Contact Section Styles */
+    .contact-form-container {
+      background: white;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .contact-info {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      height: fit-content;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+    }
+
+    .contact-icon {
+      flex-shrink: 0;
       width: 50px;
       height: 50px;
-      background: rgba(255, 255, 255, 0.2);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
+      background: var(--light-bg);
     }
-    
-    .point-item {
-      padding: 10px 0;
-      border-bottom: 1px solid #f1f3f4;
-    }
-    
-    .point-item:last-child {
-      border-bottom: none;
-    }
-    
-    .progress {
-      background-color: #f8f9fa;
-      border-radius: 10px;
-    }
-    
-    .progress-bar {
-      border-radius: 10px;
-      transition: width 0.6s ease;
-    }
-    
-    .summary-stats {
-      border: 2px solid rgba(44, 90, 160, 0.1);
-    }
-    
-    .stat-box {
-      padding: 15px;
-    }
-    
-    .stat-value {
-      font-size: 1.5rem;
+
+    .contact-details h6 {
       margin-bottom: 5px;
+      font-weight: 600;
+      color: var(--dark-text);
     }
-    
-    .stat-label {
-      font-size: 0.9rem;
+
+    .contact-details p {
+      margin-bottom: 0;
       color: var(--light-text);
+      line-height: 1.5;
+    }
+
+    .contact-details a {
+      color: var(--primary-color);
+      transition: color 0.3s ease;
+    }
+
+    .contact-details a:hover {
+      color: var(--secondary-color);
+      text-decoration: none;
+    }
+
+    .social-links .btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      transition: all 0.3s ease;
+    }
+
+    .social-links .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .map-container {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .map-embed iframe {
+      border-radius: 15px;
+    }
+
+    /* Form Messages */
+    .form-message {
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-top: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .form-message.success {
+      background-color: rgba(76, 175, 80, 0.1);
+      border: 1px solid rgba(76, 175, 80, 0.3);
+      color: #2e7d32;
+    }
+
+    .form-message.error {
+      background-color: rgba(244, 67, 54, 0.1);
+      border: 1px solid rgba(244, 67, 54, 0.3);
+      color: #c62828;
+    }
+
+    /* Contact form enhancements */
+    .contact-form .form-label {
+      font-weight: 600;
+      color: var(--dark-text);
+      margin-bottom: 8px;
+    }
+
+    .contact-form .form-control:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.2rem rgba(44, 90, 160, 0.25);
+    }
+
+    .contact-form .form-select:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.2rem rgba(44, 90, 160, 0.25);
+    }
+
+    .form-check-input:checked {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+
+    /* Responsive adjustments for contact section */
+    @media (max-width: 768px) {
+      .contact-form-container,
+      .contact-info,
+      .map-container {
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      .contact-item {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .contact-icon {
+        margin: 0 auto;
+      }
     }
   </style>
 </head>
 <body>
 
-<section class="hero py-5">
+<!-- Header/Navigation Bar -->
+<header class="header">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
+    <div class="container">
+      <!-- Logo and Brand -->
+      <a class="navbar-brand d-flex align-items-center" href="#home">
+        <div class="logo-container me-3">
+          <i class="fas fa-cow text-primary" style="font-size: 2rem;"></i>
+        </div>
+        <div class="brand-text">
+          <h5 class="mb-0 fw-bold text-primary">DDMS</h5>
+          <small class="text-muted">Modern Dairy Solutions</small>
+        </div>
+      </a>
+
+      <!-- Mobile Menu Toggle -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Navigation Menu -->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#home">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#about">About Us</a>
+          </li>
+          <li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#products" id="navbarDropdown" role="button" 
+     data-bs-toggle="dropdown" aria-expanded="false">
+    Products
+  </a>
+  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+    <li><a class="dropdown-item" href="milk_product.php">Milk Products</a></li>
+    <li><a class="dropdown-item" href="curd_product.php">Curd & Sambaram</a></li>
+    <li><a class="dropdown-item" href="icecream_product.php">Ice Cream</a></li>
+    <li><a class="dropdown-item" href="ghee_product.php">Ghee & Butter</a></li>
+  </ul>
+</li>
+ 
+          <li class="nav-item">
+            <a class="nav-link" href="#contact">Contact</a>
+          </li>
+        </ul>
+
+        <!-- Cart and User Section -->
+        <div class="d-flex align-items-center gap-3">
+          <!-- Cart Icon -->
+          <a href="cart.php" class="btn btn-outline-primary position-relative">
+            <i class="fas fa-shopping-cart"></i>
+            <?php if ($cartCount > 0): ?>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                <?php echo $cartCount; ?>
+                <span class="visually-hidden">items in cart</span>
+              </span>
+            <?php endif; ?>
+          </a>
+
+          <!-- User Dropdown -->
+          <?php if ($isLoggedIn): ?>
+            <div class="dropdown">
+              <button class="btn btn-outline-primary dropdown-toggle d-flex align-items-center" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-user me-2"></i>
+                <span class="d-none d-md-inline"><?php echo htmlspecialchars($_SESSION['email']); ?></span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                <li><h6 class="dropdown-header">
+                  <i class="fas fa-user me-2"></i><?php echo htmlspecialchars($_SESSION['email']); ?>
+                </h6></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="profile.php">
+                  <i class="fas fa-user-edit me-2"></i>Profile
+                </a></li>
+                <li><a class="dropdown-item" href="orders.php">
+                  <i class="fas fa-box me-2"></i>My Orders
+                </a></li>
+                <li><a class="dropdown-item" href="cart.php">
+                  <i class="fas fa-shopping-cart me-2"></i>Cart (<?php echo $cartCount; ?>)
+                </a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="logout_cus.php">
+                  <i class="fas fa-sign-out-alt me-2"></i>Logout
+                </a></li>
+              </ul>
+            </div>
+          <?php else: ?>
+            <div class="dropdown">
+              <button class="btn btn-outline-primary dropdown-toggle" type="button" id="loginDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-user me-2"></i>Login / Register
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="loginDropdown">
+                <li><a class="dropdown-item" href="login.php?role=admin">
+                  <i class="fas fa-user-shield me-2"></i>Admin Login
+                </a></li>
+                <li><a class="dropdown-item" href="index.php?role=farmer">
+                  <i class="fas fa-user me-2"></i>Farmer/Customer Login
+                </a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="customer_reg.php">
+                  <i class="fas fa-user-plus me-2"></i>Register New Account
+                </a></li>
+              </ul>
+            </div>
+          <?php endif; ?>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<!-- Spacer for fixed header -->
+<div style="height: 80px;"></div>
+
+<!-- Hero/Banner Section -->
+<section id="home" class="hero">
   <div class="container">
     <div class="row align-items-center">
       <div class="col-lg-6">
-        <span class="badge mb-3 px-3 py-2 fs-6 fw-semibold">Trusted by 5,000+ farmers across India</span>
-        <h1 class="display-4 fw-bold mb-4">
-          Take Control of Your <span class="text-primary">Dairy Business</span>
-        </h1>
-        <p class="lead mb-4">
-          Get complete transparency over milk collection records and payments - as simple as checking your phone. No more disputes, no more delays.
-        </p>
-        <div class="d-flex flex-wrap gap-4 mb-4">
-          <div class="d-flex align-items-center gap-2">
-            <i class="fas fa-shield-alt text-success fs-4"></i>
-            <span>Bank-level security</span>
+        <div class="hero-content">
+          <h1 class="display-4 fw-bold mb-4">
+            Welcome to <span class="text-primary">Digital Dairy Management System</span>
+          </h1>
+          <p class="lead mb-4">
+             A complete solution for managing farmers, milk collection, products, deliveries, and customer orders — all in one platform.
+          </p>
+
+          <!-- Hero Buttons -->
+          <div class="hero-buttons d-flex gap-3 flex-wrap">
+            
+               <a href="#categories" class="btn btn-primary btn-lg">Explore Products</a>
+            </a>
+          
+               <a href="#about" class="btn btn-primary btn-lg">Learn More</a>
+            </a>
           </div>
-          <div class="d-flex align-items-center gap-2">
-            <i class="fas fa-check-circle text-success fs-4"></i>
-            <span>99.8% payment accuracy</span>
-          </div>
-          <div class="d-flex align-items-center gap-2">
-            <i class="fas fa-wifi text-success fs-4"></i>
-            <span>Works offline</span>
-          </div>
-        </div>
-        <div class="d-flex flex-wrap gap-3">
-          <a href="#" class="btn btn-primary btn-lg px-4 py-3 fw-semibold">Start Free Trial - No Credit Card Required</a>
-          <a href="#" class="btn btn-outline-primary btn-lg px-4 py-3 fw-semibold">Watch 2-Min Demo</a>
         </div>
       </div>
-      <div class="col-lg-6 position-relative">
-        <img src="https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Dashboard" class="img-fluid rounded-4 border border-primary border-3 shadow-lg" />
-        <div class="position-absolute top-0 end-0 px-3 py-2 rounded-3 shadow" style="transform: translate(20%, -50%); font-weight: 600; background-color: #166534; color: #d1d5db;">
-          ₹45,230 <small class="d-block" style="font-weight: 400; font-size: 0.8rem;">This month's earnings</small>
-        </div>
-        <div class="position-absolute bottom-0 start-0 shadow rounded-3 px-3 py-2" style="transform: translate(-20%, 50%); min-width: 100px; font-weight: 600; background-color: #374151; color: #d1d5db;">
-          850L <small class="d-block" style="font-weight: 400; font-size: 0.8rem;">Today's collection</small>
+
+      <div class="col-lg-6">
+        <div class="hero-image text-center">
+          <div class="dairy-banner">
+            <div class="banner-image-container">
+              <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1926&q=80"
+                   alt="Fresh Dairy Products"
+                   class="banner-image">
+            </div>
+            <div class="banner-content-overlay">
+              <div class="banner-icon">
+                <i class="fas fa-cow fa-2x text-white"></i>
+              </div>
+              <h3 class="text-white">Fresh Dairy Products</h3>
+              <p class="text-white-50">From Farm to Table</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Features Section -->
-<section id="features" class="features">
+
+
+
+  
+
+<!-- About Us Section -->
+<section id="about" class="section-padding bg-surface">
   <div class="container">
-    <div class="text-center mb-5">
-      <h2 class="display-4 fw-bold mb-3">Why Choose Our System?</h2>
-      <p class="lead text-muted">Comprehensive features designed for modern dairy management</p>
-    </div>
-    
-    <div class="row">
-      <div class="col-lg-4 col-md-6">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-users"></i>
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+        <div class="text-start">
+          <h2 class="display-4 fw-bold mb-4 text-text-primary">About Digital Dairy System</h2>
+          <p class="lead mb-4 text-text-secondary">
+               Digital Dairy is a modern platform that connects farmers and customers directly.  
+          We provide fresh, pure, and quality dairy products such as milk, curd, ghee, and ice cream.          </p>
+          <p class="mb-4">
+              Our mission is to ensure that every customer receives farm-fresh dairy while supporting local farmers.  
+          With transparent processes and reliable delivery, we bring health and trust to your doorstep.          </p>
+
+          <div class="row g-4 mt-4">
+            <div class="col-6">
+              <div class="text-center">
+                <div class="stat-box summary-stats">
+                  <div class="stat-value text-secondary">500+</div>
+                  <div class="stat-label">Happy Farmers</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="text-center">
+                <div class="stat-box summary-stats">
+                  <div class="stat-value text-secondary">40%</div>
+                  <div class="stat-label">Efficiency Increase</div>
+                </div>
+              </div>
+            </div>
           </div>
-          <h4>Farmer Management</h4>
-          <p>Efficiently manage farmer profiles, track milk supply, and handle payments seamlessly.</p>
+
+          
         </div>
       </div>
-      
-      <div class="col-lg-4 col-md-6">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-chart-line"></i>
+
+      <div class="col-lg-6">
+        <div class="comparison-card digital">
+          <div class="card-body p-4">
+            <h5 class="card-title mb-4">
+              <i class="fas fa-chart-line text-secondary me-2"></i>
+              Our Mission & Vision
+            </h5>
+
+            <div class="point-item">
+              <div class="d-flex align-items-start">
+                <i class="fas fa-check-circle text-secondary me-3 mt-1"></i>
+                <div>
+                  <strong>Empower Farmers:</strong> Provide tools that help farmers increase productivity and profitability
+                </div>
+              </div>
+            </div>
+
+            <div class="point-item">
+              <div class="d-flex align-items-start">
+                <i class="fas fa-check-circle text-secondary me-3 mt-1"></i>
+                <div>
+                  <strong>Quality Assurance:</strong> Ensure consistent quality from farm to consumer
+                </div>
+              </div>
+            </div>
+
+            <div class="point-item">
+              <div class="d-flex align-items-start">
+                <i class="fas fa-check-circle text-secondary me-3 mt-1"></i>
+                <div>
+                  <strong>Sustainable Growth:</strong> Promote sustainable dairy farming practices
+                </div>
+              </div>
+            </div>
+
+            <div class="point-item">
+              <div class="d-flex align-items-start">
+                <i class="fas fa-check-circle text-secondary me-3 mt-1"></i>
+                <div>
+                  <strong>Technology Integration:</strong> Bridge traditional farming with modern technology
+                </div>
+              </div>
+            </div>
+
+            <div class="point-item">
+              <div class="d-flex align-items-start">
+                <i class="fas fa-check-circle text-secondary me-3 mt-1"></i>
+                <div>
+                  <strong>Community Building:</strong> Foster a supportive community of dairy professionals
+                </div>
+              </div>
+            </div>
           </div>
-          <h4>Real-time Analytics</h4>
-          <p>Get instant insights with comprehensive dashboards and detailed reports.</p>
-        </div>
-      </div>
-      
-      <div class="col-lg-4 col-md-6">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-truck"></i>
-          </div>
-          <h4>Delivery Tracking</h4>
-          <p>Monitor milk collection and product delivery with real-time tracking.</p>
-        </div>
-      </div>
-      
-      <div class="col-lg-4 col-md-6">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-shopping-cart"></i>
-          </div>
-          <h4>Product Sales</h4>
-          <p>Manage dairy product inventory and sales with ease.</p>
-        </div>
-      </div>
-      
-      <div class="col-lg-4 col-md-6">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-money-bill-wave"></i>
-          </div>
-          <h4>Payment Processing</h4>
-          <p>Automated payment calculations and transaction management.</p>
-        </div>
-      </div>
-      
-      <div class="col-lg-4 col-md-6">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-mobile-alt"></i>
-          </div>
-          <h4>Mobile Friendly</h4>
-          <p>Access your dairy management system from any device, anywhere.</p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Solution Demo Section -->
-<section id="demo" class="section-padding bg-surface">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="display-4 fw-bold mb-3">See How Easy Digital Tracking Can Be</h2>
-            <p class="lead text-muted">Watch your milk records get automatically generated and synced in real-time</p>
-        </div>
-        
-        <div class="row">
-            <!-- Left Side: Interactive Demo -->
-            <div class="col-lg-6 mb-5 mb-lg-0">
-                <div class="demo-card bg-white rounded-4 shadow-lg p-5 h-100">
-                    <div class="text-center mb-4">
-                        <div class="demo-icon mb-3">
-                            <i class="fas fa-calculator fa-3x text-primary"></i>
-                        </div>
-                        <h3 class="h4 fw-bold text-text-primary mb-3">Try Our Smart Calculator</h3>
-                        <p class="text-text-secondary">Experience how our system automatically calculates your earnings</p>
-                    </div>
-                    
-                    <!-- Demo Form -->
-                    <div class="demo-form">
-                        <div class="form-group mb-4">
-                            <label class="form-label fw-semibold text-text-secondary mb-2">
-                                <i class="fas fa-sun me-2 text-warning"></i>Morning Collection (Liters)
-                            </label>
-                            <input type="number" id="morning-milk" class="form-control form-control-lg" placeholder="Enter liters" value="25" />
-                        </div>
-                        
-                        <div class="form-group mb-4">
-                            <label class="form-label fw-semibold text-text-secondary mb-2">
-                                <i class="fas fa-moon me-2 text-primary"></i>Evening Collection (Liters)
-                            </label>
-                            <input type="number" id="evening-milk" class="form-control form-control-lg" placeholder="Enter liters" value="20" />
-                        </div>
-                        
-                        <div class="form-group mb-4">
-                            <label class="form-label fw-semibold text-text-secondary mb-2">
-                                <i class="fas fa-tint me-2 text-info"></i>Fat Content (%)
-                            </label>
-                            <input type="number" id="fat-content" class="form-control form-control-lg" placeholder="Enter fat %" value="4.2" step="0.1" />
-                        </div>
-                        
-                        <button onclick="calculateEarnings()" class="btn btn-primary btn-lg w-100 py-3 fw-semibold">
-                            <i class="fas fa-calculator me-2"></i>Calculate Today's Earnings
-                        </button>
-                    </div>
-                    
-                    <!-- Results -->
-                    <div id="calculation-results" class="mt-5 p-4 bg-success bg-opacity-10 rounded-3 border border-success border-opacity-25" style="display: none;">
-                        <div class="text-center mb-3">
-                            <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
-                            <h4 class="fw-bold text-success">Calculation Complete!</h4>
-                        </div>
-                        <div class="row text-center">
-                            <div class="col-6">
-                                <div class="stat-box">
-                                    <div class="stat-value text-primary fw-bold fs-4" id="total-milk">45L</div>
-                                    <div class="stat-label text-text-secondary">Total Milk</div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="stat-box">
-                                    <div class="stat-value text-success fw-bold fs-4" id="total-earning">₹1,890</div>
-                                    <div class="stat-label text-text-secondary">Today's Earning</div>
-                                </div>
-                            </div>
-                        </div>
-                       
-                  </div>
-                </div>
-            </div>
+<!-- Product Categories -->
+<section class="categories-section" id="categories">
+  <div class="container">
+    <h2 class="section-title text-center mb-4">Product Categories</h2>
+    <div class="row">
 
-            <!-- Right Side: Comparison Section -->
-            <div class="col-lg-6">
-                <div class="comparison-section">
-                    <div class="text-center mb-4">
-                        <h3 class="h4 fw-bold text-text-primary">Why Choose Digital Over Traditional?</h3>
-                        <p class="text-text-secondary">See the clear advantages of our digital system</p>
-                    </div>
-                    
-                    <!-- Comparison Cards -->
-                    <div class="comparison-cards">
-                        <!-- Traditional Method Card -->
-                        <div class="comparison-card traditional mb-4">
-                            <div class="card-header bg-danger bg-opacity-10 py-3 px-4 border-0">
-                                <div class="d-flex align-items-center">
-                                    <div class="comparison-icon me-3">
-                                        <i class="fas fa-times-circle fa-2x text-danger"></i>
-                                    </div>
-                                    <h4 class="fw-bold text-danger mb-0">Traditional Paper Method</h4>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="comparison-points">
-                                    <div class="point-item mb-3">
-                                        <div class="d-flex align-items-center">
-                                            <i class="fas fa-times text-danger me-3"></i>
-                                            <span class="text-text-secondary">Manual calculations prone to errors</span>
-                                        </div>
-                                        <div class="progress mt-2" style="height: 6px;">
-                                            <div class="progress-bar bg-danger" style="width: 30%"></div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="point-item mb-3">
-                                        <div class="d-flex align-items-center">
-                                            <i class="fas fa-times text-danger me-3"></i>
-                                            <span class="text-text-secondary">No backup if records are lost</span>
-                                        </div>
-                                        <div class="progress mt-2" style="height: 6px;">
-                                            <div class="progress-bar bg-danger" style="width: 20%"></div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="point-item mb-3">
-                                        <div class="d-flex align-items-center">
-                                            <i class="fas fa-times text-danger me-3"></i>
-                                            <span class="text-text-secondary">Disputes over handwriting</span>
-                                        </div>
-                                        <div class="progress mt-2" style="height: 6px;">
-                                            <div class="progress-bar bg-danger" style="width: 25%"></div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="point-item">
-                                        <div class="d-flex align-items-center">
-                                            <i class="fas fa-times text-danger me-3"></i>
-                                            <span class="text-text-secondary">Time-consuming monthly reports</span>
-                                        </div>
-                                        <div class="progress mt-2" style="height: 6px;">
-                                            <div class="progress-bar bg-danger" style="width: 15%"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+      <!-- Fresh Milk Category -->
+      <div class="col-md-3 col-sm-6 mb-4">
+        <a href="milk_product.php" class="text-decoration-none">
+          <div class="category-card text-center">
+            <div class="category-icon milk-icon"></div>
+            <h3 class="category-title">Fresh Milk</h3>
+            <p class="category-description">Pure, fresh milk from healthy cows</p>
+          </div>
+        </a>
+      </div>
 
-                        <!-- Digital Method Card -->
-                        <div class="comparison-card digital">
-                            <div class="card-header bg-success bg-opacity-10 py-3 px-4 border-0">
-                                <div class="d-flex align-items-center">
-                                    <div class="comparison-icon me-3">
-                                        <i class="fas fa-check-circle fa-2x text-success"></i>
-                                    </div>
-                                    <h4 class="fw-bold text-success mb-0"> Digital Dairy</h4>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="comparison-points">
-                                    <div class="point-item mb-3">
-                                        <div class="d-flex align-items-center">
-                                            <i class="fas fa-check text-success me-3"></i>
-                                            <span class="text-text-secondary">Automatic calculations, 99.8% accurate</span>
-                                        </div>
-                                        <div class="progress mt-2" style="height: 6px;">
-                                            <div class="progress-bar bg-success" style="width: 95%"></div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="point-item mb-3">
-                                        <div class="d-flex align-items-center">
-                                            <i class="fas fa-check text-success me-3"></i>
-                                            <span class="text-text-secondary">Cloud backup, never lose data</span>
-                                        </div>
-                                        <div class="progress mt-2" style="height: 6px;">
-                                            <div class="progress-bar bg-success" style="width: 100%"></div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="point-item mb-3">
-                                        <div class="d-flex align-items-center">
-                                            <i class="fas fa-check text-success me-3"></i>
-                                            <span class="text-text-secondary">Easy to use interface</span>
-                                        </div>
-                                        <div class="progress mt-2" style="height: 6px;">
-                                            <div class="progress-bar bg-success" style="width: 90%"></div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="point-item">
-                                        <div class="d-flex align-items-center">
-                                            <i class="fas fa-check text-success me-3"></i>
-                                            <span class="text-text-secondary">Real-time syncing and reports</span>
-                                        </div>
-                                        <div class="progress mt-2" style="height: 6px;">
-                                            <div class="progress-bar bg-success" style="width: 98%"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Summary Stats -->
-                    <div class="summary-stats mt-4 p-4 bg-primary bg-opacity-5 rounded-3">
-                        <div class="row text-center">
-                            <div class="col-4">
-                                <div class="stat">
-                                    <div class="stat-value fw-bold text-primary">70%</div>
-                                    <div class="stat-label text-text-secondary">Time Saved</div>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="stat">
-                                    <div class="stat-value fw-bold text-success">99.8%</div>
-                                    <div class="stat-label text-text-secondary">Accuracy</div>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="stat">
-                                    <div class="stat-value fw-bold text-info">24/7</div>
-                                    <div class="stat-label text-text-secondary">Access</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      <!-- Curd & Sambaram Category -->
+      <div class="col-md-3 col-sm-6 mb-4">
+        <a href="curd_product.php" class="text-decoration-none">
+          <div class="category-card text-center">
+            <div class="category-icon curd-icon"></div>
+            <h3 class="category-title">Curd & Sambaram</h3>
+            <p class="category-description">Traditional and flavored curd varieties</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Ice Cream Category -->
+      <div class="col-md-3 col-sm-6 mb-4">
+        <a href="icecream_product.php" class="text-decoration-none">
+          <div class="category-card text-center">
+            <div class="category-icon icecream-icon"></div>
+            <h3 class="category-title">Ice Cream</h3>
+            <p class="category-description">Pure and delicious ice cream</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Ghee & Butter Category -->
+      <div class="col-md-3 col-sm-6 mb-4">
+        <a href="ghee_product.php" class="text-decoration-none">
+          <div class="category-card text-center">
+            <div class="category-icon ghee-icon"></div>
+            <h3 class="category-title">Ghee & Butter</h3>
+            <p class="category-description">Pure ghee and premium butter</p>
+          </div>
+        </a>
+      </div>
+
     </div>
+  </div>
 </section>
 
 
-
+  <!-- User Panel Benefits -->
+   <section id="benefits" class="section-padding bg-surface">
+    <div class="row mt-5">
+      <div class="col-12">
+        <div class="bg-light p-5 rounded-3">
+          <h3 class="text-center mb-4">Why Choose Our System?</h3>
+          <div class="row">
+            <div class="col-lg-3 col-md-6 text-center mb-4">
+              <div class="mb-3">
+                <i class="fas fa-clock text-primary fa-3x"></i>
+              </div>
+              <h5>Save Time</h5>
+              <p>Automate routine tasks and reduce manual work by up to 60%</p>
+            </div>
+            <div class="col-lg-3 col-md-6 text-center mb-4">
+              <div class="mb-3">
+                <i class="fas fa-chart-bar text-success fa-3x"></i>
+              </div>
+              <h5>Increase Efficiency</h5>
+              <p>Real-time data and analytics help optimize your dairy operations</p>
+            </div>
+            <div class="col-lg-3 col-md-6 text-center mb-4">
+              <div class="mb-3">
+                <i class="fas fa-users text-warning fa-3x"></i>
+              </div>
+              <h5>Better Management</h5>
+              <p>Streamlined processes for better farmer-customer relationships</p>
+            </div>
+            <div class="col-lg-3 col-md-6 text-center mb-4">
+              <div class="mb-3">
+                <i class="fas fa-glass-whiskey text-info fa-3x"></i>
+              </div>
+              <h5>Fresh & Pure Milk</h5>
+              <p>Direct from farm to table with guaranteed freshness and purity</p>
+            </div>
+            <div class="col-lg-3 col-md-6 text-center mb-4">
+              <div class="mb-3">
+                <i class="fas fa-shield-alt text-secondary fa-3x"></i>
+              </div>
+              <h5>Hygienic Processing</h5>
+              <p>State-of-the-art processing facilities ensuring highest hygiene standards</p>
+            </div>
+            <div class="col-lg-3 col-md-6 text-center mb-4">
+              <div class="mb-3">
+                <i class="fas fa-handshake text-success fa-3x"></i>
+              </div>
+              <h5>Supporting Local Farmers</h5>
+              <p>Empowering local dairy farmers with fair prices and sustainable practices</p>
+            </div>
+            <div class="col-lg-3 col-md-6 text-center mb-4">
+              <div class="mb-3">
+                <i class="fas fa-truck text-primary fa-3x"></i>
+              </div>
+              <h5>Affordable & Reliable Delivery</h5>
+              <p>Fast, reliable delivery service at competitive prices across all locations</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  
 <!-- Testimonials Section -->
 <section class="testimonials">
   <div class="container">
@@ -919,123 +1171,310 @@ include('includes/config.php');
   </div>
 </section>
 
-    <!-- Our Products Section -->
-    <section id="products" class="products">
-      <div class="container">
-        <div class="text-center mb-5">
-          <h2 class="display-4 fw-bold mb-3">Our Products</h2>
-          <p class="lead text-muted">Explore our range of fresh dairy products</p>
-        </div>
-        
-        <div class="row">
-          <div class="col-lg-3 col-md-6 mb-4">
-            <div class="card">
-              <div class="card-img-top">
-                <i class="fas fa-milk-bottle"></i>
-              </div>
-              <div class="card-body">
-                <h5 class="card-title">Fresh Milk</h5>
-                <p class="card-text">Pure and fresh milk sourced from local farms.</p>
-                <p class="price">₹50 per liter</p>
-                <a href="#" class="btn btn-primary">Order Now</a>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-6 mb-4">
-            <div class="card">
-              <div class="card-img-top">
-                <i class="fas fa-cheese"></i>
-              </div>
-              <div class="card-body">
-                <h5 class="card-title">Cheese</h5>
-                <p class="card-text">Delicious cheese made from the finest milk.</p>
-                <p class="price">₹200 per 200g</p>
-                <a href="#" class="btn btn-primary">Order Now</a>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-6 mb-4">
-            <div class="card">
-              <div class="card-img-top">
-                <i class="fas fa-bread-slice"></i>
-              </div>
-              <div class="card-body">
-                <h5 class="card-title">Butter</h5>
-                <p class="card-text">Creamy and rich butter made from fresh cream.</p>
-                <p class="price">₹150 per 250g</p>
-                <a href="#" class="btn btn-primary">Order Now</a>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-6 mb-4">
-            <div class="card">
-              <div class="card-img-top">
-                <i class="fas fa-ice-cream"></i>
-              </div>
-              <div class="card-body">
-                <h5 class="card-title">Ice Cream</h5>
-                <p class="card-text">Premium quality ice cream in various flavors.</p>
-                <p class="price">₹100 per scoop</p>
-                <a href="#" class="btn btn-primary">Order Now</a>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-6 mb-4">
-            <div class="card">
-              <div class="card-img-top">
-                <i class="fas fa-cookie"></i>
-              </div>
-              <div class="card-body">
-                <h5 class="card-title">Curd</h5>
-                <p class="card-text">Fresh and creamy curd made daily.</p>
-                <p class="price">₹40 per 500g</p>
-                <a href="#" class="btn btn-primary">Order Now</a>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-6 mb-4">
-            <div class="card">
-              <div class="card-img-top">
-                <i class="fas fa-egg"></i>
-              </div>
-              <div class="card-body">
-                <h5 class="card-title">Paneer</h5>
-                <p class="card-text">Fresh cottage cheese for your recipes.</p>
-                <p class="price">₹180 per kg</p>
-                <a href="#" class="btn btn-primary">Order Now</a>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-6 mb-4">
-            <div class="card">
-              <div class="card-img-top">
-                <i class="fas fa-cookie-bite"></i>
-              </div>
-              <div class="card-body">
-                <h5 class="card-title">Ghee</h5>
-                <p class="card-text">Pure clarified butter for cooking.</p>
-                <p class="price">₹500 per kg</p>
-                <a href="#" class="btn btn-primary">Order Now</a>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-6 mb-4">
-            <div class="card">
-              <div class="card-img-top">
-                <i class="fas fa-cake"></i>
-              </div>
-              <div class="card-body">
-                <h5 class="card-title">Yogurt</h5>
-                <p class="card-text">Healthy probiotic yogurt.</p>
-                <p class="price">₹60 per 500g</p>
-               <a href="login.php?role=user" class="btn btn-primary">Order Now</a>
+<!-- FAQ Section -->
+<section id="faq" class="section-padding bg-surface">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="display-4 fw-bold mb-3">Frequently Asked Questions</h2>
+      <p class="lead text-muted">Find answers to common questions about our dairy products and services</p>
+    </div>
 
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="accordion" id="faqAccordion">
+
+          <!-- FAQ Item 1 -->
+          <div class="accordion-item mb-3">
+            <h2 class="accordion-header" id="headingOne">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                <i class="fas fa-question-circle text-primary me-3"></i>
+                Is milk pasteurized?
+              </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">
+                <p>Yes, all our milk products undergo pasteurization to ensure safety and quality. We follow strict food safety standards and pasteurize our milk at controlled temperatures to eliminate harmful bacteria while preserving the natural nutrients and taste of fresh milk.</p>
               </div>
             </div>
+          </div>
+
+          <!-- FAQ Item 2 -->
+          <div class="accordion-item mb-3">
+            <h2 class="accordion-header" id="headingTwo">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                <i class="fas fa-shield-alt text-primary me-3"></i>
+                How is quality maintained?
+              </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">
+                <p>Quality is maintained through our comprehensive Digital Dairy Management System that tracks every step from farm to customer. We conduct regular quality checks, maintain cold chain logistics, and work directly with verified farmers who follow best practices in dairy farming.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ Item 3 -->
+          <div class="accordion-item mb-3">
+            <h2 class="accordion-header" id="headingThree">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                <i class="fas fa-truck text-primary me-3"></i>
+                Do you deliver at shop?
+              </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">
+                <p>Yes, we offer both home delivery and shop pickup options. Our delivery service covers most areas, and we also have partner retail shops where you can purchase our products directly. You can choose your preferred delivery method during checkout.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ Item 4 -->
+          <div class="accordion-item mb-3">
+            <h2 class="accordion-header" id="headingFour">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                <i class="fas fa-clock text-primary me-3"></i>
+                What are your delivery timings?
+              </button>
+            </h2>
+            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">
+                <p>We offer flexible delivery slots throughout the day. Morning deliveries (6 AM - 10 AM) and evening deliveries (4 PM - 8 PM) are available. We also provide same-day delivery for orders placed before 2 PM. Delivery schedules may vary by location.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ Item 5 -->
+          <div class="accordion-item mb-3">
+            <h2 class="accordion-header" id="headingFive">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                <i class="fas fa-leaf text-primary me-3"></i>
+                Are your products organic?
+              </button>
+            </h2>
+            <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">
+                <p>We offer both organic and conventional dairy products. Our organic range comes from farms that follow strict organic farming practices without the use of synthetic pesticides or hormones. All our products, whether organic or conventional, meet the highest quality standards.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ Item 6 -->
+          <div class="accordion-item mb-3">
+            <h2 class="accordion-header" id="headingSix">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                <i class="fas fa-credit-card text-primary me-3"></i>
+                What payment methods do you accept?
+              </button>
+            </h2>
+            <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">
+                <p>We accept various payment methods including cash on delivery, online payments (credit/debit cards, net banking, UPI), and digital wallets. For regular customers, we also offer monthly billing options with flexible payment terms.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ Item 7 -->
+          <div class="accordion-item mb-3">
+            <h2 class="accordion-header" id="headingSeven">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+                <i class="fas fa-undo text-primary me-3"></i>
+                What is your return policy?
+              </button>
+            </h2>
+            <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">
+                <p>We have a customer-friendly return policy for dairy products. If you're not satisfied with the quality or if there's any issue with the product, you can return it within 24 hours of delivery. We ensure quick refunds or replacements to maintain your trust in our products.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ Item 8 -->
+          <div class="accordion-item mb-3">
+            <h2 class="accordion-header" id="headingEight">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
+                <i class="fas fa-users text-primary me-3"></i>
+                How can I become a supplier/farmer partner?
+              </button>
+            </h2>
+            <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">
+                <p>We're always looking to partner with quality-conscious dairy farmers. You can register through our farmer portal or contact our partnership team directly. We provide training, quality support, and fair pricing to ensure mutually beneficial partnerships.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Contact Support -->
+        <div class="text-center mt-5">
+          <div class="bg-light p-4 rounded-3">
+            <h5 class="mb-3">Still have questions?</h5>
+            <p class="text-muted mb-3">Our customer support team is here to help you with any queries.</p>
+            <a href="#contact" class="btn btn-primary">Contact Support</a>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="section-padding bg-surface">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="display-4 fw-bold mb-3">Get In Touch</h2>
+      <p class="lead text-muted">Have questions about our dairy products or services? We'd love to hear from you!</p>
+    </div>
+
+    <div class="row">
+      <!-- Contact Form -->
+      <div class="col-lg-8 mb-5">
+        <div class="contact-form-container">
+          <h4 class="mb-4">Send us a Message</h4>
+          <form id="contactForm" class="contact-form">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="contactName" class="form-label">
+                  <i class="fas fa-user me-2"></i>Full Name
+                </label>
+                <input type="text" class="form-control input-field" id="contactName" name="name" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="contactEmail" class="form-label">
+                  <i class="fas fa-envelope me-2"></i>Email Address
+                </label>
+                <input type="email" class="form-control input-field" id="contactEmail" name="email" required>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="contactSubject" class="form-label">
+                <i class="fas fa-tag me-2"></i>Subject
+              </label>
+              <select class="form-control input-field" id="contactSubject" name="subject" required>
+                <option value="">Choose a subject...</option>
+                <option value="general">General Inquiry</option>
+                <option value="products">Product Information</option>
+                <option value="delivery">Delivery Questions</option>
+                <option value="partnership">Partnership Opportunities</option>
+                <option value="complaint">Complaint/Feedback</option>
+                <option value="support">Technical Support</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="contactMessage" class="form-label">
+                <i class="fas fa-comment me-2"></i>Message
+              </label>
+              <textarea class="form-control input-field" id="contactMessage" name="message" rows="5" placeholder="Tell us how we can help you..." required></textarea>
+            </div>
+
+            <div class="mb-3">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="newsletterCheck" name="newsletter">
+                <label class="form-check-label" for="newsletterCheck">
+                  Subscribe to our newsletter for updates on new products and offers
+                </label>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg">
+              <i class="fas fa-paper-plane me-2"></i>Send Message
+            </button>
+          </form>
+
+          <!-- Success/Error Messages -->
+          <div id="formMessages" class="mt-3" style="display: none;"></div>
+        </div>
+      </div>
+
+      <!-- Contact Information -->
+      <div class="col-lg-4">
+        <div class="contact-info">
+          <h4 class="mb-4">Contact Information</h4>
+
+          <!-- Address -->
+          <div class="contact-item mb-4">
+            <div class="contact-icon">
+              <i class="fas fa-map-marker-alt fa-2x text-primary"></i>
+            </div>
+            <div class="contact-details">
+              <h6>Our Location</h6>
+              <p class="mb-0">MACFAST Campus<br>Thiruvalla, Kerala<br>India - 689101</p>
+            </div>
+          </div>
+
+          <!-- Phone -->
+          <div class="contact-item mb-4">
+            <div class="contact-icon">
+              <i class="fas fa-phone fa-2x text-success"></i>
+            </div>
+            <div class="contact-details">
+              <h6>Phone Numbers</h6>
+              <p class="mb-0">
+                <a href="tel:+91xxxxxxxxxx" class="text-decoration-none">+91 xxxxx xxxxx</a><br>
+                <a href="tel:+91xxxxxxxxxx" class="text-decoration-none">+91 xxxxx xxxxx</a>
+              </p>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="contact-item mb-4">
+            <div class="contact-icon">
+              <i class="fas fa-envelope fa-2x text-warning"></i>
+            </div>
+            <div class="contact-details">
+              <h6>Email Addresses</h6>
+              <p class="mb-0">
+                <a href="mailto:info@digitaldairy.com" class="text-decoration-none">info@digitaldairy.com</a><br>
+                <a href="mailto:support@digitaldairy.com" class="text-decoration-none">support@digitaldairy.com</a>
+              </p>
+            </div>
+          </div>
+
+          <!-- Business Hours -->
+          <div class="contact-item mb-4">
+            <div class="contact-icon">
+              <i class="fas fa-clock fa-2x text-info"></i>
+            </div>
+            <div class="contact-details">
+              <h6>Business Hours</h6>
+              <p class="mb-0">
+                <strong>Monday - Friday:</strong> 8:00 AM - 8:00 PM<br>
+                <strong>Saturday:</strong> 8:00 AM - 6:00 PM<br>
+                <strong>Sunday:</strong> 9:00 AM - 4:00 PM
+              </p>
+            </div>
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+
+    <!-- Map Section -->
+    <div class="row mt-5">
+      <div class="col-12">
+        <div class="map-container">
+          <h4 class="text-center mb-4">Find Us on the Map</h4>
+          <div class="map-embed">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3924.6381!2d76.5735!3d9.3850!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b0623b3b3b3b3b3%3A0x3b0623b3b3b3b3b3!2sMACFAST!5e0!3m2!1sen!2sin!4v1623456789012!5m2!1sen!2sin"
+              width="100%"
+              height="400"
+              style="border:0; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="cta">
   <div class="container">
     <h2 class="display-4 fw-bold mb-4">Ready to Transform Your Dairy Business?</h2>
@@ -1059,23 +1498,24 @@ include('includes/config.php');
       <div class="col-lg-2 col-6 mb-4">
         <h6>Quick Links</h6>
         <div class="footer-links d-flex flex-column">
-          <a href="index.php">Features</a>
-          <a href="login.php">Login</a>
-          <a href="register.php">Register</a>
+          <a href="#benefits">Features</a>
+          <a href="index.php">Login</a>
+          <a href="customer_reg.php">Register</a>
         </div>
       </div>
       <div class="col-lg-2 col-6 mb-4">
         <h6>Support</h6>
         <div class="footer-links d-flex flex-column">
-          <a href="#">Help Center</a>
-          <a href="#">Contact Us</a>
-          <a href="#">FAQs</a>
+          
+        <a href="#contact">Contact Us</a>
+          <a href="#faq">FAQs</a>
+          
         </div>
       </div>
       <div class="col-lg-4 mb-4">
         <h6>Contact Info</h6>
         <p><i class="fas fa-envelope me-2"></i> info@digitaldairy.com</p>
-        <p><i class="fas fa-phone me-2"></i> +91 9876543210</p>
+        <p><i class="fas fa-phone me-2"></i> +91 xxxxxxxxxx</p>
         <p><i class="fas fa-map-marker-alt me-2"></i> MACFAST, Thiruvalla</p>
       </div>
     </div>

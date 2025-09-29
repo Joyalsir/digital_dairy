@@ -55,15 +55,16 @@ include('includes/config.php');
                     <h3><i class="fas fa-table"></i> All Products</h3>
                     <p class="text-muted">Comprehensive list of all products in inventory</p>
                 </div>
-                
+
                 <div class="table-container">
                     <div class="table-responsive">
                         <table class="table table-striped table-hover" id="productsTable" style="width: 100%; max-width: 100%;">
                             <thead class="table-dark">
                                 <tr>
                                     <th><i class="fas fa-hashtag"></i> ID</th>
+                                    <th><i class="fas fa-image"></i> Image</th>
                                     <th><i class="fas fa-tag"></i> Product Name</th>
-                                    <th><i class="fas fa-cubes"></i> Product Type</th>
+                                    <th><i class="fas fa-tags"></i> Product Type</th>
                                     <th><i class="fas fa-rupee-sign"></i> Unit Price</th>
                                     <th><i class="fas fa-calendar"></i> Added On</th>
                                     <th><i class="fas fa-cogs"></i> Actions</th>
@@ -78,6 +79,20 @@ include('includes/config.php');
                                     <tr>
                                         <td><?php echo $cnt++; ?></td>
                                         <td>
+                                            <div class="product-image-cell">
+                                                <?php if (!empty($row['ProductImage']) && file_exists($row['ProductImage'])): ?>
+                                                    <img src="<?php echo htmlspecialchars($row['ProductImage']); ?>"
+                                                         alt="<?php echo htmlspecialchars($row['ProductName']); ?>"
+                                                         class="product-thumbnail"
+                                                         onclick="showImageModal('<?php echo htmlspecialchars($row['ProductImage']); ?>', '<?php echo htmlspecialchars($row['ProductName']); ?>')">
+                                                <?php else: ?>
+                                                    <div class="no-image">
+                                                        <i class="fas fa-image"></i>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </div>
+                                        </td>
+                                        <td>
                                             <div class="product-info">
                                                 <div class="product-icon">
                                                     <i class="fas fa-box"></i>
@@ -89,6 +104,7 @@ include('includes/config.php');
                                         </td>
                                         <td>
                                             <span class="badge bg-info">
+                                                <i class="fas fa-tags"></i>
                                                 <?php echo htmlspecialchars($row['ProductType']); ?>
                                             </span>
                                         </td>
@@ -119,6 +135,13 @@ include('includes/config.php');
                         </table>
                     </div>
                 </div>
+            </div>
+
+            <!-- Image Modal -->
+            <div id="imageModal" class="image-modal" onclick="closeImageModal()">
+                <span class="close-modal">&times;</span>
+                <img class="modal-content" id="modalImage">
+                <div class="modal-caption" id="modalCaption"></div>
             </div>
 
             <!-- Quick Stats -->
@@ -192,7 +215,106 @@ include('includes/config.php');
                 }
             });
         });
+
+        // Image Modal Functions
+        function showImageModal(imageSrc, imageAlt) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            const captionText = document.getElementById('modalCaption');
+
+            modal.style.display = 'block';
+            modalImg.src = imageSrc;
+            captionText.innerHTML = imageAlt;
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('imageModal');
+            modal.style.display = 'none';
+        }
+
+        // Close modal when clicking outside the image
+        window.onclick = function(event) {
+            const modal = document.getElementById('imageModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
     </script>
 </body>
+<style>
+    .product-image-cell {
+        text-align: center;
+        width: 80px;
+    }
+
+    .product-thumbnail {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 0.375rem;
+        cursor: pointer;
+        border: 2px solid #e5e7eb;
+        transition: transform 0.2s;
+    }
+
+    .product-thumbnail:hover {
+        transform: scale(1.1);
+        border-color: #3b82f6;
+    }
+
+    .no-image {
+        width: 50px;
+        height: 50px;
+        border-radius: 0.375rem;
+        background-color: #f3f4f6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #9ca3af;
+        font-size: 1.25rem;
+    }
+
+    /* Image Modal Styles */
+    .image-modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.9);
+        cursor: pointer;
+    }
+
+    .modal-content {
+        margin: auto;
+        display: block;
+        max-width: 90%;
+        max-height: 90%;
+        object-fit: contain;
+    }
+
+    .close-modal {
+        position: absolute;
+        top: 15px;
+        right: 35px;
+        color: #f1f1f1;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .modal-caption {
+        margin: auto;
+        display: block;
+        width: 80%;
+        max-width: 700px;
+        text-align: center;
+        color: #ccc;
+        padding: 10px 0;
+        height: 150px;
+    }
+</style>
 </html>
 <?php include('includes/footer.php'); ?>

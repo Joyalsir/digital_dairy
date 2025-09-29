@@ -18,11 +18,11 @@ if (!$query) {
     die("Query failed: " . mysqli_error($con));
 }
 if (mysqli_num_rows($query) == 0) {
-    $farmer_id = null;
+    $farmer_uuid = null;
     $farmer_name = $_SESSION['name'];
 } else {
     $farmer = mysqli_fetch_assoc($query);
-    $farmer_id = $farmer['id'];
+    $farmer_uuid = $farmer['uuid'];
     $farmer_name = $farmer['name'];
 }
 
@@ -32,8 +32,8 @@ $monthly_summary = [
     'total_earnings' => 0,
     'average_per_day' => 0,
 ];
-if ($farmer_id) {
-    $month_query = mysqli_query($con, "SELECT SUM(quantity) as total_milk, SUM(payment) as total_earnings, AVG(quantity) as avg_per_day FROM milk_collection WHERE farmer_id='$farmer_id' AND MONTH(date) = MONTH(CURDATE()) AND YEAR(date) = YEAR(CURDATE())");
+if ($farmer_uuid) {
+    $month_query = mysqli_query($con, "SELECT SUM(quantity) as total_milk, SUM(payment) as total_earnings, AVG(quantity) as avg_per_day FROM milk_collection WHERE farmer_uuid='$farmer_uuid' AND MONTH(date) = MONTH(CURDATE()) AND YEAR(date) = YEAR(CURDATE())");
     if ($month_query && $month_data = mysqli_fetch_assoc($month_query)) {
         $monthly_summary['total_milk'] = $month_data['total_milk'] ?? 0;
         $monthly_summary['total_earnings'] = $month_data['total_earnings'] ?? 0;
@@ -46,8 +46,8 @@ $records = [];
 $total_collection = 0;
 $total_payment = 0;
 $total_records = 0;
-if ($farmer_id) {
-    $where_clause = "WHERE id='$farmer_id'";
+if ($farmer_uuid) {
+    $where_clause = "WHERE farmer_uuid='$farmer_uuid'";
     if ($from_date) $where_clause .= " AND date >= '$from_date'";
     if ($to_date) $where_clause .= " AND date <= '$to_date'";
     $records_query = mysqli_query($con, "SELECT date, quantity, payment, product_type, fat, temperature FROM milk_collection $where_clause ORDER BY date DESC");
@@ -297,7 +297,7 @@ if ($farmer_id) {
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table id="milkTable">
+                    <table id="milkTable" class="table table-striped table-bordered">
                         <thead>
                             <tr>
                                 <th>Date</th>

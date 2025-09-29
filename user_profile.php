@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             flex: 1;
             padding: 20px;
             background: #f8f9fa;
-            margin-left: 250px;
+            margin-left: 300px;
         }
         .page-title {
             display: flex;
