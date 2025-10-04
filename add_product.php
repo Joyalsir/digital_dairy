@@ -8,9 +8,8 @@ include('includes/header.php');
 include('includes/config.php');
 
 if (isset($_POST['submit'])) {
-    $productName = $_POST['product_name'];
-    $productCategory = $_POST['product_category'];
-    $productType = $_POST['product_type'];
+    $productName = $_POST['product_type'];
+    $productType = $_POST['product_category'];
     $unitPrice = $_POST['unit_price'];
 
     // Handle image upload
@@ -121,14 +120,6 @@ if (isset($_POST['submit'])) {
                     <form method="post" enctype="multipart/form-data" class="modern-form">
                         <div class="form-grid">
                             <div class="form-group">
-                                <label for="product_name" class="form-label">
-                                    <i class="fas fa-tag"></i> Product Name <span class="required">*</span>
-                                </label>
-                                <input type="text" id="product_name" name="product_name" class="form-control"
-                                       placeholder="Enter product name" required>
-                            </div>
-
-                            <div class="form-group">
                                 <label for="product_category" class="form-label">
                                     <i class="fas fa-cubes"></i> Product Category <span class="required">*</span>
                                 </label>
@@ -144,10 +135,10 @@ if (isset($_POST['submit'])) {
 
                             <div class="form-group">
                                 <label for="product_type" class="form-label">
-                                    <i class="fas fa-tag"></i> Product Type / Name <span class="required">*</span>
+                                    <i class="fas fa-tag"></i> Product Name <span class="required">*</span>
                                 </label>
                                 <input type="text" id="product_type" name="product_type" class="form-control"
-                                       placeholder="e.g., Full Cream Milk, Greek Yogurt, Vanilla Ice Cream" required>
+                                       placeholder="Enter product name" required>
                             </div>
 
                             <div class="form-group">

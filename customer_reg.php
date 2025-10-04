@@ -11,8 +11,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validate passwords match
     if ($password !== $confirm_password) {
         $error = "Passwords do not match!";
-    } elseif (strlen($password) < 6) {
-        $error = "Password must be at least 6 characters long!";
+    } elseif (strlen($password) < 8) {
+        $error = "Password must be at least 8 characters long!";
+    } elseif (!preg_match('/[A-Z]/', $password)) {
+        $error = "Password must contain at least one uppercase letter!";
+    } elseif (!preg_match('/[a-z]/', $password)) {
+        $error = "Password must contain at least one lowercase letter!";
+    } elseif (!preg_match('/[0-9]/', $password)) {
+        $error = "Password must contain at least one number!";
+    } elseif (!preg_match('/[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?]/', $password)) {
+        $error = "Password must contain at least one special character!";
     } else {
         // Check if customer already exists
         $check = mysqli_query($con, "SELECT * FROM tblcustomer WHERE email='$email'");
@@ -188,6 +196,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                            style="border: 2px solid #e2e8f0; border-radius: 8px; padding: 12px 16px; font-size: 16px; transition: border-color 0.3s ease;"
                                            placeholder="Enter your password"
                                            value="<?php echo isset($password) ? $password : ''; ?>" required>
+                                    <small class="text-muted" style="font-size: 0.85rem;">
+                                        Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.
+                                    </small>
                                 </div>
                                 <div class="col-md-6 mb-4">
                                     <label for="confirm_password" class="form-label fw-bold">
@@ -362,7 +373,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
 
                 // Validate password length
-                if (passwordField.value && passwordField.value.length < 6) {
+                if (passwordField.value && passwordField.value.length < 8) {
+                    passwordField.style.borderColor = '#dc3545';
+                    isValid = false;
+                }
+
+                // Validate password strength
+                if (passwordField.value && !/[A-Z]/.test(passwordField.value)) {
+                    passwordField.style.borderColor = '#dc3545';
+                    isValid = false;
+                }
+                if (passwordField.value && !/[a-z]/.test(passwordField.value)) {
+                    passwordField.style.borderColor = '#dc3545';
+                    isValid = false;
+                }
+                if (passwordField.value && !/[0-9]/.test(passwordField.value)) {
+                    passwordField.style.borderColor = '#dc3545';
+                    isValid = false;
+                }
+                if (passwordField.value && !/[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?]/.test(passwordField.value)) {
                     passwordField.style.borderColor = '#dc3545';
                     isValid = false;
                 }

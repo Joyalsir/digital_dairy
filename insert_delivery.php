@@ -13,10 +13,10 @@ if (isset($_POST['submit'])) {
   $driver_name = $_POST['driver_name'];
   $driver_contact = $_POST['driver_contact'];
 
-  // Generate 4-digit UUIDs for this delivery
-  $delivery_uuid = generateShortUUID();
-  $customer_uuid = generateShortUUID();
-  $driver_uuid = generateShortUUID();
+  // Use UUIDs from the form or generate if not provided
+  $delivery_uuid = isset($_POST['delivery_uuid']) && !empty($_POST['delivery_uuid']) ? $_POST['delivery_uuid'] : generateShortUUID();
+  $customer_uuid = isset($_POST['customer_uuid']) && !empty($_POST['customer_uuid']) ? $_POST['customer_uuid'] : generateShortUUID();
+  $driver_uuid = isset($_POST['driver_uuid']) && !empty($_POST['driver_uuid']) ? $_POST['driver_uuid'] : generateShortUUID();
 
   $query = "INSERT INTO tbldelivery
     (CustomerName, Contact, Address, DeliveryDate, ProductType, Quantity, VehicleNo, DriverName, DriverContact, delivery_uuid, customer_uuid, driver_uuid, delivery_status)

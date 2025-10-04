@@ -59,6 +59,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
+    // Validate password strength
+    if (strlen($password) < 8) {
+        echo "<script>alert('Password must be at least 8 characters long!'); window.history.back();</script>";
+        exit;
+    }
+    if (!preg_match('/[A-Z]/', $password)) {
+        echo "<script>alert('Password must contain at least one uppercase letter!'); window.history.back();</script>";
+        exit;
+    }
+    if (!preg_match('/[a-z]/', $password)) {
+        echo "<script>alert('Password must contain at least one lowercase letter!'); window.history.back();</script>";
+        exit;
+    }
+    if (!preg_match('/[0-9]/', $password)) {
+        echo "<script>alert('Password must contain at least one number!'); window.history.back();</script>";
+        exit;
+    }
+    if (!preg_match('/[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?]/', $password)) {
+        echo "<script>alert('Password must contain at least one special character!'); window.history.back();</script>";
+        exit;
+    }
+
     $hashed_password = md5($password);
 
     // Use the UUID from the form instead of generating a new one
@@ -74,6 +96,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $check_query = mysqli_query($con, "SELECT id FROM farmers WHERE uuid='$uuid'");
     if (mysqli_num_rows($check_query) > 0) {
         echo "<script>alert('UUID already exists! Please try again.'); window.history.back();</script>";
+        exit;
+    }
+
+    // Validate Aadhar number
+    if (!empty($aadhar) && !preg_match('/^[0-9]{12}$/', $aadhar)) {
+        echo "<script>alert('Aadhar number must be exactly 12 digits!'); window.history.back();</script>";
         exit;
     }
 

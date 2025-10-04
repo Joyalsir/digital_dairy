@@ -1482,7 +1482,7 @@ if (isset($_SESSION['email'])) {
     <div class="d-flex justify-content-center gap-3 flex-wrap">
       <a href="index.php?role=user" class="btn btn-light btn-custom">Farmer Login</a>
       <a href="login.php?role=admin" class="btn btn-outline-light btn-custom">Admin Login</a>
-      <a href="register.php" class="btn btn-light btn-custom">Register Now</a>
+      <a href="customer_reg.php" class="btn btn-light btn-custom">Register Now</a>
     </div>
   </div>
 </section>

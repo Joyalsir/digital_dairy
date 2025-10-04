@@ -70,7 +70,9 @@ $farmer_uuid = generateShortUUID();
                                     <i class="fas fa-phone"></i> Contact Number
                                 </label>
                                 <input type="tel" id="contact" name="contact" class="form-control"
-                                       placeholder="Enter phone number">
+                                       placeholder="Enter 10-digit phone number" pattern="[6-9][0-9]{9}"
+                                       title="Enter a valid 10-digit Indian phone number starting with 6-9">
+                                <small class="form-text text-muted">Enter a valid 10-digit phone number (e.g., 9876543210)</small>
                             </div>
 
                             <div class="form-group full-width">
@@ -105,7 +107,9 @@ $farmer_uuid = generateShortUUID();
                                     <i class="fas fa-id-card"></i> Aadhar Number
                                 </label>
                                 <input type="text" id="aadhar" name="aadhar" class="form-control"
-                                       placeholder="Enter 12-digit Aadhar number" maxlength="12">
+                                       placeholder="Enter 12-digit Aadhar number" pattern="[0-9]{12}"
+                                       title="Aadhar number must be exactly 12 digits" maxlength="12">
+                                <small class="form-text text-muted">Enter a valid 12-digit Aadhar number (e.g., 123456789012)</small>
                             </div>
 
                             <div class="form-group">
@@ -130,6 +134,7 @@ $farmer_uuid = generateShortUUID();
                                 </label>
                                 <input type="password" id="password" name="password" class="form-control" required
                                        placeholder="Enter password">
+                                <small class="form-text text-muted">Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.</small>
                             </div>
 
                             <div class="form-group">
@@ -451,6 +456,43 @@ $farmer_uuid = generateShortUUID();
                 confirmPassword.classList.add('is-invalid');
                 isValid = false;
                 alert('Passwords do not match!');
+            }
+
+            // Validate password length
+            if (password.value && password.value.length < 8) {
+                password.classList.add('is-invalid');
+                isValid = false;
+                alert('Password must be at least 8 characters long!');
+            }
+
+            // Validate password strength
+            if (password.value && !/[A-Z]/.test(password.value)) {
+                password.classList.add('is-invalid');
+                isValid = false;
+                alert('Password must contain at least one uppercase letter!');
+            }
+            if (password.value && !/[a-z]/.test(password.value)) {
+                password.classList.add('is-invalid');
+                isValid = false;
+                alert('Password must contain at least one lowercase letter!');
+            }
+            if (password.value && !/[0-9]/.test(password.value)) {
+                password.classList.add('is-invalid');
+                isValid = false;
+                alert('Password must contain at least one number!');
+            }
+            if (password.value && !/[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?]/.test(password.value)) {
+                password.classList.add('is-invalid');
+                isValid = false;
+                alert('Password must contain at least one special character!');
+            }
+
+            // Validate Aadhar number
+            const aadhar = document.getElementById('aadhar');
+            if (aadhar.value && (!/^[0-9]{12}$/.test(aadhar.value))) {
+                aadhar.classList.add('is-invalid');
+                isValid = false;
+                alert('Aadhar number must be exactly 12 digits!');
             }
 
             if (!isValid) {

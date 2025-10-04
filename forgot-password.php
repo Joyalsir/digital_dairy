@@ -8,8 +8,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($new_password !== $confirm_password) {
         $error = "Passwords do not match!";
-    } elseif (strlen($new_password) < 6) {
-        $error = "Password must be at least 6 characters long!";
+    } elseif (strlen($new_password) < 8) {
+        $error = "Password must be at least 8 characters long!";
+    } elseif (!preg_match('/[A-Z]/', $new_password)) {
+        $error = "Password must contain at least one uppercase letter!";
+    } elseif (!preg_match('/[a-z]/', $new_password)) {
+        $error = "Password must contain at least one lowercase letter!";
+    } elseif (!preg_match('/[0-9]/', $new_password)) {
+        $error = "Password must contain at least one number!";
+    } elseif (!preg_match('/[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?]/', $new_password)) {
+        $error = "Password must contain at least one special character!";
+    } elseif (strlen($new_password) > 20) {
+        $error = "Password must not exceed 20 characters!";
     } else {
         // Check if email exists in tblcustomer
         $sql = "SELECT * FROM tblcustomer WHERE email = '$email' LIMIT 1";
@@ -297,10 +307,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     isValid = false;
                 }
 
-                // Validate password length
-                if (newPasswordField.value && newPasswordField.value.length < 6) {
-                    newPasswordField.style.borderColor = '#dc3545';
-                    isValid = false;
+                // Validate password strength
+                if (newPasswordField.value) {
+                    if (newPasswordField.value.length < 8) {
+                        newPasswordField.style.borderColor = '#dc3545';
+                        isValid = false;
+                    } else if (newPasswordField.value.length > 20) {
+                        newPasswordField.style.borderColor = '#dc3545';
+                        isValid = false;
+                    } else if (!/[A-Z]/.test(newPasswordField.value)) {
+                        newPasswordField.style.borderColor = '#dc3545';
+                        isValid = false;
+                    } else if (!/[a-z]/.test(newPasswordField.value)) {
+                        newPasswordField.style.borderColor = '#dc3545';
+                        isValid = false;
+                    } else if (!/[0-9]/.test(newPasswordField.value)) {
+                        newPasswordField.style.borderColor = '#dc3545';
+                        isValid = false;
+                    } else if (!/[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?]/.test(newPasswordField.value)) {
+                        newPasswordField.style.borderColor = '#dc3545';
+                        isValid = false;
+                    }
                 }
 
                 if (!isValid) {

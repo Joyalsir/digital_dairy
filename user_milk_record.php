@@ -69,6 +69,30 @@ if ($farmer_uuid) {
         $total_records = $row['records'];
     }
 }
+
+// Handle CSV download
+if (isset($_GET['download']) && $_GET['download'] == 'csv' && $farmer_uuid) {
+    header('Content-Type: text/csv');
+    header('Content-Disposition: attachment; filename="milk_collection_report.csv"');
+
+    $output = fopen('php://output', 'w');
+    fputcsv($output, ['Date', 'Product Type', 'Quantity (L)', 'Fat Content (%)', 'Temperature (°C)', 'Rate (₹/L)', 'Amount (₹)', 'Status']);
+
+    foreach ($records as $record) {
+        fputcsv($output, [
+            date('d/m/Y', strtotime($record['date'])),
+            $record['product_type'],
+            number_format($record['quantity'], 2),
+            number_format($record['fat'], 2),
+            number_format($record['temperature'], 1),
+            number_format($record['rate'], 2),
+            number_format($record['payment'], 2),
+            $record['status']
+        ]);
+    }
+    fclose($output);
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -79,6 +103,8 @@ if ($farmer_uuid) {
     <link rel="stylesheet" href="css/user_style.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <style>
         /* Reset and base */
         body, html {
@@ -264,7 +290,7 @@ if ($farmer_uuid) {
         <div class="main-content">
             <div class="page-title">
                 <h1>Milk Collection Records</h1>
-                <button class="btn btn-primary">Download Report</button>
+                <a href="?download=csv<?php echo ($from_date ? '&from-date=' . urlencode($from_date) : '') . ($to_date ? '&to-date=' . urlencode($to_date) : ''); ?>" class="btn btn-primary">Download Report</a>
             </div>
             <div class="card">
                 <div class="card-header">
@@ -292,8 +318,8 @@ if ($farmer_uuid) {
                 <div class="card-header">
                     <h2>Milk Collection History</h2>
                     <div>
-                        <button class="btn btn-secondary" style="margin-right: 10px;">Print</button>
-                        <button class="btn btn-primary">Export PDF</button>
+                        <button class="btn btn-secondary" style="margin-right: 10px;" onclick="window.print()">Print</button>
+                        <button class="btn btn-primary" onclick="exportPDF()">Export PDF</button>
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -407,6 +433,42 @@ if ($farmer_uuid) {
                 }
             });
         });
+
+        function exportPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            doc.text('Milk Collection Report', 14, 20);
+
+            const table = document.getElementById('milkTable');
+            const rows = [];
+            const headers = [];
+
+            // Get headers
+            const headerCells = table.querySelectorAll('thead th');
+            headerCells.forEach(cell => {
+                headers.push(cell.textContent);
+            });
+
+            // Get data rows
+            const dataRows = table.querySelectorAll('tbody tr');
+            dataRows.forEach(row => {
+                const rowData = [];
+                const cells = row.querySelectorAll('td');
+                cells.forEach(cell => {
+                    rowData.push(cell.textContent);
+                });
+                rows.push(rowData);
+            });
+
+            doc.autoTable({
+                head: [headers],
+                body: rows,
+                startY: 30,
+            });
+
+            doc.save('milk_collection_report.pdf');
+        }
     </script>
 </body>
 </html>

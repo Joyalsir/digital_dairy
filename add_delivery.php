@@ -146,7 +146,8 @@ $delivery_uuid = generateShortUUID();
                                     <i class="fas fa-id-badge"></i> Customer UUID
                                 </label>
                                 <input type="text" id="customer_uuid_display" name="customer_uuid_display" class="form-control"
-                                       placeholder="Auto-generated" readonly>
+                                       value="<?php echo $customer_uuid; ?>" placeholder="Auto-generated" readonly>
+                                <input type="hidden" name="customer_uuid" value="<?php echo $customer_uuid; ?>">
                                 <small class="form-text text-muted">Auto-generated unique customer identifier</small>
                             </div>
 
@@ -155,7 +156,8 @@ $delivery_uuid = generateShortUUID();
                                     <i class="fas fa-id-badge"></i> Driver UUID
                                 </label>
                                 <input type="text" id="driver_uuid_display" name="driver_uuid_display" class="form-control"
-                                       placeholder="Auto-generated" readonly>
+                                       value="<?php echo $driver_uuid; ?>" placeholder="Auto-generated" readonly>
+                                <input type="hidden" name="driver_uuid" value="<?php echo $driver_uuid; ?>">
                                 <small class="form-text text-muted">Auto-generated unique driver identifier</small>
                             </div>
 
@@ -164,7 +166,8 @@ $delivery_uuid = generateShortUUID();
                                     <i class="fas fa-id-badge"></i> Delivery UUID
                                 </label>
                                 <input type="text" id="delivery_uuid_display" name="delivery_uuid_display" class="form-control"
-                                       placeholder="Auto-generated" readonly>
+                                       value="<?php echo $delivery_uuid; ?>" placeholder="Auto-generated" readonly>
+                                <input type="hidden" name="delivery_uuid" value="<?php echo $delivery_uuid; ?>">
                                 <small class="form-text text-muted">Auto-generated unique delivery identifier</small>
                             </div>
                         </div>
@@ -179,8 +182,10 @@ $delivery_uuid = generateShortUUID();
                         </div>
                     </form>
                 </div>
-    </script>
+            </div>
+        </div>
+    </div>
+
+    <?php include('includes/footer.php'); ?>
 </body>
 </html>
-
-<?php include('includes/footer.php'); ?>

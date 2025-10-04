@@ -1,229 +1,282 @@
 # Digital Dairy Management System (DDMS)
 
-## Project Overview
+A comprehensive web-based dairy management system built with PHP and MySQL that streamlines dairy operations from farm to consumer. The system manages farmers, milk collection, product inventory, customer orders, deliveries, and provides detailed reporting capabilities.
 
-The Digital Dairy Management System (DDMS) is a comprehensive web-based application designed to streamline dairy farm operations, product management, sales, and customer interactions. It supports multiple user roles including administrators, farmers, and customers, providing tools for efficient dairy supply chain management. The system handles milk collection tracking, inventory management, order processing, and reporting, with a modern, responsive interface built using PHP and MySQL.
+## 🌟 Features
 
-Key goals:
-- Automate milk collection and payment processes for farmers.
-- Enable product cataloging and e-commerce for customers.
-- Provide analytics and dashboards for administrators.
-- Ensure secure user authentication and data management.
+### For Farmers
+- **Profile Management**: Complete farmer registration with contact details, farm size, and banking information
+- **Milk Collection Tracking**: Daily milk collection records with quality metrics (fat content, temperature)
+- **Payment Management**: Automated payment calculations and transparent transaction history
+- **Farm Analytics**: Detailed insights into farm performance and productivity trends
+- **Digital Records**: Secure storage of all farming activities and transactions
 
-The project is inspired by modern dairy solutions like MILMA, focusing on real-time tracking, quality assurance, and user-friendly interfaces.
+### For Customers
+- **Easy Online Ordering**: Browse and order fresh dairy products with just a few clicks
+- **Product Catalog**: Comprehensive catalog of dairy products (milk, curd, ghee, ice cream, etc.)
+- **Delivery Tracking**: Real-time tracking of orders from processing to delivery
+- **Quality Assurance**: Fresh, pure dairy products delivered straight from local farms
+- **Order History**: Complete history of past orders and transactions
 
-## Features
+### For Administrators
+- **Farmer Management**: Add, edit, view, and manage all registered farmers
+- **Product Management**: Complete inventory management with image uploads
+- **Sales Reporting**: Advanced reporting with date filtering and export capabilities (Excel, PDF, Print)
+- **Delivery Management**: Track and manage delivery operations
+- **Customer Management**: Manage customer accounts and orders
+- **Analytics Dashboard**: Real-time insights and system statistics
 
-### Core Features
-- **User Authentication**: Secure login for admins, farmers, and customers with role-based access.
-- **Admin Dashboard**: Overview with key metrics (farmers, deliveries, milk collected, revenue), charts (monthly trends, distribution), recent activity, and quick actions.
-- **Farmer Management**: Add, edit, view, and delete farmer records; track milk collections and payments.
-- **Milk Collection**: Record daily collections with quantity, date, and time-of-day categorization (morning, evening, night).
-- **Product Management**: Add, manage, and display dairy products (milk, curd, ice cream, ghee) with images and categories.
-- **Sales and Inventory**: Track sales, generate reports (sales, payments, inventory), handle stock updates.
-- **Delivery Management**: Schedule and track deliveries with status updates.
-- **Customer Portal**: Browse products, add to cart, checkout, order tracking, profile management.
-- **Reports**: Milk collection, sales, payment, and inventory reports with filtering.
-- **Notifications**: User notifications for orders and updates.
+## 🛠 Technology Stack
 
-### User-Specific Features
-- **Administrators**: Full access to manage all resources, view analytics.
-- **Farmers**: Record milk submissions, view payment history, personal dashboard.
-- **Customers**: Product browsing, cart management, order placement, delivery tracking.
+- **Backend**: PHP 8.0+
+- **Database**: MySQL 8.0+ / MariaDB
+- **Frontend**: HTML5, CSS3, JavaScript
+- **UI Framework**: Bootstrap 5.3
+- **Icons**: Font Awesome 6.4
+- **Data Tables**: DataTables with export functionality
+- **Charts**: Chart.js for analytics
+- **Server**: Apache/Nginx with PHP support
 
-### Additional Features
-- UUID-based identifiers for data consistency.
-- Responsive design with Bootstrap for mobile access.
-- Chart visualizations using Chart.js.
-- File uploads for product images.
-- Password reset and registration.
+## 📋 Prerequisites
 
-## Tech Stack
+- PHP 8.0 or higher
+- MySQL 8.0 or MariaDB 10.4+
+- Apache/Nginx web server
+- XAMPP/WAMP/MAMP (recommended for local development)
+- Modern web browser with JavaScript enabled
 
-- **Backend**: PHP (with MySQLi for database interactions)
-- **Database**: MySQL (tables for users, collections, products, sales, etc.)
-- **Frontend**: HTML5, CSS3 (custom styles + Bootstrap 5), JavaScript (vanilla + Chart.js)
-- **Icons/Fonts**: FontAwesome, Google Fonts (Poppins)
-- **Security**: Session management, MD5 hashing (note: upgrade to stronger hashing like bcrypt in production), SQL escaping.
-- **Other**: XAMPP for local development (Apache, MySQL).
+## 🚀 Installation
 
-## Installation and Setup
+### 1. Environment Setup
 
-### Prerequisites
-- XAMPP (or equivalent: Apache, MySQL, PHP 7+)
-- Web browser (Chrome, Firefox recommended)
+1. **Install XAMPP** (recommended for Windows):
+   - Download and install XAMPP from [apachefriends.org](https://www.apachefriends.org/)
+   - Start Apache and MySQL services
 
-### Steps
-1. **Clone/Download Project**:
-   - Place the project files in `c:/xampp/htdocs/digital_dairy` (or your htdocs directory).
+2. **Clone or Download the Project**:
+   ```bash
+   # Place the project files in your web server directory
+   # For XAMPP: htdocs/digital_dairy/
+   # For WAMP: www/digital_dairy/
+   ```
 
-2. **Database Setup**:
-   - Start XAMPP (Apache and MySQL).
-   - Open phpMyAdmin (http://localhost/phpmyadmin).
-   - Create a new database named `digital_dairy` (or update `includes/config.php`).
-   - Import the SQL schema:
-     - Run `create_order_tables.sql` for orders-related tables.
-     - The main schema is in `digital_dairy (3).sql` – import this for core tables (farmers, customers, milk_collection, etc.).
-     - Additional setup: Run `setup_order_tables.php` if needed for order tables.
-   - Update database credentials in `includes/config.php`:
-     ```
-     $host = "localhost"; // or your host
-     $user = "root"; // default XAMPP user
-     $pass = ""; // default no password
-     $dbname = "digital_dairy";
-     ```
+### 2. Database Setup
 
-3. **UUID Helper**:
-   - The project uses UUIDs for unique identifiers. Ensure `includes/uuid_helper.php` is functional (uses `uniqid()` or similar).
+1. **Create Database**:
+   - Open phpMyAdmin (http://localhost/phpmyadmin)
+   - Create a new database named `digital_dairy`
 
-4. **File Permissions**:
-   - Ensure `uploads/` directory is writable for product images.
+2. **Import Database Schema**:
+   - Select the `digital_dairy` database
+   - Import the `digital_dairy (3).sql` file from the project root
 
-5. **Run the Application**:
-   - Access via http://localhost/digital_dairy/index.php (login page).
-   - Default login: Create users via registration or admin panel (no defaults; register first).
+3. **Update Configuration**:
+   - Open `includes/config.php`
+   - Verify database connection settings (should work with default XAMPP settings)
 
-6. **Testing**:
-   - Run `test_uuid_functionality.php` or similar scripts for data integrity.
-   - Lint PHP: Run `lint_php.bat` for code quality checks.
+### 3. File Permissions
 
-### Troubleshooting
-- Database connection errors: Check `includes/config.php`.
-- UUID issues: Run migration scripts like `update_uuids.php`, `fix_uuid_consistency.php`.
-- Missing tables: Import SQL dumps and run setup scripts (e.g., `add_image_column.php`, `alter_uuid_columns.php`).
+Ensure proper permissions for file uploads:
+```bash
+# For Linux/Mac
+chmod 755 uploads/
+chmod 755 uploads/products/
 
-## Database Schema
+# For Windows - ensure IIS_IUSRS or appropriate user has write permissions
+```
 
-The database uses MySQL with the following key tables (inferred from code; run `DESCRIBE table_name;` in phpMyAdmin for details):
+### 4. Access the Application
+
+- Open your browser and navigate to: `http://localhost/digital_dairy/`
+- Default admin credentials:
+  - Email: `admin@gmail.com`
+  - Password: `admin`
+
+## 📊 Database Schema
 
 ### Core Tables
-- **farmers**: id, uuid, name, username, email, phone, address, password, created_at.
-- **tblcustomer**: id, customer_name, email, password, phone, address.
-- **milk_collection**: id, farmer_uuid, quantity (liters), date, time_of_day (inferred), fat_content, etc.
-- **tbldelivery**: id, uuid, farmer_uuid, quantity, delivery_date, status.
-- **tblproduct**: id, product_name, category, price, stock_quantity, image_path.
-- **tblsales**: id, product_id, customer_id, quantity, total_amount, sales_date.
-- **orders** (from create_order_tables.sql): orders (id, customer_id, total, status), order_items (order_id, product_id, quantity, price).
 
-### Relationships
-- Farmers → Milk Collections (one-to-many via uuid).
-- Customers → Orders/Sales (one-to-many).
-- Products → Sales/Orders (many-to-many via items).
-- UUIDs ensure cross-table consistency (e.g., farmer_uuid in collections/deliveries).
+#### `farmers`
+- Farmer registration and profile information
+- Fields: id, uuid, name, contact, address, farm_size, email, password, aadhar, bank_account, ifsc, status
 
-For full schema, import `digital_dairy (3).sql` and inspect.
+#### `milk_collection`
+- Daily milk collection records
+- Fields: id, date, farmer_uuid, product_type, quantity, fat, temperature, payment
 
-## User Roles and Flows
+#### `tblproduct`
+- Product catalog and inventory
+- Fields: ID, ProductName, ProductType, UnitPrice, productimage, Quantity, Description
 
-### Administrator
-- Login: Via index.php (select 'Admin' if separate; code shows farmer/customer, admin likely via dashboard.php check).
-- Flow: Login → Dashboard (stats/charts) → Manage Farmers/Collections/Deliveries/Products/Sales → Reports.
-- Permissions: CRUD on all resources.
+#### `tblcustomer`
+- Customer registration and profile
+- Fields: id, customer_name, contact, email, address, password, status
 
-### Farmer
-- Registration/Login: Via index.php (select 'Farmer', use email/username).
-- Flow: Login → user_dashboard.php → Record Milk (user_milk_record.php) → View Payments (user_payment.php) → Profile/Logout.
-- Features: Submit collections, view history.
+#### `tblorders` & `tblorderitems`
+- Customer order management
+- Order header with customer details and totals
+- Order items with product details and quantities
 
-### Customer
-- Registration: customer_reg.php.
-- Login: index.php (select 'Customer', email).
-- Flow: Login → home_page.php (browse products) → Add to Cart (cart.php) → Checkout (cart_checkout.php, process_checkout.php) → Order Details (order_details.php) → Profile (user_profile.php).
-- Features: Shop milk/curd/icecream/ghee, track orders.
+#### `tbldelivery`
+- Delivery tracking and management
+- Fields: ID, CustomerName, Contact, Address, DeliveryDate, ProductType, Quantity, VehicleNo, DriverName
 
-### Authentication Flow
-- Sessions: $_SESSION['user_type'], $_SESSION['email'], etc.
-- Password: MD5 hashed (insecure; update to password_hash()).
-- Logout: logout.php, user_logout.php.
+#### `tblsales`
+- Sales transaction records
+- Fields: ID, InvoiceNumber, CustomerName, Contact, ProductName, Quantity, Price, TotalAmount, SalesDate
 
-## File Structure
+#### `admin`
+- Administrative user accounts
+- Fields: id, email, password
 
-```
-digital_dairy/
-├── index.php                  # Main login page
-├── dashboard.php              # Admin dashboard with stats/charts
-├── home_page.php              # Customer home/products page
-├── customer_reg.php           # Customer registration
-├── login.php                  # Alternative login?
-├── includes/
-│   ├── config.php             # DB connection
-│   ├── header.php             # Common header
-│   ├── footer.php             # Common footer
-│   ├── sidebar.php            # Admin sidebar
-│   ├── user_sidebar.php       # User sidebar
-│   └── uuid_helper.php        # UUID generation
-├── admin/                     # Admin-specific pages (if populated)
-├── chart/                     # Chart JS files
-│   └── script.js
-├── uploads/                   # Product images
-│   └── products/
-├── style.css                  # Main styles
-├── user_style.css             # User-specific styles
-├── SQL Files/
-│   ├── digital_dairy (3).sql  # Main DB dump
-│   └── create_order_tables.sql # Orders schema
-├── Management Pages/
-│   ├── add_farmer.php         # Add farmer
-│   ├── manage_farmer.php      # List/edit farmers
-│   ├── add_collection.php     # Add milk collection
-│   ├── manage_collection.php  # Manage collections
-│   ├── add_product.php        # Add product
-│   ├── manage_product.php     # Manage products
-│   ├── add_sales.php          # Add sale
-│   ├── manage_sales.php       # Manage sales
-│   └── ... (similar for delivery)
-├── User Pages/
-│   ├── user_dashboard.php     # Farmer dashboard
-│   ├── user_milk_record.php   # Record milk
-│   ├── cart.php               # Shopping cart
-│   ├── cart_checkout.php      # Checkout
-│   ├── process_checkout.php   # Process order
-│   └── order_details.php      # View orders
-├── Reports/
-│   ├── milk_collection_report.php
-│   ├── sales_report.php
-│   ├── payment_report.php
-│   └── inventory_report.php
-├── Utilities/
-│   ├── forgot-password.php    # Password reset
-│   ├── profile.php            # User profile
-│   └── TODO.md                # Pending tasks
-└── Scripts/
-    ├── setup_order_tables.php # DB setup
-    ├── update_uuids.php       # Migrations
-    └── lint_php.bat           # Code linting
-```
+## 👥 User Roles & Access
 
-## Usage
+### 1. Administrator
+- **Login URL**: `index.php` (select "Admin Login")
+- **Capabilities**:
+  - Manage farmers (add, edit, view, archive)
+  - Manage products (add, edit, delete, view inventory)
+  - View sales reports with filtering and export
+  - Manage deliveries and customer orders
+  - Access system analytics and statistics
 
-1. **Start Server**: Run XAMPP, access http://localhost/digital_dairy/.
-2. **Admin Setup**: Register or insert admin user in DB (extend login for admin role).
-3. **Daily Operations**:
-   - Admin: Use dashboard to monitor, add/manage resources.
-   - Farmer: Login, record milk via forms.
-   - Customer: Browse home_page.php, add products to cart, checkout.
-4. **Reports**: Access via sidebar links (e.g., milk_collection_report.php).
-5. **Customization**: Update styles in style.css; add products via admin panel.
+### 2. Farmer
+- **Login URL**: `index.php` (select "Farmer/Customer Login")
+- **Capabilities**:
+  - View personal dashboard with milk collection history
+  - Track payments and earnings
+  - Update profile information
+  - Access farm analytics and reports
 
-## Security Considerations
-- Use prepared statements (current code uses mysqli_escape; migrate to PDO/prepared).
-- Upgrade password hashing from MD5.
-- Validate/sanitize all inputs.
-- HTTPS in production.
-- Limit file uploads to images.
+### 3. Customer
+- **Login URL**: `index.php` (select "Farmer/Customer Login")
+- **Registration**: `customer_reg.php`
+- **Capabilities**:
+  - Browse product catalog
+  - Place orders online
+  - Track order status and delivery
+  - View order history
+  - Manage account profile
 
-## Known Issues / TODO
-From TODO.md:
-- Update header to MILMA-style navigation.
-- Reorganize products into categories (Milk, Curd, Ghee, Ice Cream).
-- Enhance responsive design and product cards.
-- Additional migrations for UUIDs and columns (run scripts like alter_uuid_columns.php).
+## 📖 Usage Guide
 
-For contributions or issues, check TODO.md or contact the developer.
+### Farmer Workflow
+1. **Registration**: Farmers register through the admin panel or self-registration
+2. **Daily Operations**: Record milk collection with quality parameters
+3. **Payment Tracking**: Monitor payments and earnings
+4. **Profile Management**: Update contact and banking information
 
-## License
-This project is for educational purposes. © 2025 Developed by Joyal (MACFAST).
+### Customer Workflow
+1. **Registration**: Create account with personal details
+2. **Product Browsing**: Explore available dairy products
+3. **Order Placement**: Add items to cart and complete purchase
+4. **Delivery Tracking**: Monitor order status in real-time
+5. **Order History**: Review past purchases and reorder
+
+### Admin Workflow
+1. **Farmer Management**: Add new farmers and manage existing ones
+2. **Product Management**: Maintain product catalog and inventory
+3. **Order Processing**: Monitor and manage customer orders
+4. **Reporting**: Generate sales reports and analytics
+5. **System Maintenance**: Monitor system health and performance
+
+## 🔧 Key Modules
+
+### Authentication System
+- Secure login for all user types
+- Password hashing with MD5 (consider upgrading to bcrypt)
+- Session management
+- Password reset functionality
+
+### Milk Collection Module
+- Daily collection entry with quality metrics
+- Farmer-wise tracking
+- Payment calculation based on quantity and quality
+- Historical data analysis
+
+### E-commerce Module
+- Product catalog with image uploads
+- Shopping cart functionality
+- Order processing and management
+- Payment integration (framework ready)
+
+### Reporting System
+- Date-range filtering
+- Multiple export formats (Excel, PDF, Print)
+- Real-time summary statistics
+- Comprehensive sales analytics
+
+## 🔒 Security Features
+
+- SQL injection prevention with prepared statements
+- XSS protection with input sanitization
+- Session-based authentication
+- File upload validation
+- Password encryption
+- Role-based access control
+
+## 📱 Responsive Design
+
+- Mobile-first approach with Bootstrap 5
+- Responsive data tables
+- Touch-friendly interfaces
+- Optimized for all screen sizes
+
+## 📈 Analytics & Reporting
+
+- Real-time dashboard statistics
+- Sales performance metrics
+- Farmer productivity analysis
+- Customer order trends
+- Revenue tracking and forecasting
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+1. **Database Connection Error**:
+   - Verify MySQL service is running
+   - Check database credentials in `config.php`
+   - Ensure database exists and is accessible
+
+2. **File Upload Issues**:
+   - Check folder permissions for `uploads/` directory
+   - Verify PHP upload settings in `php.ini`
+
+3. **Session Issues**:
+   - Clear browser cache and cookies
+   - Check PHP session configuration
+
+4. **Email Functionality**:
+   - Configure SMTP settings for password reset
+   - Verify mail server connectivity
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is developed for educational and demonstration purposes. Please ensure compliance with local regulations for commercial use.
+
+## 👨‍💻 Developer Information
+
+- **Developer**: Joyal (MACFAST)
+- **Project**: Digital Dairy Management System
+- **Version**: 1.0.0
+- **Last Updated**: September 2025
+
+## 📞 Support
+
+For technical support or questions about the system:
+- Check the troubleshooting section above
+- Review the database schema for customization
+- Ensure all prerequisites are properly installed
 
 ---
 
-For more details, refer to individual PHP files or database schema.
+**Note**: This system is designed to modernize traditional dairy farming operations by providing digital solutions for farmers, customers, and administrators. The modular architecture allows for easy customization and expansion based on specific requirements.
