@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <!-- Logo and Brand -->
                 <a class="navbar-brand d-flex align-items-center" href="home_page.php">
                     <div class="logo-container me-3">
-                        <i class="fas fa-cow text-primary" style="font-size: 2rem;"></i>
+                        <img src="uploads/logo.png" alt="Digital Dairy Logo" style="height: 3rem;">
                     </div>
                     <div class="brand-text">
                         <h5 class="mb-0 fw-bold text-primary">DDMS</h5>

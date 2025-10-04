@@ -380,37 +380,69 @@ if (isset($_SESSION['email'])) {
         }
 
         .category-card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 20px;
+            padding: 35px 25px;
             text-align: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
             margin-bottom: 30px;
+            border: 1px solid rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(44,90,160,0.05), transparent);
+            transition: left 0.5s;
+        }
+
+        .category-card:hover::before {
+            left: 100%;
         }
 
         .category-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+            border-color: rgba(44,90,160,0.1);
         }
 
         .category-icon {
-            width: 80px;
-            height: 80px;
+            width: 90px;
+            height: 90px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 2rem;
-            color: white;
+            margin: 0 auto 25px;
             position: relative;
             overflow: hidden;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            border: 3px solid rgba(255,255,255,0.2);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 4px solid rgba(255,255,255,0.3);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+        }
+
+        .category-card:hover .category-icon {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .category-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .category-card:hover .category-image {
+            transform: scale(1.05);
         }
 
         .category-icon::before {
@@ -420,48 +452,73 @@ if (isset($_SESSION['email'])) {
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(44,90,160,0.7) 0%, rgba(76,175,80,0.7) 100%);
+            background: linear-gradient(135deg, rgba(44,90,160,0.6) 0%, rgba(76,175,80,0.6) 100%);
             z-index: 1;
+            transition: opacity 0.3s ease;
+            opacity: 0.7;
         }
 
-        .category-icon i {
+        .category-card:hover .category-icon::before {
+            opacity: 0.8;
+        }
+
+        .category-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 12px;
+            transition: color 0.3s ease;
             position: relative;
             z-index: 2;
         }
 
-        /* Category specific image backgrounds */
-        .milk-icon {
-            background-image: url('uploads/products/product_68d11758f140b4.57759496.png');
-        }
-
-        .curd-icon {
-            background-image: url('uploads/products/product_68d118eb1afba8.07186790.png');
-        }
-
-        .icecream-icon {
-            background-image: url('uploads/products/product_68d1200e547f02.98518454.png');
-        }
-
-        .ghee-icon {
-            background-image: url('uploads/products/product_68d11896e32298.84480869.png');
-        }
-
-        .category-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: var(--primary-color);
-            margin-bottom: 10px;
+        .category-card:hover .category-title {
+            color: var(--secondary-color);
         }
 
         .category-description {
             color: #666;
-            font-size: 0.95rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            transition: color 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .category-card:hover .category-description {
+            color: #444;
+        }
+
+        .category-btn {
+            margin-top: 15px;
+            padding: 8px 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        .category-card:hover .category-btn {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .category-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(44,90,160,0.3);
+            color: white;
+            text-decoration: none;
         }
     
 
     /* Hero Banner Styles */
     .dairy-banner {
-      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      background: var(--primary-color);
       border-radius: 20px;
       padding: 40px 30px;
       text-align: center;
@@ -758,7 +815,7 @@ if (isset($_SESSION['email'])) {
       <!-- Logo and Brand -->
       <a class="navbar-brand d-flex align-items-center" href="#home">
         <div class="logo-container me-3">
-          <i class="fas fa-cow text-primary" style="font-size: 2rem;"></i>
+          <img src="uploads/logo.png" alt="Digital Dairy Logo" style="height: 3.5rem;">
         </div>
         <div class="brand-text">
           <h5 class="mb-0 fw-bold text-primary">DDMS</h5>
@@ -895,16 +952,17 @@ if (isset($_SESSION['email'])) {
         <div class="hero-image text-center">
           <div class="dairy-banner">
             <div class="banner-image-container">
-              <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1926&q=80"
+              <img src="uploads/banner.jpg"
                    alt="Fresh Dairy Products"
                    class="banner-image">
             </div>
             <div class="banner-content-overlay">
-              <div class="banner-icon">
-                <i class="fas fa-cow fa-2x text-white"></i>
+             
               </div>
-              <h3 class="text-white">Fresh Dairy Products</h3>
-              <p class="text-white-50">From Farm to Table</p>
+              <h3 class="text-white">Manage your dairy smartly</h3>
+              <p class="text-white mb-0">Connecting Farmers and Customers Seamlessly</p>
+              
+              
             </div>
           </div>
         </div>
@@ -1024,7 +1082,9 @@ if (isset($_SESSION['email'])) {
       <div class="col-md-3 col-sm-6 mb-4">
         <a href="milk_product.php" class="text-decoration-none">
           <div class="category-card text-center">
-            <div class="category-icon milk-icon"></div>
+            <div class="category-icon">
+              <img src="uploads/products/product_68d11758f140b4.57759496.png" alt="Fresh Milk" class="category-image">
+            </div>
             <h3 class="category-title">Fresh Milk</h3>
             <p class="category-description">Pure, fresh milk from healthy cows</p>
           </div>
@@ -1035,7 +1095,9 @@ if (isset($_SESSION['email'])) {
       <div class="col-md-3 col-sm-6 mb-4">
         <a href="curd_product.php" class="text-decoration-none">
           <div class="category-card text-center">
-            <div class="category-icon curd-icon"></div>
+            <div class="category-icon">
+              <img src="uploads/products/product_68d118eb1afba8.07186790.png" alt="Curd & Sambaram" class="category-image">
+            </div>
             <h3 class="category-title">Curd & Sambaram</h3>
             <p class="category-description">Traditional and flavored curd varieties</p>
           </div>
@@ -1046,7 +1108,9 @@ if (isset($_SESSION['email'])) {
       <div class="col-md-3 col-sm-6 mb-4">
         <a href="icecream_product.php" class="text-decoration-none">
           <div class="category-card text-center">
-            <div class="category-icon icecream-icon"></div>
+            <div class="category-icon">
+              <img src="uploads/products/product_68d1200e547f02.98518454.png" alt="Ice Cream" class="category-image">
+            </div>
             <h3 class="category-title">Ice Cream</h3>
             <p class="category-description">Pure and delicious ice cream</p>
           </div>
@@ -1057,7 +1121,9 @@ if (isset($_SESSION['email'])) {
       <div class="col-md-3 col-sm-6 mb-4">
         <a href="ghee_product.php" class="text-decoration-none">
           <div class="category-card text-center">
-            <div class="category-icon ghee-icon"></div>
+            <div class="category-icon">
+              <img src="uploads/products/product_68d11896e32298.84480869.png" alt="Ghee & Butter" class="category-image">
+            </div>
             <h3 class="category-title">Ghee & Butter</h3>
             <p class="category-description">Pure ghee and premium butter</p>
           </div>
