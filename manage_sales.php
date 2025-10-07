@@ -31,7 +31,7 @@ include('includes/config.php');
                 </div>
                 <div class="date-display">
                     <i class="fas fa-calendar"></i>
-                    <?php echo date("D, M j, Y - h:i A"); ?>
+                    <span id="currentDateTime"></span>
                 </div>
             </div>
 
@@ -253,6 +253,26 @@ include('includes/config.php');
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 
     <script>
+        // Function to update current date and time
+        function updateDateTime() {
+            const now = new Date();
+            const options = {
+                weekday: 'short',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            };
+            const formattedDateTime = now.toLocaleDateString('en-US', options);
+            document.getElementById('currentDateTime').textContent = formattedDateTime;
+        }
+
+        // Update time immediately and then every second
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+
         $(document).ready(function() {
             // Initialize DataTable
             $('#salesTable').DataTable({

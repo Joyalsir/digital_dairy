@@ -33,7 +33,7 @@ $farmer_uuid = generateShortUUID();
                 </div>
                 <div class="date-display">
                     <i class="fas fa-calendar"></i>
-                    <?php echo date("D, M j, Y - h:i A"); ?>
+                    <span id="currentDateTime"></span>
                 </div>
             </div>
 
@@ -430,6 +430,26 @@ $farmer_uuid = generateShortUUID();
     </style>
 
     <script>
+        // Function to update current date and time
+        function updateDateTime() {
+            const now = new Date();
+            const options = {
+                weekday: 'short',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            };
+            const formattedDateTime = now.toLocaleDateString('en-US', options);
+            document.getElementById('currentDateTime').textContent = formattedDateTime;
+        }
+
+        // Update time immediately and then every second
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+
     // Use server-generated UUID for consistency
     document.addEventListener('DOMContentLoaded', function() {
         // Set the server-generated UUID

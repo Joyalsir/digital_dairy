@@ -51,7 +51,7 @@ if (isset($_GET['delete']) && isset($_GET['id'])) {
                 </div>
                 <div class="date-display">
                     <i class="fas fa-calendar"></i>
-                    <?php echo date("D, M j, Y - h:i A"); ?>
+                    <span id="currentDateTime"></span>
                 </div>
             </div>
 
@@ -269,6 +269,26 @@ if (isset($_GET['delete']) && isset($_GET['id'])) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        // Function to update current date and time
+        function updateDateTime() {
+            const now = new Date();
+            const options = {
+                weekday: 'short',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            };
+            const formattedDateTime = now.toLocaleDateString('en-US', options);
+            document.getElementById('currentDateTime').textContent = formattedDateTime;
+        }
+
+        // Update time immediately and then every second
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+
     function viewCustomer(customerId) {
         // This would typically make an AJAX call to get customer details
         // For now, we'll show a placeholder

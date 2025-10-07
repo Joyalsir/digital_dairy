@@ -42,7 +42,7 @@ if (isset($_SESSION['email'])) {
     .hero {
       background: #f8f9fa;
       color: var(--dark-text);
-      padding: 120px 0 100px;
+      padding: 100px 0;
       position: relative;
       overflow: hidden;
     }
@@ -390,6 +390,24 @@ if (isset($_SESSION['email'])) {
             border: 1px solid rgba(0,0,0,0.05);
             position: relative;
             overflow: hidden;
+            opacity: 0;
+            animation: fadeInRotate 0.8s ease-out forwards;
+        }
+
+        .category-card:nth-child(1) { animation-delay: 0s; }
+        .category-card:nth-child(2) { animation-delay: 0.2s; }
+        .category-card:nth-child(3) { animation-delay: 0.4s; }
+        .category-card:nth-child(4) { animation-delay: 0.6s; }
+
+        @keyframes fadeInRotate {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) rotate(-10deg) scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg) scale(1);
+            }
         }
 
         .category-card::before {
@@ -938,12 +956,10 @@ if (isset($_SESSION['email'])) {
 
           <!-- Hero Buttons -->
           <div class="hero-buttons d-flex gap-3 flex-wrap">
-            
+
                <a href="#categories" class="btn btn-primary btn-lg">Explore Products</a>
-            </a>
-          
+
                <a href="#about" class="btn btn-primary btn-lg">Learn More</a>
-            </a>
           </div>
         </div>
       </div>
@@ -976,40 +992,174 @@ if (isset($_SESSION['email'])) {
 
   
 
+<!-- How It Works Section -->
+<section id="how-it-works" class="section-padding bg-light">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="display-4 fw-bold mb-3">How It Works</h2>
+      <p class="lead text-muted">Streamlined dairy management from farm to customer</p>
+    </div>
+
+    <div class="row">
+      <!-- Step 1: Milk Collection -->
+      <div class="col-lg-3 col-md-6 mb-4">
+        <div class="process-step text-center">
+          <div class="step-number bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; font-size: 2rem; font-weight: bold;">
+            1
+          </div>
+          <div class="step-icon mb-3">
+            <i class="fas fa-cow text-primary" style="font-size: 3rem;"></i>
+          </div>
+          <h5 class="step-title mb-3">Milk Collection</h5>
+          <p class="step-description text-muted">
+            Farmers record daily milk collection with quality parameters like fat content, SNF, and temperature through the digital interface.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 2: Quality Testing -->
+      <div class="col-lg-3 col-md-6 mb-4">
+        <div class="process-step text-center">
+          <div class="step-number bg-success text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; font-size: 2rem; font-weight: bold;">
+            2
+          </div>
+          <div class="step-icon mb-3">
+            <i class="fas fa-flask text-success" style="font-size: 3rem;"></i>
+          </div>
+          <h5 class="step-title mb-3">Quality Testing</h5>
+          <p class="step-description text-muted">
+            Automated quality analysis and grading system ensures only premium quality milk enters the processing pipeline.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 3: Processing & Inventory -->
+      <div class="col-lg-3 col-md-6 mb-4">
+        <div class="process-step text-center">
+          <div class="step-number bg-warning text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; font-size: 2rem; font-weight: bold;">
+            3
+          </div>
+          <div class="step-icon mb-3">
+            <i class="fas fa-cogs text-warning" style="font-size: 3rem;"></i>
+          </div>
+          <h5 class="step-title mb-3">Processing</h5>
+          <p class="step-description text-muted">
+            Milk is processed into various dairy products with real-time inventory tracking and automated stock management.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 4: Distribution -->
+      <div class="col-lg-3 col-md-6 mb-4">
+        <div class="process-step text-center">
+          <div class="step-number bg-info text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; font-size: 2rem; font-weight: bold;">
+            4
+          </div>
+          <div class="step-icon mb-3">
+            <i class="fas fa-truck text-info" style="font-size: 3rem;"></i>
+          </div>
+          <h5 class="step-title mb-3">Distribution</h5>
+          <p class="step-description text-muted">
+            Seamless order processing, delivery tracking, and customer notifications ensure timely and reliable product delivery.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Process Flow Visualization -->
+    <div class="row mt-5">
+      <div class="col-12">
+        <div class="process-flow bg-white p-4 rounded-3 shadow-sm">
+          <div class="text-center mb-4">
+            <h4>Complete Digital Workflow</h4>
+          </div>
+          <div class="d-flex justify-content-center align-items-center flex-wrap">
+            <div class="flow-item text-center mx-3 mb-3">
+              <div class="flow-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 50px; height: 50px;">
+                <i class="fas fa-user"></i>
+              </div>
+              <small class="text-muted">Farmer</small>
+            </div>
+            <div class="flow-arrow mx-2">
+              <i class="fas fa-arrow-right text-primary"></i>
+            </div>
+            <div class="flow-item text-center mx-3 mb-3">
+              <div class="flow-icon bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 50px; height: 50px;">
+                <i class="fas fa-database"></i>
+              </div>
+              <small class="text-muted">System</small>
+            </div>
+            <div class="flow-arrow mx-2">
+              <i class="fas fa-arrow-right text-success"></i>
+            </div>
+            <div class="flow-item text-center mx-3 mb-3">
+              <div class="flow-icon bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 50px; height: 50px;">
+                <i class="fas fa-industry"></i>
+              </div>
+              <small class="text-muted">Processing</small>
+            </div>
+            <div class="flow-arrow mx-2">
+              <i class="fas fa-arrow-right text-warning"></i>
+            </div>
+            <div class="flow-item text-center mx-3 mb-3">
+              <div class="flow-icon bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 50px; height: 50px;">
+                <i class="fas fa-shopping-cart"></i>
+              </div>
+              <small class="text-muted">Customer</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- About Us Section -->
 <section id="about" class="section-padding bg-surface">
   <div class="container">
     <div class="row align-items-center">
       <div class="col-lg-6">
         <div class="text-start">
-          <h2 class="display-4 fw-bold mb-4 text-text-primary">About Digital Dairy System</h2>
+          <h2 class="display-4 fw-bold mb-4 text-text-primary">About Us</h2>
           <p class="lead mb-4 text-text-secondary">
-               Digital Dairy is a modern platform that connects farmers and customers directly.  
-          We provide fresh, pure, and quality dairy products such as milk, curd, ghee, and ice cream.          </p>
+            The Digital Dairy Management System (DDMS) is a comprehensive web-based application designed to modernize and streamline dairy farm operations.
+          </p>
           <p class="mb-4">
-              Our mission is to ensure that every customer receives farm-fresh dairy while supporting local farmers.  
-          With transparent processes and reliable delivery, we bring health and trust to your doorstep.          </p>
+            Built using PHP, MySQL, and Bootstrap, this system provides a complete solution for managing farmers, milk collection, product inventory, sales tracking, delivery management, and customer orders. The platform features a responsive design that works seamlessly across desktop and mobile devices.
+          </p>
 
           <div class="row g-4 mt-4">
             <div class="col-6">
               <div class="text-center">
                 <div class="stat-box summary-stats">
-                  <div class="stat-value text-secondary">500+</div>
-                  <div class="stat-label">Happy Farmers</div>
+                  <div class="stat-value text-secondary">PHP 8+</div>
+                  <div class="stat-label">Backend</div>
                 </div>
               </div>
             </div>
             <div class="col-6">
               <div class="text-center">
                 <div class="stat-box summary-stats">
-                  <div class="stat-value text-secondary">40%</div>
-                  <div class="stat-label">Efficiency Increase</div>
+                  <div class="stat-value text-secondary">MySQL</div>
+                  <div class="stat-label">Database</div>
                 </div>
               </div>
             </div>
           </div>
 
-          
+          <div class="mt-4">
+            <h5 class="mb-3">Key Features:</h5>
+            <ul class="list-unstyled">
+              <li class="mb-2"><i class="fas fa-check-circle text-secondary me-2"></i> User authentication and role-based access (Admin, Farmer, Customer)</li>
+              <li class="mb-2"><i class="fas fa-check-circle text-secondary me-2"></i> Real-time milk collection and quality tracking</li>
+              <li class="mb-2"><i class="fas fa-check-circle text-secondary me-2"></i> Automated payment calculations and farmer earnings</li>
+              <li class="mb-2"><i class="fas fa-check-circle text-secondary me-2"></i> Product inventory management with image uploads</li>
+              <li class="mb-2"><i class="fas fa-check-circle text-secondary me-2"></i> E-commerce functionality for customers</li>
+              <li class="mb-2"><i class="fas fa-check-circle text-secondary me-2"></i> Delivery tracking and status updates</li>
+              <li class="mb-2"><i class="fas fa-check-circle text-secondary me-2"></i> Comprehensive reporting and analytics</li>
+              <li class="mb-2"><i class="fas fa-check-circle text-secondary me-2"></i> Mobile-responsive design with Bootstrap</li>
+            </ul>
+          </div>
         </div>
       </div>
 
@@ -1017,51 +1167,60 @@ if (isset($_SESSION['email'])) {
         <div class="comparison-card digital">
           <div class="card-body p-4">
             <h5 class="card-title mb-4">
-              <i class="fas fa-chart-line text-secondary me-2"></i>
-              Our Mission & Vision
+              <i class="fas fa-code text-secondary me-2"></i>
+              Technical Architecture
             </h5>
 
             <div class="point-item">
               <div class="d-flex align-items-start">
-                <i class="fas fa-check-circle text-secondary me-3 mt-1"></i>
+                <i class="fas fa-server text-secondary me-3 mt-1"></i>
                 <div>
-                  <strong>Empower Farmers:</strong> Provide tools that help farmers increase productivity and profitability
+                  <strong>Backend:</strong> PHP with MySQL database for robust data management and secure transactions
                 </div>
               </div>
             </div>
 
             <div class="point-item">
               <div class="d-flex align-items-start">
-                <i class="fas fa-check-circle text-secondary me-3 mt-1"></i>
+                <i class="fas fa-palette text-secondary me-3 mt-1"></i>
                 <div>
-                  <strong>Quality Assurance:</strong> Ensure consistent quality from farm to consumer
+                  <strong>Frontend:</strong> Bootstrap 5 framework for responsive and modern user interface
                 </div>
               </div>
             </div>
 
             <div class="point-item">
               <div class="d-flex align-items-start">
-                <i class="fas fa-check-circle text-secondary me-3 mt-1"></i>
+                <i class="fas fa-shield-alt text-secondary me-3 mt-1"></i>
                 <div>
-                  <strong>Sustainable Growth:</strong> Promote sustainable dairy farming practices
+                  <strong>Security:</strong> Session-based authentication with role-based access control
                 </div>
               </div>
             </div>
 
             <div class="point-item">
               <div class="d-flex align-items-start">
-                <i class="fas fa-check-circle text-secondary me-3 mt-1"></i>
+                <i class="fas fa-mobile-alt text-secondary me-3 mt-1"></i>
                 <div>
-                  <strong>Technology Integration:</strong> Bridge traditional farming with modern technology
+                  <strong>Mobile-First:</strong> Responsive design ensuring optimal experience on all devices
                 </div>
               </div>
             </div>
 
             <div class="point-item">
               <div class="d-flex align-items-start">
-                <i class="fas fa-check-circle text-secondary me-3 mt-1"></i>
+                <i class="fas fa-chart-line text-secondary me-3 mt-1"></i>
                 <div>
-                  <strong>Community Building:</strong> Foster a supportive community of dairy professionals
+                  <strong>Analytics:</strong> Built-in reporting system for operational insights and decision making
+                </div>
+              </div>
+            </div>
+
+            <div class="point-item">
+              <div class="d-flex align-items-start">
+                <i class="fas fa-graduation-cap text-secondary me-3 mt-1"></i>
+                <div>
+                  <strong>Developed by:</strong> Joyal - Final Year BCA Student at MACFAST, Thiruvalla
                 </div>
               </div>
             </div>
@@ -1071,6 +1230,270 @@ if (isset($_SESSION['email'])) {
     </div>
   </div>
 </section>
+
+<!-- Technology Stack Section -->
+<section id="technology" class="section-padding bg-white">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="display-4 fw-bold mb-3">Technology Stack</h2>
+      <p class="lead text-muted">Built with modern web technologies for reliability and performance</p>
+    </div>
+
+    <div class="row">
+      <!-- Backend Technologies -->
+      <div class="col-lg-4 mb-4">
+        <div class="tech-card bg-light p-4 rounded-3 h-100">
+          <div class="text-center mb-4">
+            <div class="tech-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px; font-size: 2rem;">
+              <i class="fas fa-server"></i>
+            </div>
+            <h4 class="tech-title">Backend</h4>
+          </div>
+          <div class="tech-list">
+            <div class="tech-item d-flex align-items-center mb-3">
+              <i class="fab fa-php text-primary me-3" style="font-size: 1.5rem;"></i>
+              <div>
+                <strong>PHP 8+</strong>
+                <br><small class="text-muted">Server-side scripting & business logic</small>
+              </div>
+            </div>
+            <div class="tech-item d-flex align-items-center mb-3">
+              <i class="fas fa-database text-success me-3" style="font-size: 1.5rem;"></i>
+              <div>
+                <strong>MySQL</strong>
+                <br><small class="text-muted">Relational database management</small>
+              </div>
+            </div>
+            <div class="tech-item d-flex align-items-center mb-3">
+              <i class="fas fa-shield-alt text-warning me-3" style="font-size: 1.5rem;"></i>
+              <div>
+                <strong>Session Management</strong>
+                <br><small class="text-muted">Secure user authentication</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Frontend Technologies -->
+      <div class="col-lg-4 mb-4">
+        <div class="tech-card bg-light p-4 rounded-3 h-100">
+          <div class="text-center mb-4">
+            <div class="tech-icon bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px; font-size: 2rem;">
+              <i class="fas fa-desktop"></i>
+            </div>
+            <h4 class="tech-title">Frontend</h4>
+          </div>
+          <div class="tech-list">
+            <div class="tech-item d-flex align-items-center mb-3">
+              <i class="fab fa-html5 text-danger me-3" style="font-size: 1.5rem;"></i>
+              <div>
+                <strong>HTML5</strong>
+                <br><small class="text-muted">Semantic markup & structure</small>
+              </div>
+            </div>
+            <div class="tech-item d-flex align-items-center mb-3">
+              <i class="fab fa-css3 text-primary me-3" style="font-size: 1.5rem;"></i>
+              <div>
+                <strong>CSS3</strong>
+                <br><small class="text-muted">Styling & responsive design</small>
+              </div>
+            </div>
+            <div class="tech-item d-flex align-items-center mb-3">
+              <i class="fab fa-bootstrap text-info me-3" style="font-size: 1.5rem;"></i>
+              <div>
+                <strong>Bootstrap 5</strong>
+                <br><small class="text-muted">UI framework & components</small>
+              </div>
+            </div>
+            <div class="tech-item d-flex align-items-center mb-3">
+              <i class="fab fa-js-square text-warning me-3" style="font-size: 1.5rem;"></i>
+              <div>
+                <strong>JavaScript</strong>
+                <br><small class="text-muted">Interactive functionality</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional Technologies -->
+      <div class="col-lg-4 mb-4">
+        <div class="tech-card bg-light p-4 rounded-3 h-100">
+          <div class="text-center mb-4">
+            <div class="tech-icon bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px; font-size: 2rem;">
+              <i class="fas fa-tools"></i>
+            </div>
+            <h4 class="tech-title">Tools & Features</h4>
+          </div>
+          <div class="tech-list">
+            <div class="tech-item d-flex align-items-center mb-3">
+              <i class="fas fa-mobile-alt text-success me-3" style="font-size: 1.5rem;"></i>
+              <div>
+                <strong>Responsive Design</strong>
+                <br><small class="text-muted">Mobile-first approach</small>
+              </div>
+            </div>
+            <div class="tech-item d-flex align-items-center mb-3">
+              <i class="fas fa-upload text-primary me-3" style="font-size: 1.5rem;"></i>
+              <div>
+                <strong>File Upload</strong>
+                <br><small class="text-muted">Image management system</small>
+              </div>
+            </div>
+            <div class="tech-item d-flex align-items-center mb-3">
+              <i class="fas fa-chart-bar text-warning me-3" style="font-size: 1.5rem;"></i>
+              <div>
+                <strong>Data Analytics</strong>
+                <br><small class="text-muted">Reporting & insights</small>
+              </div>
+            </div>
+            <div class="tech-item d-flex align-items-center mb-3">
+              <i class="fas fa-lock text-danger me-3" style="font-size: 1.5rem;"></i>
+              <div>
+                <strong>Security</strong>
+                <br><small class="text-muted">Role-based access control</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Architecture Diagram -->
+    <div class="row mt-5">
+      <div class="col-12">
+        <div class="architecture-diagram bg-light p-4 rounded-3">
+          <h4 class="text-center mb-4">System Architecture</h4>
+          <div class="text-center">
+            <div class="arch-layer user-layer bg-white p-3 rounded mb-3 mx-auto" style="max-width: 600px;">
+              <i class="fas fa-users text-primary me-2"></i>
+              <strong>User Interface Layer</strong> - Web browsers, mobile devices
+            </div>
+            <div class="arch-arrow mb-3">
+              <i class="fas fa-arrow-down text-muted"></i>
+            </div>
+            <div class="arch-layer app-layer bg-white p-3 rounded mb-3 mx-auto" style="max-width: 600px;">
+              <i class="fas fa-code text-success me-2"></i>
+              <strong>Application Layer</strong> - PHP, Business Logic, Session Management
+            </div>
+            <div class="arch-arrow mb-3">
+              <i class="fas fa-arrow-down text-muted"></i>
+            </div>
+            <div class="arch-layer data-layer bg-white p-3 rounded mx-auto" style="max-width: 600px;">
+              <i class="fas fa-database text-warning me-2"></i>
+              <strong>Data Layer</strong> - MySQL Database, File Storage
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Developer Section -->
+<section id="developer" class="section-padding bg-primary text-white">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="display-4 fw-bold mb-3">Meet the Developer</h2>
+      <p class="lead">Passionate about technology and creating solutions that make a difference</p>
+    </div>
+
+    <div class="row align-items-center">
+      <div class="col-lg-4 text-center mb-4">
+        <div class="developer-avatar mx-auto mb-4">
+          <div class="bg-white text-primary rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 150px; height: 150px; font-size: 4rem;">
+            <i class="fas fa-user-graduate"></i>
+          </div>
+        </div>
+        <h4 class="mb-2">Joyal & Kebin Varghese</h4>
+        <p class="mb-0 text-light">Final Year BCA Students</p>
+        <p class="mb-0 text-light">MACFAST, Thiruvalla</p>
+      </div>
+
+      <div class="col-lg-8">
+        <div class="developer-info">
+          <h4 class="mb-4">About the Project</h4>
+          <p class="mb-4">
+            This Digital Dairy Management System was developed as a comprehensive final year project to demonstrate practical application of web development skills and solve real-world problems in the dairy industry.
+          </p>
+
+          <div class="row">
+            <div class="col-md-6 mb-4">
+              <h5 class="mb-3"><i class="fas fa-lightbulb text-warning me-2"></i>Project Vision</h5>
+              <p class="mb-0">
+                To modernize traditional dairy farming operations by providing a digital platform that connects farmers, dairy processors, and customers in an efficient ecosystem.
+              </p>
+            </div>
+            <div class="col-md-6 mb-4">
+              <h5 class="mb-3"><i class="fas fa-code text-info me-2"></i>Learning Outcomes</h5>
+              <ul class="list-unstyled mb-0">
+                <li><i class="fas fa-check text-success me-2"></i>Full-stack web development</li>
+                <li><i class="fas fa-check text-success me-2"></i>Database design & management</li>
+                <li><i class="fas fa-check text-success me-2"></i>User experience design</li>
+                <li><i class="fas fa-check text-success me-2"></i>Security implementation</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <h5 class="mb-3"><i class="fas fa-graduation-cap text-warning me-2"></i>Academic Achievement</h5>
+            <p class="mb-0">
+              This project showcases the application of theoretical knowledge gained during BCA studies into a practical, industry-relevant solution. It demonstrates proficiency in modern web technologies and problem-solving abilities.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Skills Showcase -->
+    <div class="row mt-5">
+      <div class="col-12">
+        <h4 class="text-center mb-4">Technical Skills Demonstrated</h4>
+        <div class="row text-center">
+          <div class="col-lg-2 col-md-4 col-6 mb-3">
+            <div class="skill-item">
+              <i class="fab fa-php fa-2x text-warning mb-2"></i>
+              <br><small>PHP</small>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-4 col-6 mb-3">
+            <div class="skill-item">
+              <i class="fas fa-database fa-2x text-success mb-2"></i>
+              <br><small>MySQL</small>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-4 col-6 mb-3">
+            <div class="skill-item">
+              <i class="fab fa-html5 fa-2x text-danger mb-2"></i>
+              <br><small>HTML5</small>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-4 col-6 mb-3">
+            <div class="skill-item">
+              <i class="fab fa-css3 fa-2x text-primary mb-2"></i>
+              <br><small>CSS3</small>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-4 col-6 mb-3">
+            <div class="skill-item">
+              <i class="fab fa-bootstrap fa-2x text-info mb-2"></i>
+              <br><small>Bootstrap</small>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-4 col-6 mb-3">
+            <div class="skill-item">
+              <i class="fab fa-js-square fa-2x text-warning mb-2"></i>
+              <br><small>JavaScript</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
 
 <!-- Product Categories -->
 <section class="categories-section" id="categories">

@@ -1,10 +1,4 @@
 <?php
-session_start();
-if (!isset($_SESSION['email'])) {
-    header("Location: index.php");
-    exit;
-}
-
 include('includes/header.php');
 include('includes/config.php');
 ?>
@@ -225,6 +219,33 @@ include('includes/config.php');
             color: var(--primary-color);
             margin-bottom: 10px;
         }
+
+        .category-navigation {
+            padding: 20px 0;
+            background: var(--light-bg);
+            border-bottom: 1px solid #ddd;
+        }
+
+        .category-link {
+            background: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .category-link:hover {
+            background: var(--secondary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .category-link.active {
+            background: var(--accent-color);
+        }
     </style>
 </head>
 <body>
@@ -239,6 +260,26 @@ include('includes/config.php');
                     <i class="fas fa-shopping-cart"></i>
                     View Products
                 </a>
+            </div>
+        </section>
+
+        <!-- Category Navigation -->
+        <section class="category-navigation">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-auto">
+                        <a href="milk_product.php" class="category-link">Milk Products</a>
+                    </div>
+                    <div class="col-auto">
+                        <a href="curd_product.php" class="category-link active">Curd Products</a>
+                    </div>
+                    <div class="col-auto">
+                        <a href="ghee_product.php" class="category-link">Ghee Products</a>
+                    </div>
+                    <div class="col-auto">
+                        <a href="icecream_product.php" class="category-link">Ice Cream Products</a>
+                    </div>
+                </div>
             </div>
         </section>
 
