@@ -76,7 +76,7 @@ include('includes/config.php');
                                     <th><i class="fas fa-user-tie"></i> Driver</th>
                                     <th><i class="fas fa-phone"></i> Driver Contact</th>
                                     <th><i class="fas fa-clock"></i> Posted</th>
-                            
+                                    <th><i class="fas fa-info-circle"></i> Status</th>
                                     <th><i class="fas fa-tasks"></i> Actions</th>
                                 </tr>
                             </thead>

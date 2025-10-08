@@ -21,7 +21,7 @@ if (isset($_POST['update_profile'])) {
     $_SESSION['customer_name'] = $new_name;
 
     // Update database if needed (assuming there's a customers table)
-    $update_query = "UPDATE tblcustomers SET CustomerName = '$new_name', Phone = '$new_phone', Address = '$new_address' WHERE Email = '$user_email'";
+    $update_query = "UPDATE tblcustomer SET customer_name = '$new_name', contact = '$new_phone', address = '$new_address' WHERE email = '$user_email'";
 
     if (mysqli_query($con, $update_query)) {
         $_SESSION['profile_success'] = "Profile updated successfully!";
@@ -34,7 +34,7 @@ if (isset($_POST['update_profile'])) {
 }
 
 // Get user details from database
-$user_query = "SELECT * FROM tblcustomers WHERE Email = '$user_email'";
+$user_query = "SELECT * FROM tblcustomer WHERE email = '$user_email'";
 $user_result = mysqli_query($con, $user_query);
 $user_data = mysqli_fetch_assoc($user_result);
 ?>
@@ -209,14 +209,14 @@ $user_data = mysqli_fetch_assoc($user_result);
                                 <div class="col-md-6 mb-4">
                                     <div class="info-item" style="padding: 20px; background: #f8f9fa; border-radius: 10px;">
                                         <label style="color: #6c757d; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">Phone</label>
-                                        <p style="color: #2c5aa0; font-weight: 600; margin: 5px 0;"><?php echo htmlspecialchars($user_data['Phone'] ?? 'Not provided'); ?></p>
+                                        <p style="color: #2c5aa0; font-weight: 600; margin: 5px 0;"><?php echo htmlspecialchars($user_data['contact'] ?? 'Not provided'); ?></p>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6 mb-4">
                                     <div class="info-item" style="padding: 20px; background: #f8f9fa; border-radius: 10px;">
                                         <label style="color: #6c757d; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">Member Since</label>
-                                        <p style="color: #2c5aa0; font-weight: 600; margin: 5px 0;"><?php echo date('F Y', strtotime($user_data['RegDate'] ?? 'now')); ?></p>
+                                        <p style="color: #2c5aa0; font-weight: 600; margin: 5px 0;"><?php echo date('F Y', strtotime($user_data['registration_date'] ?? 'now')); ?></p>
                                     </div>
                                 </div>
                             </div>
@@ -240,7 +240,7 @@ $user_data = mysqli_fetch_assoc($user_result);
                                     <div class="col-md-6 mb-4">
                                         <label for="phone" class="form-label" style="color: #2c5aa0; font-weight: 600;">Phone Number</label>
                                         <input type="tel" class="form-control" id="phone" name="phone"
-                                               value="<?php echo htmlspecialchars($user_data['Phone'] ?? ''); ?>"
+                                               value="<?php echo htmlspecialchars($user_data['contact'] ?? ''); ?>"
                                                style="border-radius: 10px; padding: 12px 16px; border: 2px solid #e9ecef;">
                                     </div>
                                 </div>
@@ -248,7 +248,7 @@ $user_data = mysqli_fetch_assoc($user_result);
                                 <div class="mb-4">
                                     <label for="address" class="form-label" style="color: #2c5aa0; font-weight: 600;">Address</label>
                                     <textarea class="form-control" id="address" name="address" rows="3"
-                                              style="border-radius: 10px; padding: 12px 16px; border: 2px solid #e9ecef;"><?php echo htmlspecialchars($user_data['Address'] ?? ''); ?></textarea>
+                                              style="border-radius: 10px; padding: 12px 16px; border: 2px solid #e9ecef;"><?php echo htmlspecialchars($user_data['address'] ?? ''); ?></textarea>
                                 </div>
 
                                 <div class="d-flex gap-3">
@@ -316,7 +316,7 @@ $user_data = mysqli_fetch_assoc($user_result);
                                     <i class="fas fa-calendar" style="font-size: 2rem; color: #f57c00; margin-bottom: 10px;"></i>
                                     <h4 style="color: #f57c00; margin-bottom: 5px;">Member Since</h4>
                                     <p style="font-size: 1.2rem; font-weight: bold; color: #2c5aa0;">
-                                        <?php echo date('M Y', strtotime($user_data['RegDate'] ?? 'now')); ?>
+                                        <?php echo date('M Y', strtotime($user_data['registration_date'] ?? 'now')); ?>
                                     </p>
                                 </div>
                             </div>

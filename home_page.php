@@ -822,6 +822,12 @@ if (isset($_SESSION['email'])) {
         margin: 0 auto;
       }
     }
+
+    /* Screenshot section text color */
+    #screenshots .carousel-caption h5,
+    #screenshots .carousel-caption p {
+      color: black;
+    }
   </style>
 </head>
 <body>
@@ -987,10 +993,61 @@ if (isset($_SESSION['email'])) {
   </div>
 </section>
 
+<!-- Product Categories Section -->
+<section id="categories" class="categories-section">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="display-4 fw-bold mb-3">Our Product Categories</h2>
+      <p class="lead text-muted">Discover our range of fresh dairy products</p>
+    </div>
 
+    <div class="row">
+      <div class="col-lg-3 col-md-6">
+        <div class="category-card">
+          <div class="category-icon">
+            <img src="uploads/products/product_68d11758f140b4.57759496.png" alt="Milk Products" class="category-image">
+          </div>
+          <h3 class="category-title">Milk Products</h3>
+          <p class="category-description">Fresh milk, flavored milk, and milk-based beverages</p>
+          <a href="milk_product.php" class="category-btn">Explore</a>
+        </div>
+      </div>
 
+      <div class="col-lg-3 col-md-6">
+        <div class="category-card">
+          <div class="category-icon">
+            <img src="uploads/products/product_68d118eb1afba8.07186790.png" alt="Curd & Sambaram" class="category-image">
+          </div>
+          <h3 class="category-title">Curd & Sambaram</h3>
+          <p class="category-description">Traditional curd and spicy buttermilk varieties</p>
+          <a href="curd_product.php" class="category-btn">Explore</a>
+        </div>
+      </div>
 
-  
+      <div class="col-lg-3 col-md-6">
+        <div class="category-card">
+          <div class="category-icon">
+            <img src="uploads/products/product_68d11896e32298.84480869.png" alt="Ice Cream" class="category-image">
+          </div>
+          <h3 class="category-title">Ice Cream</h3>
+          <p class="category-description">Delicious ice cream in various flavors and sizes</p>
+          <a href="icecream_product.php" class="category-btn">Explore</a>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-6">
+        <div class="category-card">
+          <div class="category-icon">
+            <img src="uploads/products/product_68d1198391f951.31223157.png" alt="Ghee & Butter" class="category-image">
+          </div>
+          <h3 class="category-title">Ghee & Butter</h3>
+          <p class="category-description">Pure ghee and fresh butter from farm to table</p>
+          <a href="ghee_product.php" class="category-btn">Explore</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- How It Works Section -->
 <section id="how-it-works" class="section-padding bg-light">
@@ -1391,6 +1448,75 @@ if (isset($_SESSION['email'])) {
   </div>
 </section>
 
+<!-- System Screenshots Section -->
+<section id="screenshots" class="section-padding bg-light">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="display-4 fw-bold mb-3">System Screenshots</h2>
+      <p class="lead text-muted">Explore the key interfaces of our Digital Dairy Management System</p>
+    </div>
+
+    <div id="screenshotsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#screenshotsCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#screenshotsCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#screenshotsCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        <button type="button" data-bs-target="#screenshotsCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+        <button type="button" data-bs-target="#screenshotsCarousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
+      </div>
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="uploads/admin-dashboard.png" class="d-block w-100" alt="Admin Dashboard">
+          <div class="carousel-caption d-none d-md-block">
+            <h5>Admin Dashboard</h5>
+            <p>Comprehensive overview of system analytics, farmer management, and sales reports.</p>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img src="uploads/farmer-reg.png" class="d-block w-100" alt="farmer registration">
+          <div class="carousel-caption d-none d-md-block">
+            <h5>Farmer Registration</h5>
+            <p>Easy registration process for dairy farmers to join the digital platform.</p>
+          </div>
+        </div>
+        <div class="carousel-item">
+           <img src="uploads/farmer.png" class="d-block w-100" alt="farmer Dashboard">
+          <div class="carousel-caption d-none d-md-block">
+            <h5>Farmer Dashboard</h5>
+            <p>Farmers can manage their profiles, view earnings, and track milk collections.</p>
+          </div>
+        </div>
+        <div class="carousel-item">
+           <img src="uploads/manage-milk.png" class="d-block w-100" alt="Milk Management">
+          <div class="carousel-caption d-none d-md-block">
+            <h5>Milk Collection Management</h5>
+            <p>Real-time monitoring and management of milk collection from multiple farmers.</p>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img src="uploads/admin-dashboard.png" class="d-block w-100" alt="Reports Analytics">
+          <div class="carousel-caption d-none d-md-block">
+            <h5>Reports & Analytics</h5>
+            <p>Detailed insights into milk collection, sales, and farmer earnings.</p>
+          </div>
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#screenshotsCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#screenshotsCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+
+    <div class="text-center mt-4">
+      <a href="index.php" class="btn btn-primary btn-lg">Try the System</a>
+    </div>
+  </div>
+</section>
+
 <!-- Developer Section -->
 <section id="developer" class="section-padding bg-primary text-white">
   <div class="container">
@@ -1495,67 +1621,7 @@ if (isset($_SESSION['email'])) {
 
 
 
-<!-- Product Categories -->
-<section class="categories-section" id="categories">
-  <div class="container">
-    <h2 class="section-title text-center mb-4">Product Categories</h2>
-    <div class="row">
 
-      <!-- Fresh Milk Category -->
-      <div class="col-md-3 col-sm-6 mb-4">
-        <a href="milk_product.php" class="text-decoration-none">
-          <div class="category-card text-center">
-            <div class="category-icon">
-              <img src="uploads/products/product_68d11758f140b4.57759496.png" alt="Fresh Milk" class="category-image">
-            </div>
-            <h3 class="category-title">Fresh Milk</h3>
-            <p class="category-description">Pure, fresh milk from healthy cows</p>
-          </div>
-        </a>
-      </div>
-
-      <!-- Curd & Sambaram Category -->
-      <div class="col-md-3 col-sm-6 mb-4">
-        <a href="curd_product.php" class="text-decoration-none">
-          <div class="category-card text-center">
-            <div class="category-icon">
-              <img src="uploads/products/product_68d118eb1afba8.07186790.png" alt="Curd & Sambaram" class="category-image">
-            </div>
-            <h3 class="category-title">Curd & Sambaram</h3>
-            <p class="category-description">Traditional and flavored curd varieties</p>
-          </div>
-        </a>
-      </div>
-
-      <!-- Ice Cream Category -->
-      <div class="col-md-3 col-sm-6 mb-4">
-        <a href="icecream_product.php" class="text-decoration-none">
-          <div class="category-card text-center">
-            <div class="category-icon">
-              <img src="uploads/products/product_68d1200e547f02.98518454.png" alt="Ice Cream" class="category-image">
-            </div>
-            <h3 class="category-title">Ice Cream</h3>
-            <p class="category-description">Pure and delicious ice cream</p>
-          </div>
-        </a>
-      </div>
-
-      <!-- Ghee & Butter Category -->
-      <div class="col-md-3 col-sm-6 mb-4">
-        <a href="ghee_product.php" class="text-decoration-none">
-          <div class="category-card text-center">
-            <div class="category-icon">
-              <img src="uploads/products/product_68d11896e32298.84480869.png" alt="Ghee & Butter" class="category-image">
-            </div>
-            <h3 class="category-title">Ghee & Butter</h3>
-            <p class="category-description">Pure ghee and premium butter</p>
-          </div>
-        </a>
-      </div>
-
-    </div>
-  </div>
-</section>
 
 
   <!-- User Panel Benefits -->

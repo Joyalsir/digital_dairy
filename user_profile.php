@@ -17,12 +17,22 @@ if (mysqli_num_rows($query) == 0) {
     $farmer_name = $_SESSION['name'];
     $farmer_phone = '';
     $farmer_address = '';
+    $farmer_username = '';
+    $farmer_farm_size = '';
+    $farmer_aadhar = '';
+    $farmer_bank_account = '';
+    $farmer_ifsc = '';
 } else {
     $farmer = mysqli_fetch_assoc($query);
     $farmer_uuid = $farmer['uuid'];
     $farmer_name = $farmer['name'];
-    $farmer_phone = $farmer['phone'] ?? '';
+    $farmer_phone = $farmer['contact'] ?? '';
     $farmer_address = $farmer['address'] ?? '';
+    $farmer_username = $farmer['username'] ?? '';
+    $farmer_farm_size = $farmer['farm_size'] ?? '';
+    $farmer_aadhar = $farmer['aadhar'] ?? '';
+    $farmer_bank_account = $farmer['bank_account'] ?? '';
+    $farmer_ifsc = $farmer['ifsc'] ?? '';
 }
 
 // Handle form submission
@@ -30,9 +40,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = mysqli_real_escape_string($con, $_POST['name']);
     $phone = mysqli_real_escape_string($con, $_POST['phone']);
     $address = mysqli_real_escape_string($con, $_POST['address']);
+    $username = mysqli_real_escape_string($con, $_POST['username']);
+    $farm_size = mysqli_real_escape_string($con, $_POST['farm_size']);
+    $aadhar = mysqli_real_escape_string($con, $_POST['aadhar']);
+    $bank_account = mysqli_real_escape_string($con, $_POST['bank_account']);
+    $ifsc = mysqli_real_escape_string($con, $_POST['ifsc']);
 
     if ($farmer_uuid) {
-        $update_query = "UPDATE farmers SET name='$name', phone='$phone', address='$address' WHERE uuid='$farmer_uuid'";
+        $update_query = "UPDATE farmers SET name='$name', contact='$phone', address='$address', username='$username', farm_size='$farm_size', aadhar='$aadhar', bank_account='$bank_account', ifsc='$ifsc' WHERE uuid='$farmer_uuid'";
     } else {
         // If no farmer record, perhaps insert, but for now, skip
         $update_query = null;
@@ -106,6 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         .form-group input[type="text"],
         .form-group input[type="email"],
+        .form-group input[type="number"],
         .form-group textarea {
             width: 100%;
             padding: 10px;
@@ -116,6 +132,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .form-group textarea {
             resize: vertical;
             min-height: 80px;
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+        }
+        .input-group .form-control {
+            flex: 1;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        .input-addon {
+            padding: 10px;
+            background-color: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-left: none;
+            border-top-right-radius: 6px;
+            border-bottom-right-radius: 6px;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        .form-label i {
+            margin-right: 0.5rem;
+            color: #6b7280;
         }
         .btn-primary {
             background-color: #3b82f6;
@@ -177,20 +221,67 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <?php endif; ?>
                 <form method="POST">
                     <div class="form-group">
-                        <label for="name">Full Name</label>
-                        <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($farmer_name); ?>" required />
+                        <label for="name" class="form-label">
+                            <i class="fas fa-user"></i> Full Name <span style="color: #ef4444;">*</span>
+                        </label>
+                        <input type="text" id="name" name="name" class="form-control" value="<?php echo htmlspecialchars($farmer_name); ?>" required />
                     </div>
                     <div class="form-group">
-                        <label for="email">Email Address</label>
-                        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user_email); ?>" readonly />
+                        <label for="email" class="form-label">
+                            <i class="fas fa-envelope"></i> Email Address
+                        </label>
+                        <input type="email" id="email" name="email" class="form-control" value="<?php echo htmlspecialchars($user_email); ?>" readonly />
                     </div>
                     <div class="form-group">
-                        <label for="phone">Phone Number</label>
-                        <input type="text" id="phone" name="phone" value="<?php echo htmlspecialchars($farmer_phone); ?>" />
+                        <label for="farmer_uuid_display" class="form-label">
+                            <i class="fas fa-id-badge"></i> Farmer UUID
+                        </label>
+                        <input type="text" id="farmer_uuid_display" name="farmer_uuid_display" class="form-control" value="<?php echo htmlspecialchars($farmer_uuid); ?>" readonly />
                     </div>
                     <div class="form-group">
-                        <label for="address">Address</label>
-                        <textarea id="address" name="address"><?php echo htmlspecialchars($farmer_address); ?></textarea>
+                        <label for="username" class="form-label">
+                            <i class="fas fa-at"></i> Username
+                        </label>
+                        <input type="text" id="username" name="username" class="form-control" value="<?php echo htmlspecialchars($farmer_username); ?>" pattern="[a-zA-Z0-9_]{3,20}" title="Username must be 3-20 characters long and contain only letters, numbers, and underscores" />
+                    </div>
+                    <div class="form-group">
+                        <label for="phone" class="form-label">
+                            <i class="fas fa-phone"></i> Contact Number
+                        </label>
+                        <input type="tel" id="phone" name="phone" class="form-control" value="<?php echo htmlspecialchars($farmer_phone); ?>" pattern="[6-9][0-9]{9}" title="Enter a valid 10-digit Indian phone number starting with 6-9" />
+                    </div>
+                    <div class="form-group">
+                        <label for="address" class="form-label">
+                            <i class="fas fa-map-marker-alt"></i> Address <span style="color: #ef4444;">*</span>
+                        </label>
+                        <textarea id="address" name="address" class="form-control" rows="3" required><?php echo htmlspecialchars($farmer_address); ?></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="farm_size" class="form-label">
+                            <i class="fas fa-tractor"></i> Farm Size
+                        </label>
+                        <div class="input-group">
+                            <input type="number" id="farm_size" name="farm_size" class="form-control" value="<?php echo htmlspecialchars($farmer_farm_size); ?>" placeholder="0.0" step="0.01" min="0" />
+                            <span class="input-addon">acres</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="aadhar" class="form-label">
+                            <i class="fas fa-id-card"></i> Aadhar Number
+                        </label>
+                        <input type="text" id="aadhar" name="aadhar" class="form-control" value="<?php echo htmlspecialchars($farmer_aadhar); ?>" pattern="[0-9]{12}" title="Aadhar number must be exactly 12 digits" maxlength="12" />
+                    </div>
+                    <div class="form-group">
+                        <label for="bank_account" class="form-label">
+                            <i class="fas fa-university"></i> Bank Account
+                        </label>
+                        <input type="text" id="bank_account" name="bank_account" class="form-control" value="<?php echo htmlspecialchars($farmer_bank_account); ?>" />
+                    </div>
+                    <div class="form-group">
+                        <label for="ifsc" class="form-label">
+                            <i class="fas fa-code"></i> IFSC Code
+                        </label>
+                        <input type="text" id="ifsc" name="ifsc" class="form-control" value="<?php echo htmlspecialchars($farmer_ifsc); ?>" />
                     </div>
                     <button type="submit" class="btn btn-primary">Update Profile</button>
                 </form>
