@@ -67,6 +67,7 @@ include('includes/config.php');
                                     <th><i class="fas fa-percentage"></i> Fat Content</th>
                                     <th><i class="fas fa-thermometer-half"></i> Temperature</th>
                                     <th><i class="fas fa-rupee-sign"></i> Payment</th>
+                                    <th><i class="fas fa-cogs"></i> Actions</th>
                                 </tr>
                             </thead>
                             <tbody>

@@ -49,12 +49,21 @@ if ($row = mysqli_fetch_assoc($result)) {
     $active_customers = $row['total'];
 }
 
+// Get selected year from GET, default to current year
+$selected_year = isset($_GET['year']) ? intval($_GET['year']) : date('Y');
+
+// Debug output
+echo "<!-- selected_year: $selected_year -->";
+
 // Get monthly milk collection (for chart)
 $monthly_data = [];
 for ($i = 1; $i <= 12; $i++) {
     $result = mysqli_query($con, "SELECT SUM(quantity) as total 
                                   FROM milk_collection 
-                                  WHERE MONTH(date) = $i");
+                                  WHERE MONTH(date) = $i AND YEAR(date) = $selected_year");
+    if (!$result) {
+        die("Query failed: " . mysqli_error($con));
+    }
     $row = mysqli_fetch_assoc($result);
     $monthly_data[] = $row['total'] ? $row['total'] : 0;
 }
@@ -78,25 +87,38 @@ while ($row = mysqli_fetch_assoc($result)) {
     $product_sales[$row['ProductName']] = $row['total_qty'];
 }
 
-// Get milk collection distribution by time of day (morning, evening, night)
-$time_distribution = [
-    'Morning' => 0,
-    'Evening' => 0,
-    'Night' => 0
-];
+$time_distribution = [];
 $result = mysqli_query($con, "
-    SELECT 
-        CASE 
-            WHEN HOUR(date) BETWEEN 5 AND 11 THEN 'Morning'
-            WHEN HOUR(date) BETWEEN 12 AND 17 THEN 'Evening'
-            ELSE 'Night'
-        END as time_of_day,
-        SUM(quantity) as total_qty
-    FROM milk_collection
-    GROUP BY time_of_day
+    SELECT ProductType as product_type, COUNT(*) as total_qty
+    FROM tblproduct
+    GROUP BY ProductType
+    ORDER BY total_qty DESC
 ");
 while ($row = mysqli_fetch_assoc($result)) {
-    $time_distribution[$row['time_of_day']] = $row['total_qty'];
+    $time_distribution[$row['product_type']] = $row['total_qty'];
+}
+
+// Prepare labels and data for pie chart
+$pie_labels = array_keys($time_distribution);
+$pie_data = array_values($time_distribution);
+
+$color_palette = [
+    '#10b981', // green
+    '#f59e0b', // orange
+    '#ef4444', // red
+    '#3b82f6', // blue
+    '#8b5cf6', // purple
+    '#ec4899', // pink
+    '#f97316', // orange-dark
+    '#14b8a6', // teal
+    '#eab308', // yellow
+    '#6366f1', // indigo
+];
+
+$pie_colors = [];
+$palette_size = count($color_palette);
+foreach ($pie_labels as $index => $label) {
+    $pie_colors[] = $color_palette[$index % $palette_size];
 }
 
 $active_farmers_list = [];
@@ -188,8 +210,9 @@ while ($row = mysqli_fetch_assoc($result)) {
                     <div class="chart-header">
                         <h3>Monthly Milk Collection Trend</h3>
                         <select id="yearFilter" class="form-select" style="width: auto;">
-                            <option value="2024">2024</option>
-                            <option value="2023">2023</option>
+                            <option value="2025" <?php if ($selected_year == 2025) echo 'selected'; ?>>2025</option>
+                            <option value="2024" <?php if ($selected_year == 2024) echo 'selected'; ?>>2024</option>
+                            <option value="2023" <?php if ($selected_year == 2023) echo 'selected'; ?>>2023</option>
                         </select>
                     </div>
                     <div class="chart-canvas">
@@ -199,7 +222,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 
                 <div class="chart-card">
                     <div class="chart-header">
-                        <h3>Collection Distribution</h3>
+                        <h3>Product Category Distribution</h3>
                     </div>
                     <div class="chart-canvas">
                         <canvas id="collectionPieChart"></canvas>
@@ -711,12 +734,12 @@ while ($row = mysqli_fetch_assoc($result)) {
             new Chart(pieCtx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Morning', 'Evening', 'Night'],
-            datasets: [{
-                data: <?php echo json_encode(array_values($time_distribution)); ?>,
-                backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
-                borderWidth: 0
-            }]
+                    labels: <?php echo json_encode($pie_labels); ?>,
+                    datasets: [{
+                        data: <?php echo json_encode($pie_data); ?>,
+                        backgroundColor: <?php echo json_encode($pie_colors); ?>,
+                        borderWidth: 0
+                    }]
                 },
                 options: {
                     responsive: true,
@@ -734,8 +757,8 @@ while ($row = mysqli_fetch_assoc($result)) {
 
             // Year filter functionality
             document.getElementById('yearFilter').addEventListener('change', function(e) {
-                // Here you would typically fetch new data based on the selected year
-                console.log('Year changed to:', e.target.value);
+                const selectedYear = e.target.value;
+                window.location.href = '?year=' + selectedYear;
             });
 
             // Search functionality for active customers
