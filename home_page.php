@@ -432,9 +432,9 @@ if (isset($_SESSION['email'])) {
         }
 
         .category-icon {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
+            width: 100%;
+            height: 150px;
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -455,7 +455,7 @@ if (isset($_SESSION['email'])) {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 50%;
+            border-radius: 20px;
             transition: transform 0.3s ease;
         }
 
@@ -979,12 +979,8 @@ if (isset($_SESSION['email'])) {
                    class="banner-image">
             </div>
             <div class="banner-content-overlay">
-             
-              </div>
               <h3 class="text-white">Manage your dairy smartly</h3>
               <p class="text-white mb-0">Connecting Farmers and Customers Seamlessly</p>
-              
-              
             </div>
           </div>
         </div>
@@ -1005,7 +1001,7 @@ if (isset($_SESSION['email'])) {
       <div class="col-lg-3 col-md-6">
         <div class="category-card">
           <div class="category-icon">
-            <img src="uploads/products/product_68d11758f140b4.57759496.png" alt="Milk Products" class="category-image">
+            <img src="uploads/Gemini_Generated_Image_ewb77gewb77gewb7.png" alt="Milk Products" class="category-image">
           </div>
           <h3 class="category-title">Milk Products</h3>
           <p class="category-description">Fresh milk, flavored milk, and milk-based beverages</p>
@@ -1016,7 +1012,7 @@ if (isset($_SESSION['email'])) {
       <div class="col-lg-3 col-md-6">
         <div class="category-card">
           <div class="category-icon">
-            <img src="uploads/products/product_68d118eb1afba8.07186790.png" alt="Curd & Sambaram" class="category-image">
+            <img src="uploads/Gemini_Generated_Image_9exrqx9exrqx9exr.png" alt="Curd & Sambaram" class="category-image">
           </div>
           <h3 class="category-title">Curd & Sambaram</h3>
           <p class="category-description">Traditional curd and spicy buttermilk varieties</p>
@@ -1027,7 +1023,7 @@ if (isset($_SESSION['email'])) {
       <div class="col-lg-3 col-md-6">
         <div class="category-card">
           <div class="category-icon">
-            <img src="uploads/products/product_68d11896e32298.84480869.png" alt="Ice Cream" class="category-image">
+            <img src="uploads/Gemini_Generated_Image_ycnlsaycnlsaycnl.png" alt="Ice Cream" class="category-image">
           </div>
           <h3 class="category-title">Ice Cream</h3>
           <p class="category-description">Delicious ice cream in various flavors and sizes</p>
@@ -1038,7 +1034,7 @@ if (isset($_SESSION['email'])) {
       <div class="col-lg-3 col-md-6">
         <div class="category-card">
           <div class="category-icon">
-            <img src="uploads/products/product_68d1198391f951.31223157.png" alt="Ghee & Butter" class="category-image">
+            <img src="uploads/Gemini_Generated_Image_rbj73yrbj73yrbj7.png" alt="Ghee & Butter" class="category-image">
           </div>
           <h3 class="category-title">Ghee & Butter</h3>
           <p class="category-description">Pure ghee and fresh butter from farm to table</p>
