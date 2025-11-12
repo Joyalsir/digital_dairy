@@ -234,11 +234,11 @@ while ($row = mysqli_fetch_assoc($result)) {
             // Fetch recent activities from multiple tables
             $recent_activities = [];
 
-            // New farmers (assuming CreatedAt column exists; adjust if needed)
-            $query_farmers = "SELECT 'farmer' AS activity_type, FarmerName AS title, CONCAT(FarmerName, ' has been registered as a new farmer') AS description, CreatedAt AS activity_date
+            // New farmers (assuming created_at column exists; adjust if needed)
+            $query_farmers = "SELECT 'farmer' AS activity_type, name AS title, CONCAT(name, ' has been registered as a new farmer') AS description, created_at AS activity_date
                               FROM farmers
-                              WHERE CreatedAt IS NOT NULL
-                              ORDER BY CreatedAt DESC
+                              WHERE created_at IS NOT NULL
+                              ORDER BY created_at DESC
                               LIMIT 3";
 
             $result_farmers = mysqli_query($con, $query_farmers);
@@ -250,7 +250,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 
             // Milk collection updates (grouped by date)
             $query_milk = "SELECT 'milk_collection' AS activity_type, 'Milk Collection Updated' AS title,
-                                  CONCAT(FORMAT(SUM(quantity), 0), ' liters collected from ', COUNT(DISTINCT FarmerID), ' farmers on ', DATE_FORMAT(date, '%M %e')) AS description,
+                                  CONCAT(FORMAT(SUM(quantity), 0), ' liters collected from ', COUNT(DISTINCT farmer_uuid), ' farmers on ', DATE_FORMAT(date, '%M %e')) AS description,
                                   DATE(date) AS activity_date
                            FROM milk_collection
                            WHERE date IS NOT NULL
@@ -267,7 +267,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 
             // Deliveries scheduled
             $query_delivery = "SELECT 'delivery' AS activity_type, 'Delivery Scheduled' AS title,
-                                      CONCAT('Delivery #', DeliveryID, ' has been scheduled for ', DATE_FORMAT(DeliveryDate, '%M %e')) AS description,
+                                      CONCAT('Delivery #', ID, ' has been scheduled for ', DATE_FORMAT(DeliveryDate, '%M %e')) AS description,
                                       DeliveryDate AS activity_date
                                FROM tbldelivery
                                WHERE DeliveryDate IS NOT NULL

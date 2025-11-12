@@ -58,12 +58,10 @@ if (isset($_POST['action'])) {
 
 // Calculate cart totals
 $subtotal = 0;
-$tax_rate = 0.05; // 5% tax
 foreach ($_SESSION['cart'] as $item) {
     $subtotal += $item['price'] * $item['quantity'];
 }
-$tax = $subtotal * $tax_rate;
-$total = $subtotal + $tax;
+$total = $subtotal;
 ?>
 
 <!DOCTYPE html>
@@ -202,10 +200,6 @@ $total = $subtotal + $tax;
                             <span>Items (<?php echo count($_SESSION['cart']); ?>):</span>
                             <span>₹<?php echo number_format($subtotal, 2); ?></span>
                         </div>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>Tax (5%):</span>
-                            <span>₹<?php echo number_format($tax, 2); ?></span>
-                        </div>
                         <hr>
                         <div class="d-flex justify-content-between fw-bold" style="color: #2c5aa0; font-size: 1.2rem;">
                             <span>Total:</span>
@@ -319,11 +313,6 @@ $total = $subtotal + $tax;
                             <div class="summary-item d-flex justify-content-between mb-3">
                                 <span>Subtotal (<?php echo count($_SESSION['cart']); ?> items):</span>
                                 <span>₹<?php echo number_format($subtotal, 2); ?></span>
-                            </div>
-
-                            <div class="summary-item d-flex justify-content-between mb-3">
-                                <span>Tax (5%):</span>
-                                <span>₹<?php echo number_format($tax, 2); ?></span>
                             </div>
 
                             <hr>
